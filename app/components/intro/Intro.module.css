@@ -1,4 +1,4 @@
-/* First-visit intro. Shown only while <html data-intro> is "play"
+/* First-visit intro. Shown only while <html data-intro> is "play" or "landing"
    (set before paint by the inline script in layout.tsx). Transform and opacity only. */
 .loader {
   display: none;
@@ -9,7 +9,8 @@
   pointer-events: none;
 }
 
-:global(html[data-intro="play"]) .loader {
+:global(html[data-intro="play"]) .loader,
+:global(html[data-intro="landing"]) .loader {
   display: block;
 }
 
@@ -56,7 +57,7 @@
   overflow: visible;
 }
 
-/* Paper (also used by the resting crane in the hero) */
+/* Paper */
 .paper {
   fill: var(--gold);
 }
@@ -89,15 +90,6 @@
   fill: var(--ink);
   opacity: 0;
   filter: url(#paperShadow);
-}
-
-/* Ground shadow of the resting crane in the hero. Fades in once it has landed. */
-.ground {
-  transition: opacity 0.4s var(--ease-out);
-}
-
-:global(html[data-intro="play"]) .ground {
-  opacity: 0;
 }
 
 /* Contact shadow of the whole model on the cream sheet. */

@@ -73,8 +73,12 @@ export default function Intro() {
         ],
         { duration: 750, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" },
       );
-      // Land: the hero's identical gold crane takes over in the same frame.
-      flight.onfinish = finish;
+      // Land: the paper crane fades into the illustrated gold crane resting in the hero.
+      flight.onfinish = () => {
+        html.dataset.intro = "landing";
+        w.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: "forwards" });
+        timers.push(window.setTimeout(finish, 320));
+      };
     };
 
     const stop = play(svg.current!, world.current!, crane, K, () => {

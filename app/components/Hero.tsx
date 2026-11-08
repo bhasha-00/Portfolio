@@ -1,5 +1,4 @@
 import Image from "next/image";
-import CraneMark from "./intro/CraneMark";
 import styles from "./Hero.module.css";
 
 // Static home hero. Layout and spacing from reference/lofi-v4.html; type and colour from artdirection.md.
@@ -41,7 +40,21 @@ export default function Hero() {
             sizes="(max-width: 767px) 100vw, 640px"
             className={styles.art}
           />
-          <CraneMark className={styles.crane} data-intro-target="" />
+          <div className={styles.crane} data-intro-target="">
+            {/* It sits on its foot: a dark contact core, and a soft pool under the front wing. */}
+            <span className={styles.craneCore} />
+            <span className={styles.cranePool} />
+            <Image
+              src="/hero/crane-gold.webp"
+              alt=""
+              width={996}
+              height={737}
+              quality={90}
+              priority
+              sizes="(max-width: 767px) 12vw, 80px"
+              className={styles.craneArt}
+            />
+          </div>
         </div>
       </div>
 
