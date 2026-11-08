@@ -10,10 +10,12 @@ const faces = flatten(craneFinal);
 const b = bbox(faces);
 export const CRANE_VIEWBOX = `${b.x} ${b.y} ${b.w} ${b.h}`;
 
-// Ground plane runs through the contact points: near wing tip (low right), body, far wing tip
-// (higher left). The crane faces left, toward the girl.
-const tilt = 15;
-const cx = b.x + b.w * 0.5, cy = b.y + b.h * 0.86;
+// It sits on the bottom point of its body (the lowest point; the wings are lifted). The crane
+// faces left, toward the girl, so its raised wings throw their soft shadow to the right.
+let foot: [number, number] = [0, -Infinity];
+faces.forEach((f) => f.p.forEach((q) => { if (q[1] > foot[1]) foot = q; }));
+const tilt = 0;
+const cx = foot[0] + b.w * 0.14, cy = foot[1] + b.h * 0.01;
 
 export default function CraneMark({ className, ...rest }: { className?: string } & Record<string, string | undefined>) {
   return (
@@ -25,8 +27,8 @@ export default function CraneMark({ className, ...rest }: { className?: string }
       </defs>
       {/* Contact shadow: a wide soft pool, and a darker core right under the body. */}
       <g className={styles.ground} filter="url(#craneGround)" transform={`rotate(${tilt} ${cx} ${cy})`}>
-        <ellipse className={styles.shade} cx={cx} cy={cy} rx={b.w * 0.5} ry={b.h * 0.07} opacity={0.35} />
-        <ellipse className={styles.shade} cx={cx - b.w * 0.04} cy={cy - b.h * 0.04} rx={b.w * 0.18} ry={b.h * 0.05} opacity={0.5} />
+        <ellipse className={styles.shade} cx={cx} cy={cy} rx={b.w * 0.42} ry={b.h * 0.06} opacity={0.3} />
+        <ellipse className={styles.shade} cx={foot[0]} cy={foot[1]} rx={b.w * 0.12} ry={b.h * 0.035} opacity={0.55} />
       </g>
       {faces.map((f, i) => {
         const p = pts(f.p);

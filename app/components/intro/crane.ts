@@ -55,10 +55,10 @@ const steps: Step[] = [
       { pivot: [102, 78], a0: 0, a1: -150, polys: [{ p: [Cm, Qr, B3], s: -0.1 }] },
     ],
     o0: [0, 23.6], o1: [0, 40] },
-  // 8. Shape it: bend the head, open the wings. Finished crane, three-quarter view, sitting.
+  // 8. Shape it: bend the head, open the wings slightly upward. Finished crane, three-quarter view, sitting.
   { d: 0.3, pop: true,
     base: [
-      { p: [[110, 124], [186, 140], [126, 140]], s: 0.32 }, // far wing, behind the body, in shade
+      { p: [[90, 116], [126, 134], [22, 62]], s: 0.32 }, // far wing, raised behind the body, in shade
       { p: [[78, 134], [54, 16], [86, 128]], s: 0.2 }, // tail, lit face
       { p: [[86, 128], [54, 16], [92, 126]], s: -0.12 }, // tail, shade face
       { p: [[84, 130], [106, 110], [108, 150]], s: 0.24 }, // body, lit
@@ -68,8 +68,9 @@ const steps: Step[] = [
       { p: [[146, 40], [152, 34], [186, 62], [152, 44]], s: 0.12 }, // head
     ],
     folds: [
-      // Near wing, the big one, down to the desk.
-      { polys: [{ p: [[86, 134], [108, 150], [16, 186]], s: 0.02 }], a: [86, 134], b: [108, 150], c0: 0.1, c1: 1 },
+      // Near wing, the big one, lifted a little above level, with its underside showing.
+      { polys: [{ p: [[84, 131], [110, 151], [10, 112]], s: 0.02 }, { p: [[110, 151], [70, 145], [10, 112]], s: 0.32 }],
+        a: [84, 131], b: [110, 151], c0: 0.1, c1: 1 },
     ],
     creases: [[[106, 110], [108, 150]]],
     o0: [0, -15], o1: [0, -15] },
