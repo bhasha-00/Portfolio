@@ -29,10 +29,10 @@ export default function Hero() {
       {/* Hero art: designer workspace, top-down. Decorative, so empty alt. */}
       <div className={styles.stage}>
         <Image
-          src="/hero/workspace-v2.webp"
+          src="/hero/workspace-v3.webp"
           alt=""
           width={2400}
-          height={1909}
+          height={1912}
           quality={90}
           priority
           sizes="(max-width: 767px) 100vw, 640px"
