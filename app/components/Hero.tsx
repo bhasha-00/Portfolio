@@ -31,8 +31,9 @@ export default function Hero() {
         <Image
           src="/hero/workspace-cutout.webp"
           alt=""
-          width={1600}
-          height={1262}
+          width={2400}
+          height={1885}
+          quality={90}
           priority
           sizes="(max-width: 767px) 100vw, 640px"
           className={styles.art}

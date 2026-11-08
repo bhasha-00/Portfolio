@@ -19,7 +19,7 @@
 
 .headline {
   font-size: clamp(32px, 4.6vw, 72px);
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: -0.03em;
   line-height: 1.05;
   max-width: 16ch;
@@ -78,6 +78,8 @@
   display: block;
   width: 100%;
   height: auto;
+  /* Soft studio lift off the red, tinted from --ink. */
+  filter: drop-shadow(0 18px 28px color-mix(in srgb, var(--ink) 35%, transparent));
 }
 
 /* ref .cue: left 7vw, bottom 22px, 12px, .14em tracking, .8 opacity */
