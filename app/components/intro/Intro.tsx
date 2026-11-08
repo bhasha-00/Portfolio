@@ -1,23 +1,22 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { crane, craneFinal } from "./crane";
+import { crane, craneEnd } from "./crane";
 import { bbox, flatten, frameAt, play } from "./fold";
 import styles from "./Intro.module.css";
 
-const FINAL = bbox(flatten(craneFinal));
+const END = bbox(flatten(craneEnd)); // the folded base, in the 200-unit view box
 const K = { paper: styles.paper, shade: styles.shade, lite: styles.lite, edge: styles.edge, crease: styles.crease, shadow: styles.shadow };
 const SKIP_EVENTS = ["pointerdown", "wheel", "keydown", "touchmove"] as const;
 
-// Gold square folds into a crane on cream; the last fold blends into the illustrated gold crane,
-// the sheet shrinks away, and that same illustration flies to its resting place in the hero art,
-// so what lands is exactly what stays. Once per session; any input skips.
+// On cream, a gold square folds up to the crane base with neck, tail and head (diagram 14). The
+// sheet shrinks away, the folded piece flies to its place in the hero art, and as it touches down
+// the wings open into the sitting crane: one motion. Once per session; any input skips.
 export default function Intro() {
   const root = useRef<HTMLDivElement>(null);
   const wrap = useRef<HTMLDivElement>(null);
   const svg = useRef<SVGSVGElement>(null);
   const world = useRef<SVGGElement>(null);
-  const art = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const html = document.documentElement;
@@ -54,16 +53,18 @@ export default function Intro() {
       const w = wrap.current!;
       root.current!.classList.add(styles.revealed);
       const to = target?.getBoundingClientRect();
-      // The illustration on the cream sheet; the hero's crane box has the same aspect.
-      const from = art.current!.getBoundingClientRect();
+      // The folded piece's exact box on screen.
+      const view = svg.current!.getBoundingClientRect(), k = view.width / 200;
+      const from = { left: view.left + END.x * k, top: view.top + END.y * k, width: END.w * k, height: END.h * k };
       if (!to || to.width === 0 || to.bottom < 0 || to.top > innerHeight) {
         timers.push(window.setTimeout(finish, 650));
         return;
       }
       const box = w.getBoundingClientRect();
       const cx = from.left + from.width / 2, cy = from.top + from.height / 2;
-      const dx = to.left + to.width / 2 - cx, dy = to.top + to.height / 2 - cy;
-      const s = (to.width / from.width + to.height / from.height) / 2;
+      // Land on the crane's body, matched to its height (the open wings are wider than the base).
+      const dx = to.left + to.width * 0.36 - cx, dy = to.top + to.height * 0.55 - cy;
+      const s = (to.height * 0.95) / from.height;
       w.style.transformOrigin = `${cx - box.left}px ${cy - box.top}px`;
       const base = "translate(-50%, -50%)";
       flight = w.animate(
@@ -74,28 +75,19 @@ export default function Intro() {
         ],
         { duration: 750, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" },
       );
-      // Land: the identical crane in the hero (and its desk shadow) fades in underneath the still
-      // solid flyer; then the flyer fades off, so only its cream-sheet shadow goes. No dip.
-      flight.onfinish = () => {
-        html.dataset.intro = "landing";
-        timers.push(
-          window.setTimeout(() => {
-            w.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: "forwards" }).onfinish = finish;
-          }, 240),
-        );
-      };
+      // Touch down: in the last stretch the wings open. The sitting crane grows out of the folded
+      // piece (see .crane in Hero.module.css) while the folded piece fades into it.
+      timers.push(
+        window.setTimeout(() => {
+          html.dataset.intro = "landing";
+          w.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: "ease-in", fill: "forwards" });
+        }, 560),
+        window.setTimeout(finish, 900),
+      );
     };
 
-    // The last fold blends into the illustration, then it flies.
-    const blend = () => {
-      const fade = { duration: 240, easing: "ease-out", fill: "forwards" } as const;
-      svg.current!.animate([{ opacity: 1 }, { opacity: 0 }], fade);
-      art.current!.animate([{ opacity: 0 }, { opacity: 1 }], fade).onfinish = () => {
-        timers.push(window.setTimeout(fly, 60));
-      };
-    };
     const stop = play(svg.current!, world.current!, crane, K, () => {
-      timers.push(window.setTimeout(blend, 60));
+      timers.push(window.setTimeout(fly, 140));
     });
     if (process.env.NODE_ENV !== "production") {
       // Dev only: __introFrame(step, progress) freezes the intro on one frame for visual checks.
@@ -123,21 +115,6 @@ export default function Intro() {
             <polygon className={styles.edge} points="100,20 180,100 100,180 20,100" />
           </g>
         </svg>
-        {/* The illustrated crane, laid exactly over the last fold; it blends in, then flies. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          ref={art}
-          className={styles.art}
-          src="/hero/crane-gold.webp"
-          alt=""
-          width={996}
-          height={737}
-          style={{
-            left: `${(FINAL.x / 200) * 100}%`,
-            top: `${((FINAL.y + FINAL.h / 2) / 200) * 100}%`,
-            width: `${(FINAL.w / 200) * 100}%`,
-          }}
-        />
       </div>
       <p className={styles.hint}>Tap to skip</p>
     </div>

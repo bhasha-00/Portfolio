@@ -1,7 +1,7 @@
 import { reflect, type Pt, type Step } from "./fold";
 
 // Crane, following the classic sequence: square → triangle → small triangle → square base →
-// kite → petal fold (long diamond) → narrowed → tail and neck up → head bent, wings open. 200 × 200 view box.
+// kite → petal fold (long diamond) → narrowed → neck and tail up → head tucked (diagram 14). 200 × 200 view box.
 
 const SPEED = 0.85; // < 1 is faster
 
@@ -47,48 +47,20 @@ const steps: Step[] = [
       { polys: [{ p: [Tp, Xr, Qr], s: -0.2 }], a: Tp, b: Qr, c0: 1, c1: -1 },
       { polys: [{ p: [Tp, Xl, Ql], s: 0.16 }], a: Tp, b: Ql, c0: 1, c1: -1 },
     ], o0: [0, 23.6], o1: [0, 23.6] },
-  // 7. Reverse-fold the two lower points up: one becomes the tail, the other the neck.
-  { d: 0.26,
+  // 7. Reverse-fold the two lower points up beside the body (diagram 13), then tuck one tip in
+  //    to form the head (diagram 14). The loader ends here; the wings open as it lands in the hero.
+  { d: 0.34,
     base: [{ p: [Tp, Qr, Ql], s: 0.04 }, { p: reflect([Tp, Xr, Qr], Tp, Qr), s: -0.22 }, { p: reflect([Tp, Xl, Ql], Tp, Ql), s: 0.26 }],
     turns: [
-      { pivot: [98, 78], a0: 0, a1: 160, polys: [{ p: [Ql, Cm, B3], s: 0.12 }] },
-      { pivot: [102, 78], a0: 0, a1: -150, polys: [{ p: [Cm, Qr, B3], s: -0.1 }] },
+      { pivot: [98, 78], a0: 0, a1: 168, polys: [{ p: [Ql, Cm, B3], s: 0.12 }] },
+      { pivot: [102, 78], a0: 0, a1: -166, polys: [{ p: [Cm, Qr, [103.4, 140], [100, 140]], s: -0.1 }],
+        child: { pivot: [101.7, 140], a0: 0, a1: 115, polys: [{ p: [[100, 140], [103.4, 140], B3], s: 0.2 }] } },
     ],
-    o0: [0, 23.6], o1: [0, 40] },
-  // 8. Shape it: the finished crane, traced facet for facet from the reference diagram (step 16).
-  //    Head points left, toward the girl; big wing raised up-left, tail up-right, front wing out right.
-  { d: 0.3, pop: true,
-    base: [
-      // Raised big wing, lit, with its dark fold band along the right.
-      { p: [[39.6, 42.4], [111, 84.4], [117, 114], [100, 110], [74, 127], [47, 100]], s: -0.06 },
-      { p: [[78, 68], [111, 84.4], [117, 114], [100, 110], [99, 100], [94, 88]], s: 0.32 },
-      { p: [[39.6, 42.4], [89, 106]] }, // fold line on the big wing (a two-point face draws as a line)
-      // Tail, lit face and dark lower face.
-      { p: [[127, 119], [193, 54.4], [140, 119]], s: -0.06 },
-      { p: [[140, 119], [193, 54.4], [146, 119]], s: 0.32 },
-      // Neck side strip, in shade, down to the foot.
-      { p: [[47, 101], [51, 104], [76, 167], [70, 163], [45, 112]], s: 0.3 },
-      // Head, pointing left: upper lit, lower shaded.
-      { p: [[47, 101], [23, 121], [45, 112]], s: -0.04 },
-      { p: [[45, 112], [23, 121], [36, 114]], s: 0.26 },
-      // Body: front facet lit, right facet in shade, and the foot underneath.
-      { p: [[74, 127], [100, 110], [110, 129], [80, 138]], s: 0.02 },
-      { p: [[100, 110], [127, 119], [110, 129]], s: 0.3 },
-      { p: [[77, 147], [86, 155], [76, 168]], s: 0.34 },
-    ],
-    folds: [
-      // Front wing, out to the right and nearly level; dark facet where it meets the tail.
-      { polys: [
-          { p: [[80, 138], [110, 129], [146, 119], [190.4, 157], [86, 155], [77, 150]], s: -0.08 },
-          { p: [[110, 129], [127, 119], [146, 119]], s: 0.3 },
-          { p: [[110, 135], [188, 156]] }, // fold line along the front wing
-        ], a: [80, 138], b: [146, 119], c0: 0.1, c1: 1 },
-    ],
-    o0: [-8, -5], o1: [-8, -5] },
+    o0: [0, 23.6], o1: [0, 23.6] },
 ];
 
-// The crane faces left, toward the girl in the hero art. The reverse-fold step is drawn facing
-// right above, so mirror it; the finished crane (traced from the reference) already faces left.
+// The crane faces left, toward the girl in the hero art. The last step is drawn with the head on
+// the right above, so mirror it.
 const mx = (p: Pt): Pt => [200 - p[0], p[1]];
 const mirrorPoly = (q: { p: Pt[]; s?: number }) => ({ ...q, p: q.p.map(mx) });
 function mirror(st: Step): Step {
@@ -104,8 +76,8 @@ function mirror(st: Step): Step {
     o1: [-st.o1[0], st.o1[1]],
   };
 }
-steps.splice(steps.length - 2, 1, mirror(steps[steps.length - 2]));
+steps.splice(steps.length - 1, 1, mirror(steps[steps.length - 1]));
 
 export const crane = steps.map((s) => ({ ...s, d: s.d * SPEED }));
-/** The finished crane, as it rests in the hero. */
-export const craneFinal = steps[steps.length - 1];
+/** Where the loader stops: the folded base with neck, tail and head (diagram 14). */
+export const craneEnd = steps[steps.length - 1];

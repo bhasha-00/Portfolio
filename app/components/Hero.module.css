@@ -96,7 +96,10 @@
   aspect-ratio: 996 / 737;
   container-type: inline-size; /* shadow blur below is in cqw: 1cqw = 1% of the crane width */
   transform: translate(-50%, -50%);
-  transition: opacity 0.3s var(--ease-out);
+  transform-origin: 36% 55%; /* its body: the wings open out from here on landing */
+  transition:
+    opacity 0.3s var(--ease-out),
+    scale 0.45s cubic-bezier(0.3, 1.35, 0.5, 1);
 }
 
 .craneArt {
@@ -170,16 +173,19 @@
   opacity: 0.6;
 }
 
-/* Hidden while the intro plays; the paper crane lands on it and crossfades into it.
+/* Hidden while the intro plays, folded small. When the folded piece touches down ("landing"),
+   it opens out to full size with a slight overshoot as the wings spread.
    Failsafe: shows anyway after 6s if the intro script never finishes. */
 :global(html[data-intro="play"]) .crane {
   opacity: 0;
+  scale: 0.5;
   animation: craneFailsafe 0s linear 6s forwards;
 }
 
 @keyframes craneFailsafe {
   to {
     opacity: 1;
+    scale: 1;
   }
 }
 
