@@ -35,7 +35,7 @@ Feel: a precise, warm paper object. Bold red, hand-sketched, with one origami co
 ## Home (hero)
 - Cream pill nav, top centre: Home, Projects, AI Tinkering, About.
 - Headline large, top-left: **"Translating business goals and user needs into conversion focused interfaces that perform."**
-- Top-right column: name (Geist 800), "Product Designer", "Bangalore, India", then one short summary sentence. No icons.
+- Top-right column: name (Geist 800), "Product Designer", then one short summary sentence. No icons.
 - Hand-sketched figure (girl, top-down, seated with laptop, papers, tube, bowl), centred low. Ink line plus flat blue/orange accents. Until the real art exists, use the SVG placeholder from the prototype.
 - Large tinted numeral ("01") at about 14% opacity behind, right side.
 - Peek of the first case study card at the bottom, so people know to scroll.
