@@ -76,14 +76,15 @@
   width: min(560px, 92vw);
   margin-top: auto;
   padding-top: 32px;
+  margin-bottom: 56px;
   align-self: center;
-  transform: translateX(-8%);
 }
 
-.stage svg {
+.art {
   display: block;
   width: 100%;
   height: auto;
+  border-radius: 16px;
 }
 
 /* ref .cue: left 7vw, bottom 22px, 12px, .14em tracking, .8 opacity */
@@ -112,9 +113,3 @@
   }
 }
 
-/* Short mobile screens: keep the cue clear of the figure. */
-@media (max-width: 767px) {
-  .stage {
-    margin-bottom: 44px;
-  }
-}
