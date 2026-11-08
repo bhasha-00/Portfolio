@@ -15,7 +15,6 @@ export default function Hero() {
             Bhasha Maheshwari
           </h1>
           <p className={styles.role}>Product Designer</p>
-          <p className={styles.place}>Bangalore, India</p>
           <p className={styles.summary}>
             2+ years across B2B SaaS and AI-native projects. Strong focus in complex system, scale
             and end-to-end ownership.
@@ -30,12 +29,12 @@ export default function Hero() {
       {/* Hero art: designer workspace, top-down. Decorative, so empty alt. */}
       <div className={styles.stage}>
         <Image
-          src="/hero/workspace.webp"
+          src="/hero/workspace-cutout.webp"
           alt=""
-          width={1448}
-          height={1086}
+          width={1600}
+          height={1262}
           priority
-          sizes="(max-width: 767px) 92vw, 560px"
+          sizes="(max-width: 767px) 100vw, 640px"
           className={styles.art}
         />
       </div>
