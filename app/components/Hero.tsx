@@ -32,7 +32,7 @@ export default function Hero() {
           src="/hero/workspace-cutout.webp"
           alt=""
           width={2400}
-          height={1885}
+          height={1954}
           quality={90}
           priority
           sizes="(max-width: 767px) 100vw, 640px"

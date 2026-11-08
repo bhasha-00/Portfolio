@@ -18,8 +18,8 @@
 }
 
 .headline {
-  font-size: clamp(32px, 4.6vw, 72px);
-  font-weight: 400;
+  font-size: clamp(28px, 3.6vw, 56px);
+  font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.05;
   max-width: 16ch;
@@ -49,11 +49,11 @@
   line-height: 1.6;
 }
 
-/* Tinted numeral, behind everything, cropped by the bottom edge (ref .big). */
+/* Tinted numeral, behind everything. Its baseline sits on the bottom edge, where the art ends. */
 .big {
   position: absolute;
   right: 3vw;
-  bottom: -4vw;
+  bottom: -0.13em; /* cancels Geist's space under the baseline */
   z-index: 0;
   font-size: clamp(160px, 28vw, 420px);
   font-weight: 800;
