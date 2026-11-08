@@ -1,4 +1,5 @@
 import Image from "next/image";
+import CraneMark from "./intro/CraneMark";
 import styles from "./Hero.module.css";
 
 // Static home hero. Layout and spacing from reference/lofi-v4.html; type and colour from artdirection.md.
@@ -27,7 +28,7 @@ export default function Hero() {
       </div>
 
       {/* Hero art: designer workspace, top-down. Decorative, so empty alt.
-          The origami crane is its own layer so the intro's paper crane can land on it. */}
+          The gold paper crane from the intro rests where the photo's crane was. */}
       <div className={styles.stage}>
         <div className={styles.artBox}>
           <Image
@@ -40,17 +41,7 @@ export default function Hero() {
             sizes="(max-width: 767px) 100vw, 640px"
             className={styles.art}
           />
-          <Image
-            src="/hero/crane.webp"
-            alt=""
-            width={255}
-            height={205}
-            quality={90}
-            priority
-            sizes="(max-width: 767px) 11vw, 68px"
-            className={styles.crane}
-            data-intro-target=""
-          />
+          <CraneMark className={styles.crane} data-intro-target="" />
         </div>
       </div>
 

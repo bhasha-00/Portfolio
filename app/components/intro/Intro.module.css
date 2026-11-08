@@ -1,4 +1,4 @@
-/* First-visit intro. Shown only while <html data-intro> is "play" or "landing"
+/* First-visit intro. Shown only while <html data-intro> is "play"
    (set before paint by the inline script in layout.tsx). Transform and opacity only. */
 .loader {
   display: none;
@@ -9,8 +9,7 @@
   pointer-events: none;
 }
 
-:global(html[data-intro="play"]) .loader,
-:global(html[data-intro="landing"]) .loader {
+:global(html[data-intro="play"]) .loader {
   display: block;
 }
 
@@ -57,13 +56,9 @@
   overflow: visible;
 }
 
-/* Paper */
+/* Paper (also used by the resting crane in the hero) */
 .paper {
   fill: var(--gold);
-  stroke: var(--ink);
-  stroke-opacity: 0.16;
-  stroke-width: 0.5;
-  stroke-linejoin: round;
 }
 
 .shade {
@@ -74,14 +69,49 @@
   fill: var(--back);
 }
 
+/* Ink outline on every face and fold, like a folding diagram. Same width at any size. */
+.edge {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.4px;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
 .crease {
-  stroke: var(--back);
+  stroke: var(--ink);
   stroke-opacity: 0.55;
-  stroke-width: 0.6;
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
 }
 
 .shadow {
   fill: var(--ink);
   opacity: 0;
   filter: url(#paperShadow);
+}
+
+/* Contact shadow of the whole model on the cream sheet. */
+.wrap svg {
+  filter: drop-shadow(0 8px 10px color-mix(in srgb, var(--ink) 28%, transparent));
+}
+
+.hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% + min(110px, 26vw) + 36px);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.55;
+  transition: opacity 0.2s var(--ease-out);
+}
+
+.revealed .hint {
+  opacity: 0;
 }

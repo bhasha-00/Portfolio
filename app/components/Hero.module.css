@@ -86,17 +86,18 @@
   height: auto;
 }
 
-/* Crane cut from the art at (1925, 315) of 2400 × 1912. */
+/* Gold paper crane, centred where the photo's crane was: (2052, 417) of 2400 × 1912. */
 .crane {
   position: absolute;
-  left: 80.2083%;
-  top: 16.4749%;
-  width: 10.625%;
+  left: 85.52%;
+  top: 21.84%;
+  width: 12.5%;
   height: auto;
-  transition: opacity 0.35s var(--ease-out);
+  overflow: visible;
+  transform: translate(-50%, -50%);
 }
 
-/* Hidden while the intro plays; the paper crane lands here, then this fades in.
+/* Hidden while the intro plays; the flying crane lands on it and it takes over in the same frame.
    Failsafe: shows anyway after 6s if the intro script never finishes. */
 :global(html[data-intro="play"]) .crane {
   opacity: 0;

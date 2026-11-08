@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { crane } from "./crane";
-import { frameAt, play } from "./fold";
+import { crane, craneFinal } from "./crane";
+import { bbox, flatten, frameAt, play } from "./fold";
 import styles from "./Intro.module.css";
 
-const K = { paper: styles.paper, shade: styles.shade, lite: styles.lite, crease: styles.crease, shadow: styles.shadow };
+const FINAL = bbox(flatten(craneFinal));
+const K = { paper: styles.paper, shade: styles.shade, lite: styles.lite, edge: styles.edge, crease: styles.crease, shadow: styles.shadow };
 const SKIP_EVENTS = ["pointerdown", "wheel", "keydown", "touchmove"] as const;
 
 // Gold square folds into a crane on cream, the sheet shrinks away, and the paper crane flies
@@ -48,10 +49,12 @@ export default function Intro() {
 
     const fly = () => {
       const target = document.querySelector<HTMLElement>("[data-intro-target]");
-      const w = wrap.current!, model = world.current!;
+      const w = wrap.current!;
       root.current!.classList.add(styles.revealed);
       const to = target?.getBoundingClientRect();
-      const from = model.getBoundingClientRect();
+      // The crane's exact geometry on screen (outlines excluded), same box as the hero's crane.
+      const view = svg.current!.getBoundingClientRect(), k = view.width / 200;
+      const from = { left: view.left + FINAL.x * k, top: view.top + FINAL.y * k, width: FINAL.w * k, height: FINAL.h * k };
       if (!to || to.width === 0 || to.bottom < 0 || to.top > innerHeight) {
         timers.push(window.setTimeout(finish, 650));
         return;
@@ -70,12 +73,8 @@ export default function Intro() {
         ],
         { duration: 750, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" },
       );
-      flight.onfinish = () => {
-        // Land: the photo's crane fades in as the paper one fades out.
-        html.dataset.intro = "landing";
-        w.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 350, fill: "forwards" });
-        timers.push(window.setTimeout(finish, 380));
-      };
+      // Land: the hero's identical gold crane takes over in the same frame.
+      flight.onfinish = finish;
     };
 
     const stop = play(svg.current!, world.current!, crane, K, () => {
@@ -104,9 +103,11 @@ export default function Intro() {
           {/* Flat square for first paint, before the script takes over. */}
           <g ref={world}>
             <polygon className={styles.paper} points="100,20 180,100 100,180 20,100" />
+            <polygon className={styles.edge} points="100,20 180,100 100,180 20,100" />
           </g>
         </svg>
       </div>
+      <p className={styles.hint}>Tap to skip</p>
     </div>
   );
 }
