@@ -55,29 +55,40 @@ const steps: Step[] = [
       { pivot: [102, 78], a0: 0, a1: -150, polys: [{ p: [Cm, Qr, B3], s: -0.1 }] },
     ],
     o0: [0, 23.6], o1: [0, 40] },
-  // 8. Shape it: bend the head, open the wings slightly upward. Finished crane, three-quarter view, sitting.
+  // 8. Shape it: the finished crane, traced facet for facet from the reference diagram (step 16).
+  //    Head points left, toward the girl; big wing raised up-left, tail up-right, front wing out right.
   { d: 0.3, pop: true,
     base: [
-      { p: [[90, 116], [126, 134], [22, 62]], s: 0.32 }, // far wing, raised behind the body, in shade
-      { p: [[78, 134], [54, 16], [86, 128]], s: 0.2 }, // tail, lit face
-      { p: [[86, 128], [54, 16], [92, 126]], s: -0.12 }, // tail, shade face
-      { p: [[84, 130], [106, 110], [108, 150]], s: 0.24 }, // body, lit
-      { p: [[106, 110], [128, 132], [108, 150]], s: -0.1 }, // body, shade
-      { p: [[118, 136], [150, 38], [126, 136]], s: 0.26 }, // neck, lit
-      { p: [[126, 136], [150, 38], [134, 138]], s: -0.05 }, // neck, shade
-      { p: [[146, 40], [152, 34], [186, 62], [152, 44]], s: 0.12 }, // head
+      // Raised big wing, lit, with its dark fold band along the right.
+      { p: [[39.6, 42.4], [111, 84.4], [117, 114], [100, 110], [74, 127], [47, 100]], s: -0.06 },
+      { p: [[78, 68], [111, 84.4], [117, 114], [100, 110], [99, 100], [94, 88]], s: 0.32 },
+      { p: [[39.6, 42.4], [89, 106]] }, // fold line on the big wing (a two-point face draws as a line)
+      // Tail, lit face and dark lower face.
+      { p: [[127, 119], [193, 54.4], [140, 119]], s: -0.06 },
+      { p: [[140, 119], [193, 54.4], [146, 119]], s: 0.32 },
+      // Neck side strip, in shade, down to the foot.
+      { p: [[47, 101], [51, 104], [76, 167], [70, 163], [45, 112]], s: 0.3 },
+      // Head, pointing left: upper lit, lower shaded.
+      { p: [[47, 101], [23, 121], [45, 112]], s: -0.04 },
+      { p: [[45, 112], [23, 121], [36, 114]], s: 0.26 },
+      // Body: front facet lit, right facet in shade, and the foot underneath.
+      { p: [[74, 127], [100, 110], [110, 129], [80, 138]], s: 0.02 },
+      { p: [[100, 110], [127, 119], [110, 129]], s: 0.3 },
+      { p: [[77, 147], [86, 155], [76, 168]], s: 0.34 },
     ],
     folds: [
-      // Near wing, the big one, lifted a little above level, with its underside showing.
-      { polys: [{ p: [[84, 131], [110, 151], [10, 112]], s: 0.02 }, { p: [[110, 151], [70, 145], [10, 112]], s: 0.32 }],
-        a: [84, 131], b: [110, 151], c0: 0.1, c1: 1 },
+      // Front wing, out to the right and nearly level; dark facet where it meets the tail.
+      { polys: [
+          { p: [[80, 138], [110, 129], [146, 119], [190.4, 157], [86, 155], [77, 150]], s: -0.08 },
+          { p: [[110, 129], [127, 119], [146, 119]], s: 0.3 },
+          { p: [[110, 135], [188, 156]] }, // fold line along the front wing
+        ], a: [80, 138], b: [146, 119], c0: 0.1, c1: 1 },
     ],
-    creases: [[[106, 110], [108, 150]]],
-    o0: [0, -15], o1: [0, -15] },
+    o0: [-8, -5], o1: [-8, -5] },
 ];
 
-// The crane faces left, toward the girl in the hero art: mirror the last two steps
-// (drawn facing right above, with their light values already swapped for a top-left light).
+// The crane faces left, toward the girl in the hero art. The reverse-fold step is drawn facing
+// right above, so mirror it; the finished crane (traced from the reference) already faces left.
 const mx = (p: Pt): Pt => [200 - p[0], p[1]];
 const mirrorPoly = (q: { p: Pt[]; s?: number }) => ({ ...q, p: q.p.map(mx) });
 function mirror(st: Step): Step {
@@ -93,7 +104,7 @@ function mirror(st: Step): Step {
     o1: [-st.o1[0], st.o1[1]],
   };
 }
-steps.splice(steps.length - 2, 2, ...steps.slice(-2).map(mirror));
+steps.splice(steps.length - 2, 1, mirror(steps[steps.length - 2]));
 
 export const crane = steps.map((s) => ({ ...s, d: s.d * SPEED }));
 /** The finished crane, as it rests in the hero. */

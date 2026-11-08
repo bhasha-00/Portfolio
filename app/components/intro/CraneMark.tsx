@@ -10,12 +10,12 @@ const faces = flatten(craneFinal);
 const b = bbox(faces);
 export const CRANE_VIEWBOX = `${b.x} ${b.y} ${b.w} ${b.h}`;
 
-// It sits on the bottom point of its body (the lowest point; the wings are lifted). The crane
-// faces left, toward the girl, so its raised wings throw their soft shadow to the right.
+// It sits on the bottom point of its body (the lowest point). The crane faces left, toward the
+// girl; its front wing spreads to the right just above the desk, so the soft pool runs that way.
 let foot: [number, number] = [0, -Infinity];
 faces.forEach((f) => f.p.forEach((q) => { if (q[1] > foot[1]) foot = q; }));
-const tilt = 0;
-const cx = foot[0] + b.w * 0.14, cy = foot[1] + b.h * 0.01;
+const tilt = -3;
+const cx = foot[0] + b.w * 0.3, cy = foot[1] - b.h * 0.02;
 
 export default function CraneMark({ className, ...rest }: { className?: string } & Record<string, string | undefined>) {
   return (
