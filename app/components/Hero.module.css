@@ -94,6 +94,7 @@
   top: 21.84%;
   width: 10.5%;
   aspect-ratio: 996 / 737;
+  container-type: inline-size; /* shadow blur below is in cqw: 1cqw = 1% of the crane width */
   transform: translate(-50%, -50%);
   transition: opacity 0.3s var(--ease-out);
 }
@@ -105,29 +106,68 @@
   height: auto;
 }
 
-.craneCore,
-.cranePool {
+/* Shadow = the crane's own silhouette in ink, laid flat on the desk from the foot line
+   and sheared back-right. Static transforms and blur; nothing here animates. */
+/* Order matters: CSS blurs before it masks, and blurs before its own transform. So the inner
+   span is the masked silhouette, laid flat by its transform; the outer span blurs the result. */
+.craneCast {
   position: absolute;
+  inset: 0;
+}
+
+.castShape {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  -webkit-mask: url("/hero/crane-gold.webp") center / 100% 100% no-repeat;
+  mask: url("/hero/crane-gold.webp") center / 100% 100% no-repeat;
+  transform-origin: 31% 100%; /* the foot */
+}
+
+/* Blur sized to the crane so thin tips melt into soft shade at any size. */
+.castNear {
+  filter: blur(0.9cqw);
+  opacity: 0.45;
+}
+
+.castNear .castShape {
+  transform: scaleY(0.1) skewX(-22deg);
+}
+
+.castFar {
+  filter: blur(2.2cqw);
+  opacity: 0.3;
+}
+
+.castFar .castShape {
+  transform: scaleY(0.2) skewX(-28deg);
+}
+
+/* Ambient occlusion: the desk darkens softly under the body and the low front wing. */
+.craneAmbient {
+  position: absolute;
+  left: 22%;
+  bottom: -5%;
+  width: 70%;
+  height: 12%;
   border-radius: 50%;
   background: var(--ink);
-  filter: blur(3px);
+  filter: blur(1.6cqw);
+  opacity: 0.35;
+  transform: rotate(-3deg);
 }
 
-.craneCore {
-  left: 20%;
-  width: 22%;
-  bottom: -4%;
-  height: 9%;
-  opacity: 0.55;
-}
-
-.cranePool {
-  left: 24%;
-  width: 72%;
-  bottom: -2%;
-  height: 12%;
-  opacity: 0.28;
-  filter: blur(5px);
+/* Contact point: small, dark, tight. */
+.craneFoot {
+  position: absolute;
+  left: 25%;
+  bottom: -3%;
+  width: 14%;
+  height: 7%;
+  border-radius: 50%;
+  background: var(--ink);
+  filter: blur(max(1px, 0.5cqw));
+  opacity: 0.6;
 }
 
 /* Hidden while the intro plays; the paper crane lands on it and crossfades into it.

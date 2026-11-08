@@ -41,9 +41,12 @@ export default function Hero() {
             className={styles.art}
           />
           <div className={styles.crane} data-intro-target="">
-            {/* It sits on its foot: a dark contact core, and a soft pool under the front wing. */}
-            <span className={styles.craneCore} />
-            <span className={styles.cranePool} />
+            {/* Cast shadow from its own silhouette, thrown back-right from a top-left light:
+                a near, sharper layer and a far, softer one; plus the contact point at the foot. */}
+            <span className={`${styles.craneCast} ${styles.castFar}`}><span className={styles.castShape} /></span>
+            <span className={`${styles.craneCast} ${styles.castNear}`}><span className={styles.castShape} /></span>
+            <span className={styles.craneAmbient} />
+            <span className={styles.craneFoot} />
             <Image
               src="/hero/crane-gold.webp"
               alt=""
