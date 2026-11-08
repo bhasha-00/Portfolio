@@ -13,7 +13,7 @@ const geist = Geist({
 const geistMono = Geist_Mono({
   subsets: ["latin"],
   display: "swap",
-  preload: true, // nav is above the fold
+  preload: false, // only small labels below the fold use mono
   variable: "--font-geist-mono",
 });
 
