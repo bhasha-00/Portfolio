@@ -92,6 +92,15 @@
   filter: url(#paperShadow);
 }
 
+/* The illustrated crane over the last fold: hidden until the blend. Centred on the fold's box. */
+.art {
+  position: absolute;
+  height: auto;
+  opacity: 0;
+  transform: translateY(-50%);
+  filter: drop-shadow(0 8px 10px color-mix(in srgb, var(--ink) 28%, transparent));
+}
+
 /* Contact shadow of the whole model on the cream sheet. */
 .wrap svg {
   filter: drop-shadow(0 8px 10px color-mix(in srgb, var(--ink) 28%, transparent));

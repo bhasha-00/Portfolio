@@ -9,13 +9,15 @@ const FINAL = bbox(flatten(craneFinal));
 const K = { paper: styles.paper, shade: styles.shade, lite: styles.lite, edge: styles.edge, crease: styles.crease, shadow: styles.shadow };
 const SKIP_EVENTS = ["pointerdown", "wheel", "keydown", "touchmove"] as const;
 
-// Gold square folds into a crane on cream, the sheet shrinks away, and the paper crane flies
-// onto the origami crane in the hero art and becomes it. Once per session; any input skips.
+// Gold square folds into a crane on cream; the last fold blends into the illustrated gold crane,
+// the sheet shrinks away, and that same illustration flies to its resting place in the hero art,
+// so what lands is exactly what stays. Once per session; any input skips.
 export default function Intro() {
   const root = useRef<HTMLDivElement>(null);
   const wrap = useRef<HTMLDivElement>(null);
   const svg = useRef<SVGSVGElement>(null);
   const world = useRef<SVGGElement>(null);
+  const art = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const html = document.documentElement;
@@ -52,9 +54,8 @@ export default function Intro() {
       const w = wrap.current!;
       root.current!.classList.add(styles.revealed);
       const to = target?.getBoundingClientRect();
-      // The crane's exact geometry on screen (outlines excluded), same box as the hero's crane.
-      const view = svg.current!.getBoundingClientRect(), k = view.width / 200;
-      const from = { left: view.left + FINAL.x * k, top: view.top + FINAL.y * k, width: FINAL.w * k, height: FINAL.h * k };
+      // The illustration on the cream sheet; the hero's crane box has the same aspect.
+      const from = art.current!.getBoundingClientRect();
       if (!to || to.width === 0 || to.bottom < 0 || to.top > innerHeight) {
         timers.push(window.setTimeout(finish, 650));
         return;
@@ -73,16 +74,28 @@ export default function Intro() {
         ],
         { duration: 750, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" },
       );
-      // Land: the paper crane fades into the illustrated gold crane resting in the hero.
+      // Land: the identical crane in the hero (and its desk shadow) fades in underneath the still
+      // solid flyer; then the flyer fades off, so only its cream-sheet shadow goes. No dip.
       flight.onfinish = () => {
         html.dataset.intro = "landing";
-        w.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: "forwards" });
-        timers.push(window.setTimeout(finish, 320));
+        timers.push(
+          window.setTimeout(() => {
+            w.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: "forwards" }).onfinish = finish;
+          }, 240),
+        );
       };
     };
 
+    // The last fold blends into the illustration, then it flies.
+    const blend = () => {
+      const fade = { duration: 240, easing: "ease-out", fill: "forwards" } as const;
+      svg.current!.animate([{ opacity: 1 }, { opacity: 0 }], fade);
+      art.current!.animate([{ opacity: 0 }, { opacity: 1 }], fade).onfinish = () => {
+        timers.push(window.setTimeout(fly, 60));
+      };
+    };
     const stop = play(svg.current!, world.current!, crane, K, () => {
-      timers.push(window.setTimeout(fly, 120));
+      timers.push(window.setTimeout(blend, 60));
     });
     if (process.env.NODE_ENV !== "production") {
       // Dev only: __introFrame(step, progress) freezes the intro on one frame for visual checks.
@@ -110,6 +123,21 @@ export default function Intro() {
             <polygon className={styles.edge} points="100,20 180,100 100,180 20,100" />
           </g>
         </svg>
+        {/* The illustrated crane, laid exactly over the last fold; it blends in, then flies. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          ref={art}
+          className={styles.art}
+          src="/hero/crane-gold.webp"
+          alt=""
+          width={996}
+          height={737}
+          style={{
+            left: `${(FINAL.x / 200) * 100}%`,
+            top: `${((FINAL.y + FINAL.h / 2) / 200) * 100}%`,
+            width: `${(FINAL.w / 200) * 100}%`,
+          }}
+        />
       </div>
       <p className={styles.hint}>Tap to skip</p>
     </div>
