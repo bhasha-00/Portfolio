@@ -4,15 +4,29 @@ import styles from "./Intro.module.css";
 
 // The finished gold crane, drawn on the server from the same data as the intro's last frame,
 // so the flying crane lands on an identical one. The view box is cropped tight to the crane
-// (outlines spill over; the svg is overflow: visible) so its box matches the flyer's exactly.
+// (outlines and the ground shadow spill over; the svg is overflow: visible) so its box matches
+// the flyer's exactly.
 const faces = flatten(craneFinal);
 const b = bbox(faces);
-const pad = 0;
-export const CRANE_VIEWBOX = `${b.x - pad} ${b.y - pad} ${b.w + 2 * pad} ${b.h + 2 * pad}`;
+export const CRANE_VIEWBOX = `${b.x} ${b.y} ${b.w} ${b.h}`;
+
+// Ground plane runs through the contact points: near wing tip, body, far wing tip.
+const tilt = -15;
+const cx = b.x + b.w * 0.5, cy = b.y + b.h * 0.86;
 
 export default function CraneMark({ className, ...rest }: { className?: string } & Record<string, string | undefined>) {
   return (
     <svg className={className} viewBox={CRANE_VIEWBOX} aria-hidden="true" focusable="false" {...rest}>
+      <defs>
+        <filter id="craneGround" x="-30%" y="-150%" width="160%" height="400%">
+          <feGaussianBlur stdDeviation="4" />
+        </filter>
+      </defs>
+      {/* Contact shadow: a wide soft pool, and a darker core right under the body. */}
+      <g className={styles.ground} filter="url(#craneGround)" transform={`rotate(${tilt} ${cx} ${cy})`}>
+        <ellipse className={styles.shade} cx={cx} cy={cy} rx={b.w * 0.5} ry={b.h * 0.07} opacity={0.35} />
+        <ellipse className={styles.shade} cx={cx + b.w * 0.04} cy={cy - b.h * 0.04} rx={b.w * 0.18} ry={b.h * 0.05} opacity={0.5} />
+      </g>
       {faces.map((f, i) => {
         const p = pts(f.p);
         return (

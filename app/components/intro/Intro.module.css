@@ -91,6 +91,15 @@
   filter: url(#paperShadow);
 }
 
+/* Ground shadow of the resting crane in the hero. Fades in once it has landed. */
+.ground {
+  transition: opacity 0.4s var(--ease-out);
+}
+
+:global(html[data-intro="play"]) .ground {
+  opacity: 0;
+}
+
 /* Contact shadow of the whole model on the cream sheet. */
 .wrap svg {
   filter: drop-shadow(0 8px 10px color-mix(in srgb, var(--ink) 28%, transparent));

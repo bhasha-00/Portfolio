@@ -1,7 +1,7 @@
 import { reflect, type Pt, type Step } from "./fold";
 
 // Crane, following the classic sequence: square → triangle → small triangle → square base →
-// kite → petal fold (long diamond) → narrowed → neck, tail and head. 200 × 200 view box.
+// kite → petal fold (long diamond) → narrowed → tail and neck up → head bent, wings open. 200 × 200 view box.
 
 const SPEED = 0.85; // < 1 is faster
 
@@ -15,8 +15,6 @@ const Xr: Pt = [133.4, 76.4], Xl: Pt = [66.6, 76.4], Rp: Pt = [100, 76.4];
 const Tp: Pt = [100, -4.2];
 // Narrowed edges.
 const Qr: Pt = [116, 76.4], Ql: Pt = [84, 76.4], Cm: Pt = [100, 76.4];
-// Neck tip, trimmed where the head bends.
-const Nk: Pt = [96.2, 138];
 
 const steps: Step[] = [
   // 1. Fold the square in half on the diagonal.
@@ -49,20 +47,32 @@ const steps: Step[] = [
       { polys: [{ p: [Tp, Xr, Qr], s: -0.2 }], a: Tp, b: Qr, c0: 1, c1: -1 },
       { polys: [{ p: [Tp, Xl, Ql], s: 0.16 }], a: Tp, b: Ql, c0: 1, c1: -1 },
     ], o0: [0, 23.6], o1: [0, 23.6] },
-  // 7. Reverse-fold the two points up into neck and tail, bend the head, lift the wing.
-  { d: 0.42,
-    base: [],
+  // 7. Reverse-fold the two lower points up: one becomes the tail, the other the neck.
+  { d: 0.26,
+    base: [{ p: [Tp, Qr, Ql], s: 0.04 }, { p: reflect([Tp, Xr, Qr], Tp, Qr), s: -0.22 }, { p: reflect([Tp, Xl, Ql], Tp, Ql), s: 0.26 }],
     turns: [
-      { pivot: Cm, a0: 0, a1: -8, polys: [
-        { p: [Tp, Qr, Ql], s: 0.04 },
-        { p: reflect([Tp, Xr, Qr], Tp, Qr), s: -0.22 },
-        { p: reflect([Tp, Xl, Ql], Tp, Ql), s: 0.26 },
-      ] },
-      { pivot: [98, 78], a0: 0, a1: 135, polys: [{ p: [Ql, Cm, [100, 138], Nk], s: 0.2 }],
-        child: { pivot: [98, 138], a0: 0, a1: -110, polys: [{ p: [Nk, [100, 138], B3], s: 0.34 }] } },
-      { pivot: [102, 78], a0: 0, a1: -135, polys: [{ p: [Cm, Qr, B3], s: -0.1 }] },
+      { pivot: [98, 78], a0: 0, a1: 160, polys: [{ p: [Ql, Cm, B3], s: 0.12 }] },
+      { pivot: [102, 78], a0: 0, a1: -150, polys: [{ p: [Cm, Qr, B3], s: -0.1 }] },
     ],
-    o0: [0, 23.6], o1: [0, 58] },
+    o0: [0, 23.6], o1: [0, 40] },
+  // 8. Shape it: bend the head, open the wings. Finished crane, three-quarter view, sitting.
+  { d: 0.3, pop: true,
+    base: [
+      { p: [[110, 124], [186, 140], [126, 140]], s: 0.32 }, // far wing, behind the body, in shade
+      { p: [[78, 134], [54, 16], [86, 128]], s: -0.12 }, // tail, lit face
+      { p: [[86, 128], [54, 16], [92, 126]], s: 0.2 }, // tail, shade face
+      { p: [[84, 130], [106, 110], [108, 150]], s: -0.1 }, // body, lit
+      { p: [[106, 110], [128, 132], [108, 150]], s: 0.24 }, // body, shade
+      { p: [[118, 136], [150, 38], [126, 136]], s: -0.05 }, // neck, lit
+      { p: [[126, 136], [150, 38], [134, 138]], s: 0.26 }, // neck, shade
+      { p: [[146, 40], [152, 34], [186, 62], [152, 44]], s: 0.12 }, // head
+    ],
+    folds: [
+      // Near wing, the big one, down to the desk.
+      { polys: [{ p: [[86, 134], [108, 150], [16, 186]], s: 0.02 }], a: [86, 134], b: [108, 150], c0: 0.1, c1: 1 },
+    ],
+    creases: [[[106, 110], [108, 150]]],
+    o0: [0, -15], o1: [0, -15] },
 ];
 
 export const crane = steps.map((s) => ({ ...s, d: s.d * SPEED }));
