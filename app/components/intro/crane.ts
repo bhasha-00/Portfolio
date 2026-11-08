@@ -59,12 +59,12 @@ const steps: Step[] = [
   { d: 0.3, pop: true,
     base: [
       { p: [[110, 124], [186, 140], [126, 140]], s: 0.32 }, // far wing, behind the body, in shade
-      { p: [[78, 134], [54, 16], [86, 128]], s: -0.12 }, // tail, lit face
-      { p: [[86, 128], [54, 16], [92, 126]], s: 0.2 }, // tail, shade face
-      { p: [[84, 130], [106, 110], [108, 150]], s: -0.1 }, // body, lit
-      { p: [[106, 110], [128, 132], [108, 150]], s: 0.24 }, // body, shade
-      { p: [[118, 136], [150, 38], [126, 136]], s: -0.05 }, // neck, lit
-      { p: [[126, 136], [150, 38], [134, 138]], s: 0.26 }, // neck, shade
+      { p: [[78, 134], [54, 16], [86, 128]], s: 0.2 }, // tail, lit face
+      { p: [[86, 128], [54, 16], [92, 126]], s: -0.12 }, // tail, shade face
+      { p: [[84, 130], [106, 110], [108, 150]], s: 0.24 }, // body, lit
+      { p: [[106, 110], [128, 132], [108, 150]], s: -0.1 }, // body, shade
+      { p: [[118, 136], [150, 38], [126, 136]], s: 0.26 }, // neck, lit
+      { p: [[126, 136], [150, 38], [134, 138]], s: -0.05 }, // neck, shade
       { p: [[146, 40], [152, 34], [186, 62], [152, 44]], s: 0.12 }, // head
     ],
     folds: [
@@ -74,6 +74,25 @@ const steps: Step[] = [
     creases: [[[106, 110], [108, 150]]],
     o0: [0, -15], o1: [0, -15] },
 ];
+
+// The crane faces left, toward the girl in the hero art: mirror the last two steps
+// (drawn facing right above, with their light values already swapped for a top-left light).
+const mx = (p: Pt): Pt => [200 - p[0], p[1]];
+const mirrorPoly = (q: { p: Pt[]; s?: number }) => ({ ...q, p: q.p.map(mx) });
+function mirror(st: Step): Step {
+  return {
+    ...st,
+    base: st.base.map(mirrorPoly),
+    creases: st.creases?.map(([a, b]) => [mx(a), mx(b)] as [Pt, Pt]),
+    folds: st.folds?.map((f) => ({ ...f, polys: f.polys.map(mirrorPoly), a: mx(f.a), b: mx(f.b) })),
+    turns: st.turns?.map(function mt(t): NonNullable<Step["turns"]>[number] {
+      return { ...t, polys: t.polys.map(mirrorPoly), pivot: mx(t.pivot), a0: -t.a0, a1: -t.a1, child: t.child && mt(t.child) };
+    }),
+    o0: [-st.o0[0], st.o0[1]],
+    o1: [-st.o1[0], st.o1[1]],
+  };
+}
+steps.splice(steps.length - 2, 2, ...steps.slice(-2).map(mirror));
 
 export const crane = steps.map((s) => ({ ...s, d: s.d * SPEED }));
 /** The finished crane, as it rests in the hero. */
