@@ -1,0 +1,79 @@
+/* Cream pill nav, top centre. Position, padding and radius from reference/lofi-v4.html;
+   type from artdirection.md (Geist Mono, caps, wide tracking). */
+.nav {
+  position: fixed;
+  top: var(--nav-top);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  max-width: calc(100vw - 16px);
+  background: var(--cream);
+  padding: 5px;
+  border-radius: 99px;
+  /* Shadow tinted from --ink so no new colour is introduced. */
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+.list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+
+.link {
+  position: relative;
+  display: block;
+  padding: 9px 10px; /* 33px tall, matches reference link height */
+  border-radius: 99px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--ink);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.link:not([aria-current]) {
+  opacity: 0.6;
+  transition: opacity 0.2s var(--ease-out);
+}
+
+.link[aria-current] {
+  background: var(--red);
+  color: var(--cream);
+}
+
+@media (hover: hover) {
+  .link:not([aria-current]):hover {
+    opacity: 1;
+  }
+}
+
+.link:not([aria-current]):active {
+  opacity: 1;
+}
+
+.link:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+@media (min-width: 420px) {
+  .link {
+    padding: 9px 12px;
+    font-size: 11px;
+  }
+}
+
+@media (min-width: 768px) {
+  .link {
+    padding: 9px 14px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+}
