@@ -78,22 +78,22 @@
   position: relative;
 }
 
-/* Soft studio lift off the red, tinted from --ink. Photo only: the crane has its own ground shadow. */
+/* The collage's shadows are baked into the image file (hero-collage-3840): no CSS filter to paint.
+   The crane has its own ground shadow. */
 .art {
   display: block;
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 18px 28px color-mix(in srgb, var(--ink) 35%, transparent));
 }
 
 /* Gold paper crane, centred where the photo's crane was: (2052, 417) of 2400 × 1912.
-   Art is 996 × 737; its foot touches down at 31% across, the very bottom. */
+   Art (assets/crane-sm.webp) is 320 × 236; its foot touches down at 31% across, the very bottom. */
 .crane {
   position: absolute;
   left: 85.52%;
   top: 21.84%;
   width: 10.5%;
-  aspect-ratio: 996 / 737;
+  aspect-ratio: 320 / 236;
   container-type: inline-size; /* shadow blur below is in cqw: 1cqw = 1% of the crane width */
   transform: translate(-50%, -50%);
   transform-origin: 36% 55%; /* its body: the wings open out from here on landing */
@@ -122,8 +122,8 @@
   position: absolute;
   inset: 0;
   background: var(--ink);
-  -webkit-mask: url("/hero/crane-gold.webp") center / 100% 100% no-repeat;
-  mask: url("/hero/crane-gold.webp") center / 100% 100% no-repeat;
+  -webkit-mask: url("/assets/crane-sm.webp") center / 100% 100% no-repeat;
+  mask: url("/assets/crane-sm.webp") center / 100% 100% no-repeat;
   transform-origin: 31% 100%; /* the foot */
 }
 

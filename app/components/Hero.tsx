@@ -7,7 +7,7 @@ export default function Hero() {
     <section id="home" className={styles.hero} aria-labelledby="home-title">
       <div className={styles.top}>
         <p className={styles.headline}>
-          Translating business goals and user needs into conversion focused interfaces that perform.
+          Translating business goals and user needs into interfaces that perform.
         </p>
 
         <div className={styles.intro}>
@@ -31,13 +31,13 @@ export default function Hero() {
       <div className={styles.stage}>
         <div className={styles.artBox}>
           <Image
-            src="/hero/workspace-v4.webp"
+            src="/hero/workspace-v6.webp"
             alt=""
             width={2400}
             height={1912}
-            quality={90}
+            quality={80}
             priority
-            sizes="(max-width: 767px) 100vw, 640px"
+            sizes="(max-width: 767px) 88vw, 640px"
             className={styles.art}
           />
           <div className={styles.crane} data-intro-target="">
@@ -48,10 +48,10 @@ export default function Hero() {
             <span className={styles.craneAmbient} />
             <span className={styles.craneFoot} />
             <Image
-              src="/hero/crane-gold.webp"
+              src="/assets/crane-sm.webp"
               alt=""
-              width={996}
-              height={737}
+              width={320}
+              height={236}
               quality={90}
               priority
               sizes="(max-width: 767px) 12vw, 80px"

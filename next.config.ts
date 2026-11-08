@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    qualities: [75, 90], // 90 for the hero art
+    qualities: [75, 80, 90], // 80 for the hero photo, 90 for the crane
   },
 };
 

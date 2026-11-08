@@ -46,8 +46,15 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(220px, 52vw);
+  width: 220px;
   transform: translate(-50%, -50%);
+}
+
+/* Phones: a bigger mark, about 58vw. */
+@media (max-width: 699px) {
+  .wrap {
+    width: 58vw;
+  }
 }
 
 .wrap svg {
@@ -101,7 +108,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: calc(50% + min(110px, 26vw) + 36px);
+  top: calc(50% + 110px + 36px);
   text-align: center;
   font-family: var(--font-mono);
   font-size: 11px;
@@ -111,6 +118,12 @@
   color: var(--ink);
   opacity: 0.55;
   transition: opacity 0.2s var(--ease-out);
+}
+
+@media (max-width: 699px) {
+  .hint {
+    top: calc(50% + 29vw + 32px);
+  }
 }
 
 .revealed .hint {
