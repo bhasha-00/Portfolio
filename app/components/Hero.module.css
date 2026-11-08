@@ -189,6 +189,11 @@
   }
 }
 
+/* While the crane is perched on the Projects tabs, the companion there is the crane (Projects.tsx). */
+:global(html[data-crane="away"]) .crane {
+  opacity: 0;
+}
+
 /* ref .cue: left 7vw, bottom 22px, 12px, .14em tracking, .8 opacity */
 .cue {
   position: absolute;
