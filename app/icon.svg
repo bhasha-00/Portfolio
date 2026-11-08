@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Favicon: a gold paper square folded on the diagonal, on the site red. Tokens: red, gold, ink. -->
+  <rect width="64" height="64" rx="14" fill="#A82A1E"/>
+  <g stroke="#2A1410" stroke-width="2.5" stroke-linejoin="round">
+    <path d="M12 32 L32 12 L52 32 Z" fill="#E8B04A"/>
+    <path d="M12 32 L52 32 L32 52 Z" fill="#E8B04A"/>
+    <path d="M12 32 L52 32 L32 52 Z" fill="#2A1410" fill-opacity="0.22"/>
+  </g>
+</svg>
