@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Nav from "./components/Nav";
+import Intro from "./components/intro/Intro";
 import "./globals.css";
 
 const geist = Geist({
@@ -33,8 +34,14 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Blocking on purpose (tiny, cached): decides before first paint whether the intro plays. */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script src="/intro-gate.js" />
+      </head>
       <body>
+        <Intro />
         <Nav />
         <main>{children}</main>
       </body>

@@ -26,18 +26,32 @@ export default function Hero() {
         01
       </div>
 
-      {/* Hero art: designer workspace, top-down. Decorative, so empty alt. */}
+      {/* Hero art: designer workspace, top-down. Decorative, so empty alt.
+          The origami crane is its own layer so the intro's paper crane can land on it. */}
       <div className={styles.stage}>
-        <Image
-          src="/hero/workspace-v3.webp"
-          alt=""
-          width={2400}
-          height={1912}
-          quality={90}
-          priority
-          sizes="(max-width: 767px) 100vw, 640px"
-          className={styles.art}
-        />
+        <div className={styles.artBox}>
+          <Image
+            src="/hero/workspace-v4.webp"
+            alt=""
+            width={2400}
+            height={1912}
+            quality={90}
+            priority
+            sizes="(max-width: 767px) 100vw, 640px"
+            className={styles.art}
+          />
+          <Image
+            src="/hero/crane.webp"
+            alt=""
+            width={255}
+            height={205}
+            quality={90}
+            priority
+            sizes="(max-width: 767px) 11vw, 68px"
+            className={styles.crane}
+            data-intro-target=""
+          />
+        </div>
       </div>
 
       <p className={styles.cue}>Scroll for work</p>

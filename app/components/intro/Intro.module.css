@@ -1,0 +1,87 @@
+/* First-visit intro. Shown only while <html data-intro> is "play" or "landing"
+   (set before paint by the inline script in layout.tsx). Transform and opacity only. */
+.loader {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+:global(html[data-intro="play"]) .loader,
+:global(html[data-intro="landing"]) .loader {
+  display: block;
+}
+
+/* Failsafe: if the script never finishes, get out of the way after 6s. */
+:global(html[data-intro="play"]) .loader {
+  animation: failsafe 0s linear 6s forwards;
+}
+
+@keyframes failsafe {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* Cream sheet. A circle larger than any screen, so the reveal is a plain scale. */
+.veil {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150vmax;
+  height: 150vmax;
+  margin: -75vmax 0 0 -75vmax;
+  border-radius: 50%;
+  background: var(--cream);
+  transition: transform 0.65s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.revealed .veil {
+  transform: scale(0);
+}
+
+.wrap {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(220px, 52vw);
+  transform: translate(-50%, -50%);
+}
+
+.wrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Paper */
+.paper {
+  fill: var(--gold);
+  stroke: var(--ink);
+  stroke-opacity: 0.16;
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+}
+
+.shade {
+  fill: var(--ink);
+}
+
+.lite {
+  fill: var(--back);
+}
+
+.crease {
+  stroke: var(--back);
+  stroke-opacity: 0.55;
+  stroke-width: 0.6;
+}
+
+.shadow {
+  fill: var(--ink);
+  opacity: 0;
+  filter: url(#paperShadow);
+}

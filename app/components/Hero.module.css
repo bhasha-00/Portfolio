@@ -74,12 +74,39 @@
   align-self: center;
 }
 
+/* Soft studio lift off the red, tinted from --ink. On the box so the crane layer shares it. */
+.artBox {
+  position: relative;
+  filter: drop-shadow(0 18px 28px color-mix(in srgb, var(--ink) 35%, transparent));
+}
+
 .art {
   display: block;
   width: 100%;
   height: auto;
-  /* Soft studio lift off the red, tinted from --ink. */
-  filter: drop-shadow(0 18px 28px color-mix(in srgb, var(--ink) 35%, transparent));
+}
+
+/* Crane cut from the art at (1925, 315) of 2400 × 1912. */
+.crane {
+  position: absolute;
+  left: 80.2083%;
+  top: 16.4749%;
+  width: 10.625%;
+  height: auto;
+  transition: opacity 0.35s var(--ease-out);
+}
+
+/* Hidden while the intro plays; the paper crane lands here, then this fades in.
+   Failsafe: shows anyway after 6s if the intro script never finishes. */
+:global(html[data-intro="play"]) .crane {
+  opacity: 0;
+  animation: craneFailsafe 0s linear 6s forwards;
+}
+
+@keyframes craneFailsafe {
+  to {
+    opacity: 1;
+  }
 }
 
 /* ref .cue: left 7vw, bottom 22px, 12px, .14em tracking, .8 opacity */
