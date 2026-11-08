@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bhasha · Lo-fi v4</title>
+<link href="https://fonts.googleapis.com/css2?family=Modak&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#A82A1E;--ink:#F3E9DA;--card:#F3E9DA;--cardink:#2a1410;--p1:#E8B04A;--p2:#2E7D6B;--p3:#D9432F;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;overflow-x:hidden}
+nav{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:40;display:flex;background:var(--card);padding:5px;border-radius:99px;box-shadow:0 6px 20px #0003}
+nav a{font:500 13px 'DM Sans';color:var(--cardink);opacity:.55;text-decoration:none;padding:8px 13px;border-radius:99px;white-space:nowrap}
+nav a.on{background:var(--bg);color:var(--ink);opacity:1}
+.hero{position:relative;min-height:100vh;padding:110px 6vw 0;overflow:hidden}
+h1{font:400 clamp(64px,13vw,190px)/.85 'Modak',cursive;max-width:9ch;padding-top:.15em}
+.lede{position:absolute;right:6vw;top:150px;width:min(360px,40vw);font-size:clamp(14px,1.2vw,17px);line-height:1.5}
+.lede b{display:block;font-size:clamp(20px,2vw,28px);line-height:1.15;margin-bottom:10px}
+.big{position:absolute;right:3vw;bottom:-4vw;font:400 clamp(160px,28vw,420px)/1 'Modak';opacity:.14}
+.stage{position:absolute;left:50%;bottom:0;width:min(560px,92vw);transform:translateX(-58%)}
+.stage svg{display:block;width:100%;height:auto}
+#head{position:absolute;left:44%;top:6%;width:1px;height:1px}
+.reveal{opacity:0;transform:translateY(24px)}
+.loaded .reveal{animation:up .7s calc(var(--d,0)*1s) cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes up{to{opacity:1;transform:none}}
+.work{height:400vh;position:relative}
+.pin{position:sticky;top:0;height:100vh;display:grid;place-items:center;padding-top:44px}
+.deck{position:relative;width:min(1100px,90vw);height:min(66vh,540px)}
+.tabs{position:absolute;left:0;top:-40px;display:flex;gap:4px;z-index:50}
+.ptab{position:relative;border:0;font:500 13px 'DM Sans';padding:11px 18px 10px;border-radius:14px 14px 0 0;cursor:pointer;transition:transform .6s cubic-bezier(.2,.8,.2,1),opacity .5s,background .4s,color .4s}
+.ptab[data-s=hide]{transform:translateY(16px);opacity:0;pointer-events:none}
+.ptab[data-s=on]{background:var(--card);color:var(--cardink);height:41px}
+.ptab[data-s=off]{background:#D8CBB5;color:#7a6a58;height:36px;margin-top:5px}
+.anchor{position:absolute;top:2px;right:10px;width:1px;height:1px}
+.proj{position:absolute;inset:0;z-index:var(--i);background:var(--card);color:var(--cardink);border-radius:0 22px 22px 22px;padding:24px 28px;display:flex;flex-direction:column;gap:18px;box-shadow:0 20px 40px #0003;transition:transform .9s cubic-bezier(.2,.8,.2,1),filter .6s}
+.proj[data-s=after]{transform:translateY(112%)}
+.proj[data-s=on]{transform:none}
+.proj[data-s=before]{transform:translateY(calc(var(--d)*-9px)) scale(calc(1 - var(--d)*.025));filter:brightness(calc(1 - var(--d)*.1))}
+.info{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.info small{font:500 11px 'DM Sans';letter-spacing:.1em;opacity:.5}
+.info h3{font:700 clamp(18px,2.2vw,28px)/1.1 'DM Sans';margin:5px 0 8px}
+.info p{font-size:14px;line-height:1.5;opacity:.75}
+.pdemo{flex:1;min-height:0;background:#F6E3DC;border-radius:16px;display:grid;place-items:center;text-align:center;cursor:pointer;user-select:none}
+.num{font:400 clamp(70px,11vw,140px)/1 'Modak';color:#A82A1E}
+.pdemo span{font-size:12px;opacity:.55;display:block;margin-top:4px}
+.bar{height:10px;border-radius:9px;background:#0001;margin:8px auto 0;overflow:hidden;width:200px}.bar i{display:block;height:100%;width:0;background:#A82A1E}
+#count{position:absolute;right:6vw;bottom:calc(22px + env(safe-area-inset-bottom,0px));font:700 18px 'DM Sans';opacity:.9}
+.cue{position:absolute;left:7vw;bottom:22px;font:500 12px 'DM Sans';letter-spacing:.14em;opacity:.8}
+#view{position:fixed;left:0;top:0;z-index:65;width:90px;height:90px;border-radius:50%;background:#111;color:#fff;display:grid;place-items:center;font:500 16px 'DM Sans';pointer-events:none;transform:translate(-200px,-200px) scale(0);transition:transform .14s ease-out}
+#pet{position:fixed;left:0;top:0;z-index:60;width:clamp(64px,8vw,100px);aspect-ratio:200/210;transition:transform .8s cubic-bezier(.3,1.35,.5,1);touch-action:none;cursor:grab;opacity:0}
+#pet.drag{transition:none;cursor:grabbing}
+#pet .in{width:100%;height:100%;transition:transform .3s}
+#pet.go{opacity:1}
+#pet.go .in{animation:land 1.1s cubic-bezier(.2,.9,.3,1)}
+#pet.hop .in{animation:hop .6s ease-out}
+#pet.idle .in{animation:bob 2.8s ease-in-out infinite}
+@keyframes land{0%{transform:translate(60vw,-60vh) rotate(-25deg) scale(1.6)}60%{transform:translate(-3vw,-5vh) rotate(8deg)}100%{transform:none}}
+@keyframes hop{40%{transform:translateY(-26px) rotate(-10deg)}}
+@keyframes bob{50%{transform:translateY(-4px) rotate(-3deg)}}
+#tip{position:absolute;top:100%;left:50%;transform:translateX(-50%);font:500 11px 'DM Sans';background:var(--card);color:var(--cardink);padding:4px 9px;border-radius:99px;white-space:nowrap;pointer-events:none;transition:opacity .4s}
+#loader{position:fixed;inset:0;z-index:100;background:var(--card);color:var(--cardink);display:grid;place-items:center;clip-path:circle(150% at 50% 50%);transition:clip-path .7s cubic-bezier(.7,0,.2,1)}
+.loaded #loader{clip-path:circle(0% at 70% 30%);pointer-events:none}
+#loader .w{width:min(200px,46vw);text-align:center}#loader p{font:500 11px 'DM Sans';letter-spacing:.14em;margin-top:10px;opacity:.55}
+.pc{transform-box:fill-box;transform-origin:center;opacity:0;animation:fold .45s var(--t) cubic-bezier(.3,1.4,.5,1) forwards}
+@keyframes fold{0%{opacity:0;transform:perspective(200px) rotateX(90deg) scale(.4) translateY(-14px)}100%{opacity:1;transform:none}}
+.tool{position:fixed;z-index:70;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#111c;border-radius:99px;padding:5px}
+.tool button{font:500 12px 'DM Sans';border:0;border-radius:99px;padding:8px 12px;background:#fff;color:#111;cursor:pointer}
+@media(max-width:700px){.lede{position:static;width:auto;margin-top:16px;max-width:80%}.stage{transform:translateX(-50%)}h1{max-width:6ch}.deck{height:76vh}.info{grid-template-columns:1fr}.info div:nth-child(n+2) p{display:none}.info div:nth-child(n+2){display:none}.num{font-size:84px}}
+@media(prefers-reduced-motion:reduce){.proj,.ptab{transition:none}.pc,.reveal,#pet .in{animation:none!important;opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter></svg>
+
+<div id="loader"><div class="w"><svg id="ori" viewBox="0 0 200 210"></svg><p>FOLDING… (tap to skip)</p></div></div>
+<nav><a class="on" href="#">Home</a><a href="#work">Projects</a><a href="#">AI Tinkering</a><a href="#">About</a></nav>
+
+<section class="hero" id="s0">
+  <h1 class="reveal" style="--d:.1">Bhasha</h1>
+  <p class="lede reveal" style="--d:.25"><b>I turn 6 clicks into 3.</b>Product designer for enterprise fintech. 16-module dashboard redesign, 85% fewer accessibility issues, 40% fewer support queries.</p>
+  <div class="big">01</div>
+  <div class="stage reveal" style="--d:.2">
+    <svg viewBox="0 0 560 440" style="filter:url(#rough)">
+      <g fill="none" stroke="#1b1b1b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="300" y="170" width="150" height="100" rx="6" transform="rotate(28 375 220)" fill="#d9d6d0"/>
+        <rect x="120" y="190" width="95" height="120" transform="rotate(-18 167 250)" fill="#f3f1ed"/>
+        <rect x="205" y="300" width="80" height="100" transform="rotate(14 245 350)" fill="#eceae5"/>
+        <ellipse cx="450" cy="330" rx="30" ry="24" fill="#f3f1ed"/>
+        <path d="M70 430c-6-70 10-150 70-180l70 10c40 20 66 90 70 170z" fill="#e7e4de"/>
+        <path d="M205 262c40 10 70 6 100-14"/>
+        <circle cx="155" cy="205" r="46" fill="#f3f1ed"/>
+        <path d="M110 205c0-40 28-60 58-56 26 3 40 26 34 56-14-22-38-28-92 0z" fill="#1b1b1b"/>
+        <circle cx="162" cy="140" r="17" fill="#1b1b1b"/>
+      </g>
+      <text x="280" y="425" text-anchor="middle" font-size="11" fill="#fff" opacity=".7" font-family="DM Sans">[ sketched illustration goes here ]</text>
+    </svg>
+    <div id="head"></div>
+  </div>
+  <div class="cue">SCROLL FOR WORK ↓</div>
+</section>
+
+<section class="work" id="work"><div class="pin"><div class="deck">
+  <div class="tabs"><button class="ptab" data-s="hide">Project 01<i class="anchor"></i></button><button class="ptab" data-s="hide">Project 02<i class="anchor"></i></button><button class="ptab" data-s="hide">Project 03<i class="anchor"></i></button></div>
+  <article class="proj" style="--i:1" data-s="after"><div class="info"><div><small>PROJECT 01</small><h3>B2B dashboard, 16 modules</h3><p>Redesigned navigation, flows and IA.</p></div><div><small>ROLE</small><h3>End-to-end design</h3></div><div><small>OUTCOME</small><h3>6 clicks → 3</h3></div></div>
+      <div class="pdemo" data-from="6" data-to="3" data-suf=""><div><div class="num">6</div><span>tap to replay</span></div></div></article>
+  <article class="proj" style="--i:2" data-s="after"><div class="info"><div><small>PROJECT 02</small><h3>Accessibility, WCAG 2.1</h3><p>47 critical issues found and fixed.</p></div><div><small>ROLE</small><h3>Audit + design system</h3></div><div><small>OUTCOME</small><h3>85% fewer violations</h3></div></div>
+      <div class="pdemo" data-from="0" data-to="85" data-suf="%"><div><div class="num">0%</div><div class="bar"><i></i></div><span>tap to replay</span></div></div></article>
+  <article class="proj" style="--i:3" data-s="after"><div class="info"><div><small>PROJECT 03</small><h3>Chatbot, conversational UI</h3><p>Persona-based flows for guided setup.</p></div><div><small>ROLE</small><h3>UX + journey mapping</h3></div><div><small>OUTCOME</small><h3>40% fewer support queries</h3></div></div>
+      <div class="pdemo" data-from="0" data-to="40" data-suf="%"><div><div class="num">0%</div><span>tap to replay</span></div></div></article>
+</div><div id="count">01 / 03</div></div></section><div id="view">View ↗</div>
+
+<div id="pet"><div class="in"><svg id="petsvg" viewBox="0 0 200 210" width="100%" height="100%"></svg></div><div id="tip">click me · drag me</div></div>
+<div class="tool"><button id="replay">↻ Replay intro</button></div>
+
+<script>
+const $=s=>document.querySelector(s),B=document.body;
+const FORMS=[
+ {n:"parrot",p:[["70,70 120,60 140,120 100,150 75,120","var(--p2)"],["88,28 122,34 128,62 88,62","var(--p1)"],["126,40 152,54 124,58","var(--p3)"],["82,88 118,82 108,128 72,112","var(--p3)"],["100,150 116,188 100,198 88,162","var(--p1)"],["112,146 132,182 118,192","var(--p2)"]],e:[[108,44]]},
+ {n:"crane",p:[["60,125 110,100 150,125 100,152","#F3E9DA"],["110,100 124,60 132,63 119,104","#E9DCC6"],["124,60 152,68 132,72","#D9432F"],["84,115 56,56 114,104","#fff"],["98,110 138,52 128,112","#E5D5BD"],["60,125 26,106 72,128","#D9C9B0"]],e:[[130,64]]},
+ {n:"fox",p:[["100,60 152,124 48,124","#E8772E"],["48,124 52,58 88,86","#C75E1F"],["152,124 148,58 112,86","#C75E1F"],["72,114 128,114 100,156","#FFF4E6"],["91,144 109,144 100,156","#2a1410"],["120,150 190,170 150,120","#E8772E"],["170,164 190,170 176,150","#FFF4E6"]],e:[[84,104],[116,104]]},
+ {n:"critter",p:[["68,92 132,92 148,152 100,174 52,152","#F2C230"],["76,92 58,28 92,82","#F2C230"],["124,92 142,28 108,82","#F2C230"],["58,28 66,50 52,46","#2a1410"],["142,28 134,50 148,46","#2a1410"],["148,152 182,136 170,118 196,96 190,150","#E5A820"]],e:[[84,116],[116,116]],x:[[70,138,9],[130,138,9]]}
+];
+let fi=0,tok=0;
+const NS='http://www.w3.org/2000/svg',BACK='#fff7e8',PAPER='#E8B04A',RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,P2=s=>s.split(' ').map(q=>q.split(',').map(Number)),cl=x=>Math.max(0,Math.min(1,x));
+// real fold: rotate a piece about its hinge edge (180deg -> 0), projected flat
+function fold(pts,A,B,c){const ux=B[0]-A[0],uy=B[1]-A[1],l=Math.hypot(ux,uy),u=[ux/l,uy/l],n=[-u[1],u[0]];
+  return pts.map(([x,y])=>{const dx=x-A[0],dy=y-A[1],t=dx*u[0]+dy*u[1],d=dx*n[0]+dy*n[1];return[A[0]+t*u[0]+d*c*n[0],A[1]+t*u[1]+d*c*n[1]]}).map(p=>p.map(v=>v.toFixed(1)).join(',')).join(' ')}
+function el(svg,tag,at){const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);svg.appendChild(e);return e}
+function run(svg,i,o={}){
+  const f=FORMS[i],t=++tok;svg._t=t;svg.innerHTML='';
+  const gap=o.gap??.2,dur=o.dur??.45,S0=o.stage0?1.05:0,items=[];
+  if(o.stage0){
+    items.push({pts:[[20,105],[180,105],[100,190]],A:[20,105],B:[180,105],c:PAPER,m:'s',t0:.1,dur:.4,kill:.5});
+    items.push({pts:[[100,20],[20,105],[100,105]],A:[100,20],B:[100,105],c:PAPER,m:'s',t0:99,dur:.4,kill:S0});
+    items.push({pts:[[100,20],[180,105],[100,105]],A:[100,20],B:[100,105],c:PAPER,m:'s',t0:.6,dur:.4,kill:S0});
+  }
+  const polys=f.p.map(([s,c])=>({pts:P2(s),c}));let cx=0,cy=0,m=0;
+  polys.forEach(p=>p.pts.forEach(q=>{cx+=q[0];cy+=q[1];m++}));cx/=m;cy/=m;
+  const n=polys.length;
+  polys.forEach((p,k)=>{let best=1e9,A,B;p.pts.forEach((q,j)=>{const r=p.pts[(j+1)%p.pts.length],d=Math.hypot((q[0]+r[0])/2-cx,(q[1]+r[1])/2-cy);if(d<best){best=d;A=q;B=r}});
+    items.push({pts:p.pts,A,B,c:p.c,m:o.out?'o':'i',t0:o.out?(n-1-k)*gap:S0+k*gap,dur})});
+  items.forEach(it=>it.e=el(svg,'polygon',{stroke:'#0004','stroke-linejoin':'round'}));
+  const T=o.out?(n-1)*gap+dur:S0+(n-1)*gap+dur+.12;
+  const eyes=[];if(!o.out){f.e.forEach(([x,y])=>{eyes.push(el(svg,'circle',{cx:x,cy:y,r:3.6,fill:'#fff'}),el(svg,'circle',{cx:x+1,cy:y,r:1.7,fill:'#111'}))});(f.x||[]).forEach(([x,y,r])=>eyes.push(el(svg,'circle',{cx:x,cy:y,r,fill:'#D9432F'})))}
+  function draw(tm){
+    items.forEach(it=>{const e=ease(cl((tm-it.t0)/it.dur));let v,vis=true;
+      if(it.m==='i'){v=e;vis=tm>=it.t0}else if(it.m==='o'){v=1-e;vis=v>.001}else{v=1-e;vis=tm<it.kill}
+      it.e.setAttribute('display',vis?'':'none');if(!vis)return;
+      const c=-Math.cos(v*Math.PI);
+      it.e.setAttribute('points',fold(it.pts,it.A,it.B,c));
+      it.e.setAttribute('fill',c<0?BACK:it.c);
+      it.e.setAttribute('opacity',it.m==='i'?Math.min(1,v*10+.0):1)});
+    eyes.forEach(x=>x.setAttribute('display',tm>=T-.15?'':'none'));
+  }
+  if(o.instant||RM){draw(T+1);o.done&&o.done();return}
+  const t1=performance.now();
+  (function fr(now){if(svg._t!==t)return;const tm=(now-t1)/1000;draw(Math.min(tm,T+1));if(tm<T)requestAnimationFrame(fr);else o.done&&o.done()})(t1);
+}
+function morph(n){const s=$('#petsvg'),from=fi;fi=n;if(from===n){run(s,n,{instant:true});return}
+  run(s,from,{out:true,gap:.05,dur:.3,done:()=>run(s,n,{gap:.14,dur:.4})})}
+run($('#ori'),0,{stage0:true});run($('#petsvg'),0,{instant:true});
+
+const pet=$('#pet'),work=$('#work'),projs=[...document.querySelectorAll('.proj')],tabs=[...document.querySelectorAll('.ptab')],N=projs.length;
+const anchors=[$('#head'),...tabs.map(t=>t.querySelector('.anchor'))],runners=[];
+let cur=-1,drag=false,tx=0,ty=0,act=-2;
+function state(){const r=work.getBoundingClientRect(),tot=r.height-innerHeight,p=Math.max(0,Math.min(.9999,-r.top/tot));return r.top>innerHeight*.35?-1:Math.floor(p*N)}
+function setAct(i){if(i===act)return;act=i;
+  projs.forEach((c,j)=>{c.style.setProperty('--d',Math.max(0,i-j));c.dataset.s=j>i?'after':j===i?'on':'before'});
+  tabs.forEach((t,j)=>{t.dataset.s=j>i?'hide':j===i?'on':'off'});
+  $('#count').textContent=String(Math.max(i,0)+1).padStart(2,'0')+' / 0'+N;
+  if(i>=0&&runners[i])setTimeout(runners[i],450)}
+function target(){
+  const i=state();setAct(i);const k=i<0?0:1+i;
+  const r=anchors[k].getBoundingClientRect(),w=pet.offsetWidth;
+  tx=r.left-w/2;ty=r.top-w*.85;
+  if(!drag)pet.style.transform=`translate(${tx}px,${ty}px)`;
+  if(k!==cur){const first=cur<0;cur=k;if(!first){morph(k%FORMS.length);pet.classList.remove('idle');pet.classList.add('hop');setTimeout(()=>{pet.classList.remove('hop');pet.classList.add('idle')},650);setTimeout(target,750)}}
+  document.querySelectorAll('nav a').forEach((a,j)=>a.classList.toggle('on',j===(k?1:0)));
+}
+addEventListener('scroll',()=>requestAnimationFrame(target),{passive:true});addEventListener('resize',target);
+tabs.forEach((t,i)=>t.onclick=()=>{const tot=work.offsetHeight-innerHeight;scrollTo({top:work.offsetTop+tot*(i+.5)/N})});
+
+// play: tap = refold into next form, drag = carry it, release = it hops back
+let sx,sy,moved;
+pet.addEventListener('pointerdown',e=>{drag=true;moved=false;sx=e.clientX;sy=e.clientY;pet.classList.add('drag');pet.setPointerCapture(e.pointerId);$('#tip').style.opacity=0});
+pet.addEventListener('pointermove',e=>{if(!drag)return;if(Math.abs(e.clientX-sx)+Math.abs(e.clientY-sy)>6)moved=true;
+  const w=pet.offsetWidth;pet.style.transform=`translate(${e.clientX-w/2}px,${e.clientY-w/2}px)`;
+  $('#pet .in').style.transform=`rotate(${Math.max(-25,Math.min(25,(e.clientX-sx)/6))}deg)`});
+pet.addEventListener('pointerup',()=>{drag=false;pet.classList.remove('drag');$('#pet .in').style.transform='';
+  if(!moved)morph((fi+1)%FORMS.length);target()});
+
+// metric demos: run when their tab becomes active, tap to replay
+document.querySelectorAll('.pdemo').forEach((d,i)=>{
+  const n=d.querySelector('.num'),from=+d.dataset.from,to=+d.dataset.to,suf=d.dataset.suf,bar=d.querySelector('.bar i');
+  const run=()=>{const t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/1100),v=Math.round(from+(to-from)*(1-Math.pow(1-p,3)));n.textContent=v+suf;if(bar)bar.style.width=(p*to)+'%';if(p<1)requestAnimationFrame(f)})(t0)};
+  runners[i]=()=>{n.textContent=from+suf;if(bar)bar.style.width='0';requestAnimationFrame(run)};
+  d.onclick=runners[i]});
+// "View" cursor bubble (desktop only)
+if(matchMedia('(hover:hover)').matches){const vb=$('#view');document.querySelectorAll('.pdemo').forEach(d=>{
+  d.addEventListener('pointermove',e=>{vb.style.transform=`translate(${e.clientX-45}px,${e.clientY-45}px) scale(1)`});
+  d.addEventListener('pointerleave',()=>{vb.style.transform='translate(-200px,-200px) scale(0)'})})}
+
+// intro: ~1.5s, any input skips it, only once per session
+let done=false;
+function finish(){if(done)return;done=true;B.classList.add('loaded');sessionStorage.setItem('seen','1');
+  pet.classList.add('go');target();setTimeout(()=>pet.classList.add('idle'),1200);setTimeout(()=>{$('#tip').style.opacity=0},6000)}
+['pointerdown','wheel','keydown','touchmove'].forEach(ev=>addEventListener(ev,()=>{if(!done)finish()},{once:false,passive:true}));
+function intro(){done=false;B.classList.remove('loaded');pet.classList.remove('go','idle');$('#tip').style.opacity=1;run($('#ori'),0,{stage0:true});run($('#petsvg'),0,{instant:true});fi=0;scrollTo(0,0);
+  if(sessionStorage.getItem('seen')&&!intro.force){finish();return}
+  setTimeout(finish,2700)}
+$('#replay').onclick=()=>{intro.force=true;intro()};
+intro();
+</script>
+</body>
+</html>

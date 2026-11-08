@@ -1,0 +1,75 @@
+# Art direction: Bhasha Maheshwari portfolio
+
+Product / UX/UI designer, enterprise fintech. Audience: recruiters who give it about 10 seconds.
+Feel: a precise, warm paper object. Bold red, hand-sketched, with one origami companion. Personality comes from illustration and motion; type stays quiet and confident.
+
+## Brief (approved)
+- **Bar:** Single-page portfolio, 4 tabs: Home, Projects, AI Tinkering, About. Flat red hero with a hand-sketched figure.
+- **Reference:** `reference/lofi-v4.html` (motion + layout prototype), result-led hero (Albin Sigi), tabbed case study cards.
+- **Limits:** tokens below; Next.js (or React) on Vercel; mobile-first; hero usable in about 1s; no WebGL on first paint; respect reduced-motion; no texture; two font families only.
+- **Check:** screenshots at 390px and 1440px vs the prototype, Lighthouse mobile run, a 10-second recruiter scan.
+
+## Tokens
+```css
+:root{
+  --red:#A82A1E;      /* hero + page background */
+  --cream:#F3E9DA;    /* text on red, cards, nav pill */
+  --ink:#2A1410;      /* text on cream */
+  --gold:#E8B04A;     /* paper, accents, large/decorative only */
+  --green:#2E7D6B;    /* accent */
+  --vermilion:#D9432F;/* accent */
+  --back:#FFF7E8;     /* paper back side in origami folds */
+}
+```
+- Cream on red is about 5.8:1 (passes AA). Gold on red is about 3.6:1: use for large or decorative elements only, never body text.
+- **Texture: none.** Flat colour. (Revisit only if the hero feels heavy once built.)
+
+## Type
+- **Geist** for headings and body. **Geist Mono** for labels, chips, nav (caps, wide tracking).
+- Headings: weight 700-800, letter-spacing about -0.03em, line-height about 1.0. Name: `clamp(64px, 13vw, 180px)`.
+- Body: 400, at least 16px on mobile.
+- Load with `next/font/google`, Latin subset, `display: swap`, preload the heading weight. No other families.
+- Optional (only if the hero looks too plain): one serif accent word. Test before committing.
+
+## Home (hero)
+- Cream pill nav, top centre: Home, Projects, AI Tinkering, About.
+- Name large, top-left. Result-led line: **"I turn 6 clicks into 3."** One short supporting sentence with real numbers.
+- Hand-sketched figure (girl, top-down, seated with laptop, papers, tube, bowl), centred low. Ink line plus flat blue/orange accents. Until the real art exists, use the SVG placeholder from the prototype.
+- Large tinted numeral ("01") at about 14% opacity behind, right side.
+- Peek of the first case study card at the bottom, so people know to scroll.
+- Persistent "Open to work / Resume" pill.
+
+## Case study cards (Projects)
+- Cream card with a folder-style tab ("Project 01"). Three columns: Project, Role, Outcome.
+- Each card has a small interactive demo that shows its own result when scrolled into view and replays on tap:
+  - Dashboard redesign: counter 6 → 3 clicks.
+  - Accessibility: bar to 85%.
+  - Chatbot: count to 40%.
+- Map real case studies from the Framer portfolio. Keep the demos as the pattern. Case study pages stay on Framer for now; cards link out.
+
+## Origami and motion
+- **Intro (about 2.7s, skippable, once per session):** a gold square sheet folds its lower half up, then its right half over, into a triangle. Parrot pieces then unfold outward, each rotating about its own hinge edge (180° to 0°), showing the pale back side mid-turn. Then a circular reveal opens onto the hero and the parrot flies in and lands on the figure's head.
+- **Skip:** any tap, scroll, key press or wheel finishes it immediately. Set `sessionStorage.seen`; repeat visits skip the intro.
+- **Companion:** the parrot sits on the active section. When the active case study changes it folds itself flat, then folds up as the next shape (parrot, crane, fox, original critter). About 1.6s total.
+- **Play:** tap = refold into the next shape. Drag = carry it (tilts with movement). Release = it hops back to its perch.
+- **Implementation:** inline SVG polygons, animated in `requestAnimationFrame` (see prototype `run()` / `fold()`). Transform and opacity only. No video, no Lottie.
+- **Reduced motion:** show final shapes with no folding; companion static.
+- Do not use Pokemon or any other third-party characters. The "critter" is original.
+
+## Performance budget
+- Hero text and nav visible and usable within about 1s on a mid-range phone.
+- Hero illustration as sized WebP or optimised SVG, preloaded, with width/height set.
+- Everything below the fold lazy-loaded.
+- Lighthouse mobile performance 90 or above.
+- No WebGL, no heavy libraries. Ask before adding any dependency.
+
+## Accessibility
+- Cream on red only for body text. Visible focus rings. All interactions reachable by keyboard.
+- Companion is decorative (`aria-hidden`) but its tap/drag must never block content.
+- Respect `prefers-reduced-motion`.
+
+## Avoid
+- Template-looking gradients, glassmorphism, stock icons.
+- Motion that delays content. Nothing waits for the origami.
+- Copying other designers' signatures (taped notes, grid textures, stamps, mascots).
+- More than two font families.
