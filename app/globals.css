@@ -1,0 +1,87 @@
+/* Tokens: artdirection.md is the source of truth. Do not add colours here. */
+:root {
+  --red: #A82A1E;       /* hero + page background */
+  --cream: #F3E9DA;     /* text on red, cards, nav pill */
+  --ink: #2A1410;       /* text on cream */
+  --gold: #E8B04A;      /* paper, accents, large/decorative only */
+  --green: #2E7D6B;     /* accent */
+  --vermilion: #D9432F; /* accent */
+  --back: #FFF7E8;      /* paper back side in origami folds */
+
+  /* Fonts (set by next/font in app/layout.tsx) */
+  --font-sans: var(--font-geist), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Layout, from reference/lofi-v4.html */
+  --gutter: 6vw;
+  --nav-top: calc(14px + env(safe-area-inset-top, 0px));
+
+  /* Motion */
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--red);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  overflow-x: hidden;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 3px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

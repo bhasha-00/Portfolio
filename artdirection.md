@@ -25,7 +25,8 @@ Feel: a precise, warm paper object. Bold red, hand-sketched, with one origami co
 - **Texture: none.** Flat colour. (Revisit only if the hero feels heavy once built.)
 
 ## Type
-- **Geist** for headings and body. **Geist Mono** for labels, chips, nav (caps, wide tracking).
+- **Geist** for headings, body and nav. **Geist Mono** only for small labels and chips (caps, wide tracking), e.g. "PROJECT 01 / ROLE / OUTCOME".
+- Nav: Geist 500, normal case.
 - Headings: weight 700-800, letter-spacing about -0.03em, line-height about 1.0. Name: `clamp(64px, 13vw, 180px)`.
 - Body: 400, at least 16px on mobile.
 - Load with `next/font/google`, Latin subset, `display: swap`, preload the heading weight. No other families.

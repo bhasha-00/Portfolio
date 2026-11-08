@@ -1,0 +1,7 @@
+/* Shell sections. Hero top padding (110px) and side gutter (6vw) from reference/lofi-v4.html. */
+.section {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 110px var(--gutter) 0;
+}
