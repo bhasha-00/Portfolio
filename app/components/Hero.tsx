@@ -24,7 +24,7 @@ export default function Hero() {
       </div>
 
       <div className={styles.big} aria-hidden="true">
-        01
+        80/20
       </div>
 
       {/* Hero art: designer workspace, top-down. Decorative, so empty alt.

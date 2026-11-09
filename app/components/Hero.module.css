@@ -55,10 +55,11 @@
   right: 3vw;
   bottom: -0.13em; /* cancels Geist's space under the baseline */
   z-index: 0;
-  font-size: clamp(160px, 28vw, 420px);
+  font-size: clamp(88px, 13vw, 220px); /* "80/20" is wider than "01": sized to stay in its corner */
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1;
+  white-space: nowrap;
   opacity: 0.14;
   pointer-events: none;
   user-select: none;
