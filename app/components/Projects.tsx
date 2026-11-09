@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import {
   Fragment,
   useCallback,
@@ -11,7 +11,7 @@ import {
   type PointerEvent,
   type ReactNode,
 } from "react";
-import { projects } from "../content/projects";
+import { projects, type Project } from "../content/projects";
 import { controls, flightFrames, type Pt } from "./craneFlight";
 import LandingPuff from "./LandingPuff";
 import styles from "./Projects.module.css";
@@ -27,6 +27,26 @@ const CRANE_ASPECT = 236 / 320;
 // "**bold**" → <strong>bold</strong>
 const rich = (s: string): ReactNode =>
   s.split(/\*\*(.+?)\*\*/g).map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : <Fragment key={i}>{part}</Fragment>));
+
+// Case study shot. Desktop: the SVG export itself, so the browser draws vector type crisp and scales
+// the embedded screenshots once, straight from their full-size sources. Phones (and no SVG): a
+// raster sized to the card by Next, so a small screen never downloads megabytes.
+function Shot({ image }: { image: NonNullable<Project["image"]> }) {
+  const { props } = getImageProps({
+    src: image.src,
+    alt: image.alt,
+    fill: true,
+    quality: 90,
+    sizes: "calc(100vw - 2 * 6vw - 40px)", // phone: the card's inner width
+  });
+  return (
+    <picture>
+      {image.svg && <source media="(min-width: 768px)" srcSet={image.svg} type="image/svg+xml" />}
+      {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text -- props from getImageProps */}
+      <img {...props} loading="lazy" decoding="async" className={styles.shotImg} />
+    </picture>
+  );
+}
 
 // Puff under the perched crane when it lands.
 function PerchPuff({ size }: { size: () => number }) {
@@ -348,16 +368,7 @@ export default function Projects() {
 
                 {p.image ? (
                   <div className={`${styles.media} ${styles.shot}`} onPointerMove={follow} onPointerLeave={unfollow}>
-                    <Image
-                      src={p.image.src}
-                      alt={p.image.alt}
-                      fill
-                      quality={90}
-                      // Real rendered width (mobile: card inner width; desktop: the media column),
-                      // so 2× and 3× screens get a correspondingly larger, sharp file.
-                      sizes="(max-width: 767px) calc(100vw - 2 * 6vw - 40px), (max-width: 1440px) 42vw, 600px"
-                      className={styles.shotImg}
-                    />
+                    <Shot image={p.image} />
                   </div>
                 ) : p.demo ? (
                   <button
