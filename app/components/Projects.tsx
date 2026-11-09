@@ -20,41 +20,39 @@ const N = projects.length;
 const pad = (n: number) => String(n).padStart(2, "0");
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
-/** A card "arrives" (and the crane flies to it) when its top crosses this fraction of the viewport. */
+/** The crane flies down when card 01's top crosses this fraction of the viewport. */
 const TRIGGER = 0.7;
-/** Sticky offsets: first card's top below the nav, and the step that lets earlier tabs peek. */
-const STICK_TOP = 88, STICK_STEP = 14;
 const CRANE_ASPECT = 236 / 320;
 
 // "**bold**" → <strong>bold</strong>
 const rich = (s: string): ReactNode =>
   s.split(/\*\*(.+?)\*\*/g).map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : <Fragment key={i}>{part}</Fragment>));
 
-// Puff at a card's corner when the crane lands there.
-function CardPuff({ at, size }: { at: number; size: () => number }) {
+// Puff under the perched crane when it lands.
+function PerchPuff({ size }: { size: () => number }) {
   const [burst, setBurst] = useState<{ n: number; s: number } | null>(null);
   useEffect(() => {
     const land = (e: Event) => {
-      if ((e as CustomEvent).detail?.at !== at) return;
+      if ((e as CustomEvent).detail?.at !== "cards") return;
       const s = size();
       if (s) setBurst((b) => ({ n: (b?.n ?? 0) + 1, s }));
     };
     addEventListener("crane:land", land);
     return () => removeEventListener("crane:land", land);
-  }, [at, size]);
+  }, [size]);
   return burst ? <LandingPuff key={burst.n} x={0} y={0} size={burst.s} onDone={() => setBurst(null)} /> : null;
 }
 
-// Case study cards. Each card is one sticky element: later cards slide up over earlier ones as you
-// scroll. A card enters with one translate/opacity animation on itself. When a card's top crosses
-// 70% of the viewport the paper crane flies to its bottom-right corner (from the hero for card 01,
-// from the card before for the rest) and back again on the way up. Its metric demo starts once the
-// card is over 60% in view. Reduced motion: no entrance, no flight; the crane just sits there.
+// Case studies, one per screen: each card is sticky and fills the viewport, so the next slides up
+// over the last as you scroll. When card 01 comes up, the paper crane flies once from the hero to a
+// perch on the cards' bottom-right corner and stays there while the cards scroll underneath; it
+// flies home if you scroll back to the hero. Demos start once a card is over 60% in view.
+// Reduced motion: no flight (the crane just sits on the perch), demos show their result.
 export default function Projects() {
   const slots = useRef<(HTMLLIElement | null)[]>([]);
   const cards = useRef<(HTMLElement | null)[]>([]);
-  const perches = useRef<(HTMLSpanElement | null)[]>([]);
-  const flies = useRef<(HTMLSpanElement | null)[]>([]);
+  const perch = useRef<HTMLSpanElement>(null);
+  const fly = useRef<HTMLSpanElement>(null);
   const nums = useRef<(HTMLSpanElement | null)[]>([]);
   const bars = useRef<(HTMLSpanElement | null)[]>([]);
   const counts = useRef<number[]>([]);
@@ -69,7 +67,7 @@ export default function Projects() {
     return () => mq.removeEventListener("change", on);
   }, []);
 
-  const craneWidth = useCallback(() => (flies.current[0]?.firstElementChild as HTMLElement | null)?.offsetWidth ?? 0, []);
+  const craneWidth = useCallback(() => (fly.current?.firstElementChild as HTMLElement | null)?.offsetWidth ?? 0, []);
 
   // ---------- Metric demos ----------
   const show = useCallback((j: number, v: number) => {
@@ -96,53 +94,25 @@ export default function Projects() {
     [reduced, show],
   );
 
-  // ---------- Sticky tops, entrance, demos ----------
+  // ---------- Sticky fit and demos ----------
   useEffect(() => {
     if (reduced === null) return;
     const raf = counts.current;
 
     // A card taller than the screen sticks once its bottom is in view, so it is never cut off.
     const fit = () =>
-      slots.current.forEach((s, j) => {
-        if (s) s.style.top = `${Math.min(STICK_TOP + j * STICK_STEP, innerHeight - s.offsetHeight - 16)}px`;
+      slots.current.forEach((s) => {
+        if (s) s.style.top = `${Math.min(0, innerHeight - s.offsetHeight)}px`;
       });
     fit();
     const ro = new ResizeObserver(fit);
     slots.current.forEach((s) => s && ro.observe(s));
     addEventListener("resize", fit);
 
-    // Entrance: one transform/opacity animation on the card itself. Re-arms when it leaves below.
-    const enter: (Animation | null)[] = [];
-    const armed = slots.current.map(() => true);
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          const j = slots.current.indexOf(e.target as HTMLLIElement);
-          const card = cards.current[j];
-          if (j < 0 || !card) continue;
-          if (e.isIntersecting && armed[j] && e.boundingClientRect.top > 0 && !reduced) {
-            armed[j] = false;
-            enter[j]?.cancel();
-            enter[j] = card.animate(
-              [
-                { transform: "translateY(48px)", opacity: 0 },
-                { transform: "none", opacity: 1 },
-              ],
-              { duration: 500, easing: "cubic-bezier(.2,.8,.2,1)" },
-            );
-          } else if (!e.isIntersecting && e.boundingClientRect.top >= innerHeight) {
-            armed[j] = true;
-            enter[j]?.cancel();
-          }
-        }
-      },
-      { threshold: 0 },
-    );
-
     // Demos: start once a card is over 60% visible; reset when it has left the screen.
     projects.forEach((p, j) => show(j, reduced ? p.demo.to : p.demo.from));
     const ran = projects.map(() => false);
-    const demoIo = new IntersectionObserver(
+    const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
           const j = cards.current.indexOf(e.target as HTMLElement);
@@ -159,132 +129,104 @@ export default function Projects() {
       },
       { threshold: [0, 0.6, 0.61] },
     );
-    slots.current.forEach((s) => s && io.observe(s));
-    cards.current.forEach((c) => c && demoIo.observe(c));
+    cards.current.forEach((c) => c && io.observe(c));
 
     return () => {
       ro.disconnect();
       io.disconnect();
-      demoIo.disconnect();
       removeEventListener("resize", fit);
-      enter.forEach((a) => a?.cancel());
       raf.forEach(cancelAnimationFrame);
     };
   }, [reduced, count, show]);
 
-  // ---------- The crane ----------
+  // ---------- The crane: hero ⇄ perch ----------
   useEffect(() => {
     if (reduced === null) return;
     const html = document.documentElement;
-    let at = -2; // where the crane is, or is heading: -1 = hero, j = card j
-    let holder = -1; // whose element shows it right now: -1 = the hero crane, j = card j's crane
-    let flight: { anim: Animation; el: HTMLElement } | null = null;
+    const el = fly.current!;
+    let onPerch: boolean | null = null; // where it is, or is heading
+    let flight: Animation | null = null;
     let raf = 0;
 
     const heroFoot = () => {
       const r = document.querySelector<HTMLElement>("[data-intro-target]")?.getBoundingClientRect();
       return r && r.width ? { p: { x: r.left + r.width * 0.31, y: r.bottom }, w: r.width } : null;
     };
-    const perch = (j: number): Pt => {
-      const r = perches.current[j]!.getBoundingClientRect();
+    const perchPt = (): Pt => {
+      const r = perch.current!.getBoundingClientRect();
       return { x: r.left, y: r.top };
     };
 
-    // Put the crane straight on its perch: no flight, no puff.
-    const land = (j: number) => {
-      flight?.anim.cancel();
+    // Put the crane straight where it belongs: no flight, no puff.
+    const place = (toPerch: boolean) => {
+      flight?.cancel();
       flight = null;
-      flies.current.forEach((f, i) => {
-        if (!f) return;
-        f.style.transform = "";
-        f.style.opacity = i === j ? "1" : "0";
-      });
-      html.dataset.crane = j < 0 ? "home" : "away";
-      holder = j;
+      el.style.transform = "";
+      el.style.opacity = toPerch ? "1" : "0";
+      html.dataset.crane = toPerch ? "away" : "home";
     };
 
-    const fly = (to: number) => {
+    const go = (toPerch: boolean) => {
       const c = craneWidth();
       const hero = heroFoot();
-      if (!c || !hero) return land(to);
+      if (!c || !hero) return place(toPerch);
+      const origin = perchPt();
+      const heroScale = hero.w / c;
 
-      // Where the crane is on screen now, and its size relative to a card crane.
+      // Where it is now (mid-flight if interrupted), in viewport px, and its scale.
       let from: Pt, s0: number;
       if (flight) {
-        const r = flight.el.firstElementChild!.getBoundingClientRect();
+        const r = el.firstElementChild!.getBoundingClientRect();
         from = { x: r.left + r.width * 0.31, y: r.bottom };
         s0 = r.height / (c * CRANE_ASPECT) || 1;
-      } else if (holder < 0) {
+      } else if (toPerch) {
         from = hero.p;
-        s0 = hero.w / c;
+        s0 = heroScale;
       } else {
-        from = perch(holder);
+        from = origin;
         s0 = 1;
       }
-      const fromHero = holder < 0 && !flight;
-      const prevAt = at;
+      // The path is drawn hero → perch; flying home runs it backwards.
+      const [a, b] = toPerch ? [from, origin] : [hero.p, from];
+      const P = controls(a, b, "dive").map((p) => ({ x: p.x - origin.x, y: p.y - origin.y }));
 
-      // The flying element: the destination card's crane, or (back to the hero) the current one.
-      const f = to >= 0 ? to : Math.max(holder, 0);
-      const el = flies.current[f];
-      if (!el) return land(to);
-      const origin = perch(f);
-      const dest = to >= 0 ? perch(to) : hero.p;
-      const s1 = to >= 0 ? 1 : hero.w / c;
-
-      // Paths are drawn top to bottom; flying up uses the same curve backwards.
-      const dive = to < 0 || fromHero || prevAt < 0;
-      const up = to < prevAt;
-      const [a, b] = up ? [dest, from] : [from, dest];
-      const P = controls(a, b, dive ? "dive" : "hop").map((p) => ({ x: p.x - origin.x, y: p.y - origin.y }));
-
-      flight?.anim.cancel();
-      flies.current.forEach((g, i) => {
-        if (g && i !== f) {
-          g.style.opacity = "0";
-          g.style.transform = "";
-        }
-      });
+      flight?.cancel();
       html.dataset.crane = "away";
       el.style.opacity = "1";
-      const anim = el.animate(flightFrames(P, s0, s1, up), {
-        duration: dive ? 1100 : 900,
+      const anim = el.animate(flightFrames(P, s0, toPerch ? 1 : heroScale, !toPerch), {
+        duration: 1100,
         easing: "linear",
         fill: "forwards",
       });
-      flight = { anim, el };
-      holder = f;
+      flight = anim;
       anim.onfinish = () => {
-        if (flight?.anim !== anim) return;
+        if (flight !== anim) return;
         anim.cancel();
         flight = null;
         el.style.transform = "";
-        if (to < 0) {
+        if (!toPerch) {
           el.style.opacity = "0";
           html.dataset.crane = "home";
-          holder = -1;
         }
-        dispatchEvent(new CustomEvent("crane:land", { detail: { at: to < 0 ? "hero" : to } }));
+        dispatchEvent(new CustomEvent("crane:land", { detail: { at: toPerch ? "cards" : "hero" } }));
       };
     };
 
     const update = () => {
       raf = 0;
-      let want = -1;
-      slots.current.forEach((s, j) => {
-        if (s && s.getBoundingClientRect().top < innerHeight * TRIGGER) want = j;
-      });
-      if (html.dataset.intro !== "done") want = -1; // nothing moves under the intro
-      if (want === at) return;
-      if (at === -2 || reduced) land(want);
-      else fly(want);
-      at = want;
+      const first = slots.current[0]?.getBoundingClientRect();
+      let want = !!first && first.top < innerHeight * TRIGGER;
+      if (html.dataset.intro !== "done") want = false; // nothing moves under the intro
+      if (want === onPerch) return;
+      if (onPerch === null || reduced) place(want);
+      else go(want);
+      onPerch = want;
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
     };
     const onResize = () => {
-      if (flight) land(at);
+      if (flight && onPerch !== null) place(onPerch);
       onScroll();
     };
 
@@ -298,7 +240,7 @@ export default function Projects() {
       removeEventListener("scroll", onScroll);
       removeEventListener("resize", onResize);
       cancelAnimationFrame(raf);
-      flight?.anim.cancel();
+      flight?.cancel();
       delete html.dataset.crane;
     };
   }, [reduced, craneWidth]);
@@ -347,83 +289,77 @@ export default function Projects() {
               <h3 id={`project-${j}`} className={styles.title}>
                 {p.title}
               </h3>
-              <div className={styles.cols}>
-                <div className={styles.col}>
-                  <h4 className={styles.label}>Problem</h4>
-                  <p className={styles.body}>{rich(p.problem)}</p>
-                </div>
-                <div className={styles.col}>
-                  <h4 className={styles.label}>What I Did</h4>
-                  <p className={styles.body}>{rich(p.whatIDid)}</p>
-                </div>
-                <div className={styles.col}>
-                  <h4 className={styles.label}>Outcome</h4>
-                  <p className={styles.body}>{rich(p.outcome)}</p>
-                </div>
-              </div>
 
-              <button
-                type="button"
-                className={styles.media}
-                onClick={() => count(j)}
-                onPointerMove={follow}
-                onPointerLeave={unfollow}
-              >
-                <span className="sr-only">{p.outcome.replace(/\*\*/g, "")}. </span>
-                <span
-                  ref={(n) => {
-                    nums.current[j] = n;
-                  }}
-                  className={styles.num}
-                  aria-hidden="true"
+              <div className={styles.body}>
+                <div>
+                  <div className={styles.col}>
+                    <h4 className={styles.label}>Problem</h4>
+                    <p className={styles.text}>{rich(p.problem)}</p>
+                  </div>
+                  <div className={styles.col}>
+                    <h4 className={styles.label}>What I Did</h4>
+                    <p className={styles.text}>{rich(p.whatIDid)}</p>
+                  </div>
+                  <div className={styles.col}>
+                    <h4 className={styles.label}>Outcome</h4>
+                    <p className={styles.text}>{rich(p.outcome)}</p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className={styles.media}
+                  onClick={() => count(j)}
+                  onPointerMove={follow}
+                  onPointerLeave={unfollow}
                 >
-                  {p.demo.to}
-                  {p.demo.suffix}
-                </span>
-                {p.demo.bar && (
-                  <span className={styles.bar} aria-hidden="true">
-                    <span
-                      ref={(b) => {
-                        bars.current[j] = b;
-                      }}
-                      className={styles.fill}
-                      style={{ "--v": p.demo.to / 100 } as CSSProperties}
-                    />
+                  <span className="sr-only">{p.outcome.replace(/\*\*/g, "")}. </span>
+                  <span
+                    ref={(n) => {
+                      nums.current[j] = n;
+                    }}
+                    className={styles.num}
+                    aria-hidden="true"
+                  >
+                    {p.demo.to}
+                    {p.demo.suffix}
                   </span>
-                )}
-                <span className={styles.hint}>Tap to replay</span>
-              </button>
+                  {p.demo.bar && (
+                    <span className={styles.bar} aria-hidden="true">
+                      <span
+                        ref={(b) => {
+                          bars.current[j] = b;
+                        }}
+                        className={styles.fill}
+                        style={{ "--v": p.demo.to / 100 } as CSSProperties}
+                      />
+                    </span>
+                  )}
+                  <span className={styles.hint}>Tap to replay</span>
+                </button>
+              </div>
             </article>
-
-            {/* The card's own crane, perched on its bottom-right corner (a point at the foot). */}
-            <span
-              ref={(el) => {
-                perches.current[j] = el;
-              }}
-              className={styles.perch}
-              aria-hidden="true"
-            >
-              <CardPuff at={j} size={craneWidth} />
-              <span
-                ref={(el) => {
-                  flies.current[j] = el;
-                }}
-                className={styles.fly}
-              >
-                <Image
-                  src="/assets/crane-sm.webp"
-                  alt=""
-                  width={320}
-                  height={236}
-                  quality={90}
-                  sizes="(max-width: 767px) 12vw, 80px"
-                  className={styles.craneArt}
-                />
-              </span>
-            </span>
           </li>
         ))}
       </ol>
+
+      {/* The crane's perch: holds still at the cards' bottom-right corner while they scroll under. */}
+      <div className={styles.perchRow} aria-hidden="true">
+        <span ref={perch} className={styles.perch}>
+          <PerchPuff size={craneWidth} />
+          <span ref={fly} className={styles.fly}>
+            <Image
+              src="/assets/crane-sm.webp"
+              alt=""
+              width={320}
+              height={236}
+              quality={90}
+              sizes="(max-width: 767px) 12vw, 80px"
+              className={styles.craneArt}
+            />
+          </span>
+        </span>
+      </div>
 
       <div ref={view} className={styles.view} aria-hidden="true">
         View ↗

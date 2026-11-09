@@ -1,10 +1,15 @@
-/* Case study cards (layout from the step 3a card reference). Each card is one sticky element;
-   later cards slide up over earlier ones. Sticky tops are fitted by Projects.tsx. Only transform
-   and opacity animate, and only from JS (Web Animations). */
+/* Case study cards (layout from the step 3a card reference, v2). One card per screen: each slot is
+   sticky and fills the viewport, so the next card slides up over the last as you scroll. The crane
+   sits on a fixed perch at the cards' bottom-right corner; the cards scroll underneath it.
+   Only transform and opacity animate (the crane flight and demo bars, from Projects.tsx). */
 
 .work {
+  --pad-top: 96px; /* nav + tab + counter */
+  --pad-bottom: 28px;
+  --avail: calc(100svh - var(--pad-top) - var(--pad-bottom));
+  --card-h: var(--avail); /* mobile: the card fills the screen */
   position: relative;
-  padding: 110px var(--gutter) 20vh;
+  padding: 0 var(--gutter);
 }
 
 .stack {
@@ -14,99 +19,116 @@
   list-style: none;
 }
 
+/* One screen per card. Opaque, so the card underneath is fully covered. */
 .slot {
   position: sticky;
-  top: calc(88px + var(--i) * 14px); /* refined by Projects.tsx */
-  padding-top: 30px; /* room for the folder tab */
-}
-
-.slot + .slot {
-  margin-top: 12vh;
+  top: 0; /* Projects.tsx lowers it for a card taller than the screen */
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  padding: var(--pad-top) 0 var(--pad-bottom);
+  background: var(--red);
 }
 
 /* ---------- Card ---------- */
 .card {
+  --line: color-mix(in srgb, var(--gold) 40%, var(--cream));
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 20px 20px 20px;
-  border-radius: 0 18px 18px 18px;
+  height: var(--card-h);
+  min-height: fit-content;
+  margin: auto 0;
+  padding: 22px 20px 20px;
+  border: 2px solid var(--line);
+  border-radius: 0 16px 16px 16px;
   background: var(--cream);
   color: var(--ink);
-  box-shadow: 0 18px 40px color-mix(in srgb, var(--ink) 22%, transparent);
 }
 
-/* Folder tab: same paper as the card, sits on its top edge. */
+/* Folder tab, outlined like the card; its paper covers the card's top border beneath it. */
 .tab {
   position: absolute;
-  left: 0;
-  bottom: calc(100% - 1px);
+  left: -2px;
+  bottom: calc(100% - 2px);
   display: flex;
   align-items: center;
-  height: 30px;
-  min-width: 96px;
-  padding: 0 28px 0 16px;
-  border-radius: 12px 18px 0 0;
+  width: 120px;
+  height: 32px;
+  padding: 0 16px;
+  border: 2px solid var(--line);
+  border-bottom: 0;
+  border-radius: 12px 12px 0 0;
   background: var(--cream);
   font: 500 12px/1 var(--font-mono);
   letter-spacing: 0.06em;
 }
 
+/* "01 / 03", faint, above the card's top-right corner. */
 .count {
   position: absolute;
-  top: 14px;
-  right: 20px;
-  font: 500 11px/1 var(--font-mono);
+  right: 4px;
+  bottom: calc(100% + 10px);
+  color: var(--cream);
+  font: 500 12px/1 var(--font-mono);
   letter-spacing: 0.08em;
-  opacity: 0.62;
+  opacity: 0.8;
 }
 
 .title {
-  max-width: 30ch;
-  padding-right: 56px; /* clear of the counter */
-  font-size: clamp(22px, 2.6vw, 36px);
+  font-size: clamp(22px, 2.8vw, 40px);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.12;
   text-wrap: balance;
 }
 
-.cols {
-  display: grid;
-  gap: 14px;
+/* Text column, then media (stacked on mobile, side by side on desktop). */
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 0;
   margin-top: 18px;
 }
 
+.col + .col {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1.5px solid var(--line);
+}
+
 .label {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   letter-spacing: 0;
   line-height: 1.3;
 }
 
-.body {
+.text {
   margin-top: 6px;
   font-size: 16px;
-  line-height: 1.45;
-  color: color-mix(in srgb, var(--ink) 82%, var(--cream));
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ink) 80%, var(--cream));
 }
 
-.body strong {
+.text strong {
   font-weight: 700;
   color: var(--ink);
 }
 
-/* ---------- Media area: holds the metric demo for now ---------- */
+/* ---------- Media: holds the metric demo for now ---------- */
 .media {
   display: grid;
+  flex: 1;
   place-content: center;
   justify-items: center;
   width: 100%;
-  height: clamp(150px, 24vh, 300px);
-  margin-top: 18px;
+  min-height: 140px;
   border: 0;
-  border-radius: 10px;
-  background: var(--back);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--ink) 9%, var(--cream));
   color: var(--ink);
   font: inherit;
   text-align: center;
@@ -123,7 +145,7 @@
 .num {
   display: block;
   color: var(--red);
-  font-size: clamp(48px, 8vw, 110px);
+  font-size: clamp(48px, 7vw, 110px);
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.04em;
@@ -136,7 +158,7 @@
   height: 10px;
   margin-top: 10px;
   border-radius: 9px;
-  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
   overflow: hidden;
 }
 
@@ -155,21 +177,31 @@
   font: 500 11px/1 var(--font-mono);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  opacity: 0.72;
+  opacity: 0.75;
 }
 
-/* ---------- Card crane ----------
-   .perch is a fixed point at the crane's foot on the card's bottom-right corner (never moves).
-   .fly is what animates; the art hangs off it so its foot (31% across, bottom edge) is the point. */
+/* ---------- The crane's perch ----------
+   Sticky to the bottom of the screen for as long as the section is on screen, so it holds still
+   while cards scroll under it, and leaves with the last card. The point is the crane's foot,
+   on the bottom-right corner of the card area. */
+.perchRow {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  max-width: 1100px;
+  height: 0;
+  margin: 0 auto;
+  pointer-events: none;
+}
+
 .perch {
-  --cw: clamp(40px, 3.75vw, 54px); /* desktop: 0.8 × the hero crane */
+  --cw: clamp(56px, 7.5vw, 110px); /* reference: about 9% of the card width */
   position: absolute;
-  right: 40px;
-  bottom: -6px;
-  z-index: 2;
+  right: calc(var(--cw) * 0.55);
+  /* the card's bottom edge: bottom padding plus half the slack around a shorter card */
+  bottom: calc(var(--pad-bottom) + (var(--avail) - var(--card-h)) / 2);
   width: 0;
   height: 0;
-  pointer-events: none;
 }
 
 .fly {
@@ -178,7 +210,7 @@
   top: 0;
   width: 0;
   height: 0;
-  opacity: 0; /* shown by Projects.tsx when the crane is here */
+  opacity: 0; /* shown by Projects.tsx once the crane is here */
   transition: opacity 0.2s var(--ease-out);
   will-change: transform;
 }
@@ -189,8 +221,8 @@
   bottom: 0;
   display: block;
   width: var(--cw);
-  height: auto;
   max-width: none;
+  height: auto;
 }
 
 /* ---------- "View ↗" bubble (desktop pointers only, moved by Projects.tsx) ---------- */
@@ -214,42 +246,40 @@
 }
 
 @media (min-width: 768px) {
-  .slot + .slot {
-    margin-top: 18vh;
+  .work {
+    --pad-top: 104px;
+    --pad-bottom: 32px;
+    /* reference card is about 1.8:1; never taller than the screen allows */
+    --card-h: min(var(--avail), calc(min(1100px, 100vw - 2 * var(--gutter)) / 1.75));
   }
 
   .card {
-    padding: 30px 36px 32px;
-    border-radius: 0 22px 22px 22px;
+    padding: 30px 40px 40px;
+    border-radius: 0 18px 18px 18px;
   }
 
   .tab {
-    min-width: 150px; /* reference: about 1/6 of the card width */
-  }
-
-  .media {
-    height: clamp(200px, 34vh, 340px); /* reference: card about 1.8:1 */
-  }
-
-  .count {
-    top: 18px;
-    right: 28px;
-  }
-
-  .cols {
-    grid-template-columns: 1fr 1.6fr 1fr;
-    gap: 0;
-    margin-top: 22px;
-  }
-
-  /* Hairline dividers between the three columns, as in the reference. */
-  .col + .col {
-    margin-left: 24px;
-    padding-left: 24px;
-    border-left: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+    width: 160px;
   }
 
   .body {
-    font-size: 15px;
+    display: grid;
+    grid-template-columns: minmax(0, 0.62fr) minmax(0, 1fr);
+    gap: 48px;
+    margin-top: 32px;
+  }
+
+  .col + .col {
+    margin-top: 18px;
+    padding-top: 18px;
+  }
+
+  .label {
+    font-size: 18px;
+  }
+
+  .media {
+    height: 100%;
+    min-height: 0;
   }
 }
