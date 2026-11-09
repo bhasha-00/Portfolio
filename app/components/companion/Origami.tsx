@@ -32,6 +32,9 @@ export default function Origami({ className, children }: { className?: string; c
   const rest = (i: number) => {
     const s = svg.current, w = world.current, r = art.current;
     if (!s || !w || !r) return;
+    // Only the live drawing belongs here: drop any crossfade copy an interrupted fold left behind.
+    [...s.children].forEach((el) => el !== w && el.remove());
+    w.style.opacity = "1";
     s.style.transition = r.style.transition = "none";
     s.style.transform = "";
     if (i === 0) {

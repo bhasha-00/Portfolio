@@ -139,7 +139,13 @@ export function play(svg: SVGSVGElement, world: SVGGElement, steps: Step[], k: C
 
   const next = (now: number) => {
     i++;
-    if (i >= steps.length) return done();
+    if (i >= steps.length) {
+      // A short last step can end before its crossfade does: never leave the old frame behind.
+      ghost?.remove();
+      ghost = null;
+      world.style.opacity = "1";
+      return done();
+    }
     if (steps[i].pop) {
       ghost?.remove();
       ghost = world.cloneNode(true) as SVGGElement;
