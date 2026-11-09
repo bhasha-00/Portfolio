@@ -4,7 +4,7 @@
    Only transform and opacity animate (the crane flight and demo bars, from Projects.tsx). */
 
 .work {
-  --pad-top: 96px; /* nav + tab + counter */
+  --pad-top: 112px; /* nav + room for the crane perched on the card's top edge */
   --pad-bottom: 28px;
   --avail: calc(100svh - var(--pad-top) - var(--pad-bottom));
   --card-h: var(--avail); /* mobile: the card fills the screen */
@@ -19,7 +19,7 @@
   list-style: none;
 }
 
-/* One screen per card. Opaque, so the card underneath is fully covered. */
+/* One screen per card. Transparent: the next card slides straight over the last one. */
 .slot {
   position: sticky;
   top: 0; /* Projects.tsx lowers it for a card taller than the screen */
@@ -27,7 +27,11 @@
   flex-direction: column;
   min-height: 100svh;
   padding: var(--pad-top) 0 var(--pad-bottom);
-  background: var(--red);
+  pointer-events: none;
+}
+
+.slot > * {
+  pointer-events: auto;
 }
 
 /* ---------- Card ---------- */
@@ -73,13 +77,20 @@
   font: 500 12px/1 var(--font-mono);
   letter-spacing: 0.08em;
   opacity: 0.88; /* faint, but still 4.5:1 on red */
+  transition: opacity 0.2s var(--ease-out);
 }
 
+.card[data-covered] .count {
+  opacity: 0;
+}
+
+/* Type, from the card reference: title semibold at about 2.3× the body; labels body-sized and
+   medium in ink; body regular in a soft grey-ink, with highlights semibold. */
 .title {
-  font-size: clamp(22px, 2.8vw, 40px);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.12;
+  font-size: clamp(22px, 2.6vw, 38px);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
   text-wrap: balance;
 }
 
@@ -101,21 +112,21 @@
 
 .label {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .text {
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 16px;
-  line-height: 1.5;
-  color: color-mix(in srgb, var(--ink) 80%, var(--cream));
+  font-weight: 400;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--ink) 78%, var(--cream)); /* reference body grey #4E4E4E */
 }
 
 .text strong {
-  font-weight: 700;
-  color: var(--ink);
+  font-weight: 600;
 }
 
 /* ---------- Media: holds the metric demo for now ---------- */
@@ -181,25 +192,29 @@
 }
 
 /* ---------- The crane's perch ----------
-   Sticky to the bottom of the screen for as long as the section is on screen, so it holds still
-   while cards scroll under it, and leaves with the last card. The point is the crane's foot,
-   on the bottom-right corner of the card area. */
+   A screen-tall sticky layer that takes no space. It starts level with card 01, sticks with the
+   cards and leaves with the last one, so the crane holds still while cards slide under it.
+   The point is the crane's foot, on the card's top edge just left of the "01 / 03" label. */
 .perchRow {
   position: sticky;
-  bottom: 0;
+  top: 0;
   z-index: 5;
-  max-width: 1100px;
-  height: 0;
-  margin: 0 auto;
+  height: 100svh;
   pointer-events: none;
 }
 
+/* Card 01 overlaps the perch layer, so the layer takes no space but keeps its full height
+   (a sticky element is released by its margin box: it must leave with the last card). */
+.perchRow + .slot {
+  margin-top: -100svh;
+}
+
 .perch {
-  --cw: clamp(56px, 7.5vw, 110px); /* reference: about 9% of the card width */
+  --cw: clamp(56px, 7.5vw, 110px); /* reference: about 10% of the card width */
   position: absolute;
-  right: calc(var(--cw) * 0.55);
-  /* the card's bottom edge: bottom padding plus half the slack around a shorter card */
-  bottom: calc(var(--pad-bottom) + (var(--avail) - var(--card-h)) / 2);
+  right: calc(80px + var(--cw) * 0.69); /* crane's right edge meets the label */
+  /* the card's top edge: top padding plus half the slack around a shorter card */
+  top: calc(var(--pad-top) + (var(--avail) - var(--card-h)) / 2);
   width: 0;
   height: 0;
 }
@@ -274,8 +289,9 @@
     padding-top: 18px;
   }
 
-  .label {
-    font-size: 18px;
+  .label,
+  .text {
+    font-size: 17px;
   }
 
   .media {

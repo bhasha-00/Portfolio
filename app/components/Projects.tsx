@@ -214,6 +214,11 @@ export default function Projects() {
 
     const update = () => {
       raf = 0;
+      // A covered card hides its "01 / 03" label (it sits outside the card, under the next one's).
+      const tops = cards.current.map((c) => c?.getBoundingClientRect().top ?? 0);
+      cards.current.forEach((c, j) => {
+        if (c) c.toggleAttribute("data-covered", j < N - 1 && tops[j + 1] <= tops[j] + 2);
+      });
       const first = slots.current[0]?.getBoundingClientRect();
       let want = !!first && first.top < innerHeight * TRIGGER;
       if (html.dataset.intro !== "done") want = false; // nothing moves under the intro
@@ -264,6 +269,23 @@ export default function Projects() {
         Projects
       </h2>
       <ol className={styles.stack}>
+        {/* The crane's perch: holds still on the top card's top-right edge while cards slide under. */}
+        <li className={styles.perchRow} aria-hidden="true">
+          <span ref={perch} className={styles.perch}>
+            <PerchPuff size={craneWidth} />
+            <span ref={fly} className={styles.fly}>
+              <Image
+                src="/assets/crane-sm.webp"
+                alt=""
+                width={320}
+                height={236}
+                quality={90}
+                sizes="(max-width: 767px) 12vw, 80px"
+                className={styles.craneArt}
+              />
+            </span>
+          </span>
+        </li>
         {projects.map((p, j) => (
           <li
             key={j}
@@ -342,24 +364,6 @@ export default function Projects() {
           </li>
         ))}
       </ol>
-
-      {/* The crane's perch: holds still at the cards' bottom-right corner while they scroll under. */}
-      <div className={styles.perchRow} aria-hidden="true">
-        <span ref={perch} className={styles.perch}>
-          <PerchPuff size={craneWidth} />
-          <span ref={fly} className={styles.fly}>
-            <Image
-              src="/assets/crane-sm.webp"
-              alt=""
-              width={320}
-              height={236}
-              quality={90}
-              sizes="(max-width: 767px) 12vw, 80px"
-              className={styles.craneArt}
-            />
-          </span>
-        </span>
-      </div>
 
       <div ref={view} className={styles.view} aria-hidden="true">
         View ↗
