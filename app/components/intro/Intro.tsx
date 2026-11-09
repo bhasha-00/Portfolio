@@ -80,6 +80,7 @@ export default function Intro() {
       timers.push(
         window.setTimeout(() => {
           html.dataset.intro = "landing";
+          dispatchEvent(new Event("crane:land")); // landing puff (HeroTouchdown)
           w.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: "ease-in", fill: "forwards" });
         }, 560),
         window.setTimeout(finish, 900),

@@ -144,6 +144,7 @@ export default function Projects() {
       a.onfinish = () => {
         if (hop !== a) return;
         land(next, to);
+        if (next < 0) dispatchEvent(new Event("crane:land")); // landing puff back in the hero
         a.cancel();
         hop = bob = null;
       };

@@ -1,0 +1,55 @@
+/* Landing puff. A zero-size point at the touchdown spot; everything centres on it.
+   Only transform and opacity animate (from LandingPuff.tsx). */
+.root {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.puff,
+.shadow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0; /* until its animation starts, and for good with reduced motion */
+  will-change: transform, opacity;
+}
+
+/* Centred on the point with the `translate` property, so `transform` stays free for the animation. */
+.puff {
+  display: block;
+  translate: -50% -50%;
+}
+
+.puff svg {
+  display: block;
+  overflow: visible;
+}
+
+.puff circle {
+  fill: var(--back);
+}
+
+.stroked {
+  stroke: var(--ink);
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
+}
+
+.shadow {
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+/* Fixed blurs; the sharp one sits on top. Neither blur animates. */
+.soft {
+  filter: blur(4px);
+}
+
+.sharp {
+  filter: blur(1px);
+}

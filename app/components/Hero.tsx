@@ -1,4 +1,5 @@
 import Image from "next/image";
+import HeroTouchdown from "./HeroTouchdown";
 import styles from "./Hero.module.css";
 
 // Static home hero. Layout and spacing from reference/lofi-v4.html; type and colour from artdirection.md.
@@ -40,6 +41,8 @@ export default function Hero() {
             sizes="(max-width: 767px) 88vw, 640px"
             className={styles.art}
           />
+          {/* Landing puff at the crane's foot; before the crane in the DOM, so it sits underneath. */}
+          <HeroTouchdown />
           <div className={styles.crane} data-intro-target="">
             {/* Cast shadow from its own silhouette, thrown back-right from a top-left light:
                 a near, sharper layer and a far, softer one; plus the contact point at the foot. */}
