@@ -346,7 +346,18 @@ export default function Projects() {
                   </div>
                 </div>
 
-                {p.demo ? (
+                {p.image ? (
+                  <div className={`${styles.media} ${styles.shot}`} onPointerMove={follow} onPointerLeave={unfollow}>
+                    <Image
+                      src={p.image.src}
+                      alt={p.image.alt}
+                      fill
+                      quality={80}
+                      sizes="(max-width: 767px) 88vw, 560px"
+                      className={styles.shotImg}
+                    />
+                  </div>
+                ) : p.demo ? (
                   <button
                     type="button"
                     className={styles.media}

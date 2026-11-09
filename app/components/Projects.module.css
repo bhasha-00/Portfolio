@@ -303,4 +303,27 @@
     height: 100%;
     min-height: 0;
   }
+
+  /* Desktop: the full shot at its own proportions (2000 × 1360), never cropped. */
+  .media.shot {
+    flex: none;
+    align-self: start;
+    height: auto;
+    aspect-ratio: 2000 / 1360;
+  }
+}
+
+/* Case study image. Mobile: takes the room left in the card (at least 140px), cropped to fit,
+   so a card never grows taller than the screen. */
+.media.shot {
+  position: relative;
+  flex: 1;
+  min-height: 140px;
+  overflow: hidden;
+  cursor: default;
+}
+
+.shotImg {
+  object-fit: cover;
+  object-position: left center; /* keep each shot's headline in view when cropped */
 }
