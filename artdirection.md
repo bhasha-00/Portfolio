@@ -18,7 +18,8 @@ Feel: a precise, warm paper object. Bold red, hand-sketched, with one origami co
   --gold:#E8B04A;     /* paper, accents, large/decorative only */
   --green:#2E7D6B;    /* accent */
   --vermilion:#D9432F;/* accent */
-  --back:#FFF7E8;     /* paper back side in origami folds */
+  --back:#FFF7E8;     /* paper back side in origami folds; white rabbit paper */
+  --lime:#C8D52E;     /* parrot paper only (added 2026-11-10 at Bhasha's request) */
 }
 ```
 - Cream on red is about 5.8:1 (passes AA). Gold on red is about 3.6:1: use for large or decorative elements only, never body text.

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import HeroTouchdown from "./HeroTouchdown";
+import Origami from "./companion/Origami";
 import styles from "./Hero.module.css";
 
 // Static home hero. Layout and spacing from reference/lofi-v4.html; type and colour from artdirection.md.
@@ -50,16 +51,19 @@ export default function Hero() {
             <span className={`${styles.craneCast} ${styles.castNear}`}><span className={styles.castShape} /></span>
             <span className={styles.craneAmbient} />
             <span className={styles.craneFoot} />
-            <Image
-              src="/assets/crane-sm.webp"
-              alt=""
-              width={320}
-              height={236}
-              quality={90}
-              priority
-              sizes="(max-width: 767px) 12vw, 80px"
-              className={styles.craneArt}
-            />
+            {/* Tap to refold: crane → rabbit → parrot. */}
+            <Origami>
+              <Image
+                src="/assets/crane-sm.webp"
+                alt=""
+                width={320}
+                height={236}
+                quality={90}
+                priority
+                sizes="(max-width: 767px) 12vw, 80px"
+                className={styles.craneArt}
+              />
+            </Origami>
           </div>
         </div>
       </div>

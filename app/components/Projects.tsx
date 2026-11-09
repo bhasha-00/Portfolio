@@ -14,6 +14,7 @@ import {
 import { projects, type Project } from "../content/projects";
 import { controls, flightFrames, type Pt } from "./craneFlight";
 import LandingPuff from "./LandingPuff";
+import Origami from "./companion/Origami";
 import styles from "./Projects.module.css";
 
 const N = projects.length;
@@ -200,6 +201,7 @@ export default function Projects() {
       flight = null;
       el.style.transform = "";
       el.style.opacity = toPerch ? "1" : "0";
+      el.style.visibility = toPerch ? "visible" : "hidden";
       html.dataset.crane = toPerch ? "away" : "home";
     };
 
@@ -230,6 +232,7 @@ export default function Projects() {
       flight?.cancel();
       html.dataset.crane = "away";
       el.style.opacity = "1";
+      el.style.visibility = "visible";
       const anim = el.animate(flightFrames(P, s0, toPerch ? 1 : heroScale, !toPerch), {
         duration: 1100,
         easing: "linear",
@@ -243,6 +246,7 @@ export default function Projects() {
         el.style.transform = "";
         if (!toPerch) {
           el.style.opacity = "0";
+          el.style.visibility = "hidden";
           html.dataset.crane = "home";
         }
         dispatchEvent(new CustomEvent("crane:land", { detail: { at: toPerch ? "cards" : "hero" } }));
@@ -311,15 +315,18 @@ export default function Projects() {
           <span ref={perch} className={styles.perch}>
             <PerchPuff size={craneWidth} />
             <span ref={fly} className={styles.fly}>
-              <Image
-                src="/assets/crane-sm.webp"
-                alt=""
-                width={320}
-                height={236}
-                quality={90}
-                sizes="(max-width: 767px) 12vw, 80px"
-                className={styles.craneArt}
-              />
+              {/* Tap to refold: crane → rabbit → parrot (the same companion as in the hero). */}
+              <Origami className={styles.craneArt}>
+                <Image
+                  src="/assets/crane-sm.webp"
+                  alt=""
+                  width={320}
+                  height={236}
+                  quality={90}
+                  sizes="(max-width: 767px) 12vw, 80px"
+                  className={styles.craneImg}
+                />
+              </Origami>
             </span>
           </span>
         </li>

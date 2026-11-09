@@ -235,13 +235,19 @@
   will-change: transform;
 }
 
-.craneArt {
+.fly .craneArt {
   position: absolute;
   left: calc(var(--cw) * -0.31);
   bottom: 0;
   display: block;
   width: var(--cw);
   max-width: none;
+  height: auto;
+}
+
+.craneImg {
+  display: block;
+  width: 100%;
   height: auto;
 }
 

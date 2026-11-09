@@ -6,7 +6,8 @@
   --gold: #E8B04A;      /* paper, accents, large/decorative only */
   --green: #2E7D6B;     /* accent */
   --vermilion: #D9432F; /* accent */
-  --back: #FFF7E8;      /* paper back side in origami folds */
+  --back: #FFF7E8;      /* paper back side in origami folds; also the white rabbit's paper */
+  --lime: #C8D52E;      /* parrot paper (added 2026-11-10 at Bhasha's request) */
 
   /* Fonts (set by next/font in app/layout.tsx) */
   --font-sans: var(--font-geist), system-ui, sans-serif;

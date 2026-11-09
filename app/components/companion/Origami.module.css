@@ -1,0 +1,83 @@
+/* The companion. The root is the crane illustration's box (320 × 236); the fold drawing sits on
+   the same 200-unit grid as the intro, scaled and placed so the folded crane base lands exactly on
+   the illustration (body at 36% / 55%, about 95% of its height) and every shape stands on its foot
+   line. Numbers: 200 units = 160.6% of the box width; grid origin at -40.66% / -13.62%. */
+.root {
+  position: relative;
+  display: block;
+}
+
+.art {
+  display: block;
+}
+
+.svg {
+  position: absolute;
+  left: -40.66%;
+  top: -13.62%;
+  width: 160.6%;
+  height: auto;
+  aspect-ratio: 1;
+  overflow: visible;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Tap target: the illustration's box. */
+.hit {
+  position: absolute;
+  inset: -6px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hit:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 2px;
+}
+
+/* Paper per shape, and the fold engine's tones (as in the intro). */
+.gold {
+  fill: var(--gold);
+}
+
+.white {
+  fill: var(--back);
+}
+
+.lime {
+  fill: var(--lime);
+}
+
+.shade {
+  fill: var(--ink);
+}
+
+.lite {
+  fill: var(--back);
+}
+
+.edge {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.2px;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.crease {
+  stroke: var(--ink);
+  stroke-opacity: 0.5;
+  stroke-width: 0.8px;
+  vector-effect: non-scaling-stroke;
+}
+
+.shadow {
+  fill: var(--ink);
+  opacity: 0;
+  filter: blur(1.5px);
+}

@@ -204,6 +204,20 @@
 /* While the crane is perched on the Projects tabs, the companion there is the crane (Projects.tsx). */
 :global(html[data-crane="away"]) .crane {
   opacity: 0;
+  visibility: hidden; /* out of the tab order while the crane is on the cards */
+  transition:
+    opacity 0.3s var(--ease-out),
+    visibility 0s 0.3s;
+}
+
+/* The cast shadow is the crane's silhouette: it fades while the companion is another shape. */
+.craneCast {
+  transition: opacity 0.3s var(--ease-out);
+}
+
+:global(html[data-shape="rabbit"]) .craneCast,
+:global(html[data-shape="parrot"]) .craneCast {
+  opacity: 0;
 }
 
 /* ref .cue: left 7vw, bottom 22px, 12px, .14em tracking, .8 opacity */
