@@ -11,7 +11,7 @@
   position: relative;
   display: grid;
   gap: 48px;
-  max-width: 460px;
+  max-width: 520px;
   margin: 0 auto;
 }
 
@@ -131,13 +131,13 @@
     display: grid;
     place-items: center;
     height: 100vh;
-    padding: 64px var(--gutter) 24px;
+    padding: 64px 24px 24px; /* narrow sides: the cards are large */
     overflow: visible;
   }
 
   .stage {
     display: block;
-    width: min(100%, 1400px, (100vh - 88px) * 1522 / 768);
+    width: min(100%, 1600px, (100vh - 88px) * 1522 / 768);
     max-width: none;
     aspect-ratio: 1522 / 768;
     margin: 0;
@@ -147,7 +147,7 @@
     position: absolute;
     left: var(--x);
     top: var(--y);
-    width: 27.2%;
+    width: 29.3%; /* reference: 446 of 1522 */
     transform: translate(-50%, -50%);
   }
 }
