@@ -1,176 +1,111 @@
-/* Projects. Numbers marked "ref" come from reference/lofi-v4.html (.work, .pin, .deck, .ptab, .proj).
-   Two modes, set by Projects.tsx on the section:
-   - data-mode="stack": plain stacked cards (reduced motion, and before JS runs).
-   - data-mode="pin":   one pinned panel; scrolling steps through the cards.
-   Only transform and opacity animate. */
+/* Case study cards (layout from the step 3a card reference). Each card is one sticky element;
+   later cards slide up over earlier ones. Sticky tops are fitted by Projects.tsx. Only transform
+   and opacity animate, and only from JS (Web Animations). */
 
 .work {
   position: relative;
-  padding: 110px var(--gutter) 96px;
+  padding: 110px var(--gutter) 20vh;
 }
 
-.deck {
-  position: relative;
-  display: grid;
-  gap: 72px;
-  width: min(1100px, 100%); /* ref: min(1100px, 90vw) inside the gutters */
+.stack {
+  max-width: 1100px;
   margin: 0 auto;
-  padding-top: 40px;
+  padding: 0;
+  list-style: none;
 }
 
-.tabs,
-.count,
-.pet {
-  display: none;
+.slot {
+  position: sticky;
+  top: calc(88px + var(--i) * 14px); /* refined by Projects.tsx */
+  padding-top: 30px; /* room for the folder tab */
 }
 
-/* ---------- Folder tabs ---------- */
-.tab,
-.ownTab {
-  position: relative;
-  border: 0;
-  border-radius: 14px 14px 0 0; /* ref */
-  padding: 12px 16px 11px;
-  background: var(--cream);
-  color: var(--ink);
-  font: 500 13px/1 var(--font-sans); /* ref: 500 13px */
-  white-space: nowrap;
+.slot + .slot {
+  margin-top: 12vh;
 }
 
-.tabs {
-  position: absolute;
-  left: 0;
-  bottom: calc(100% - 1px); /* sits on the card's top edge */
-  z-index: 50;
-  gap: 4px; /* ref */
-}
-
-.tab {
-  cursor: pointer;
-  transform-origin: 50% 100%;
-  transition:
-    transform 0.6s var(--ease-out),
-    opacity 0.5s var(--ease-out);
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Earlier tabs turn grey: an ink layer fades in over the cream. */
-.tab::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: var(--ink);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s var(--ease-out);
-}
-
-.tabText {
-  position: relative;
-  transition: opacity 0.4s var(--ease-out);
-}
-
-.tab[data-s="hide"] {
-  transform: translateY(16px); /* ref */
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* A keyboard user can still reach a tab before it has slid in. */
-.tab[data-s="hide"]:focus-visible {
-  transform: none;
-  opacity: 1;
-}
-
-.tab[data-s="off"] {
-  transform: scale(0.9);
-}
-
-.tab[data-s="off"]::after {
-  opacity: 0.16;
-}
-
-.tab[data-s="off"] .tabText {
-  opacity: 0.8;
-}
-
-@media (hover: hover) {
-  .tab[data-s="off"]:hover::after {
-    opacity: 0.08;
-  }
-}
-
-/* Stacked mode: each card carries its own tab. */
-.ownTab {
-  position: absolute;
-  left: 0;
-  bottom: calc(100% - 1px);
-}
-
-/* ---------- Cards ---------- */
+/* ---------- Card ---------- */
 .card {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 18px; /* ref */
-  padding: 22px 20px 20px;
-  border-radius: 0 22px 22px 22px; /* ref */
+  padding: 20px 20px 20px;
+  border-radius: 0 18px 18px 18px;
   background: var(--cream);
   color: var(--ink);
-  box-shadow: 0 20px 40px color-mix(in srgb, var(--ink) 20%, transparent); /* ref #0003, in ink */
+  box-shadow: 0 18px 40px color-mix(in srgb, var(--ink) 22%, transparent);
 }
 
-/* Cards behind darken: an ink layer that fades in (replaces the prototype's filter: brightness). */
-.card::after {
-  content: "";
+/* Folder tab: same paper as the card, sits on its top edge. */
+.tab {
   position: absolute;
-  inset: 0;
-  z-index: 2;
-  border-radius: inherit;
-  background: var(--ink);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.6s var(--ease-out);
+  left: 0;
+  bottom: calc(100% - 1px);
+  display: flex;
+  align-items: center;
+  height: 30px;
+  min-width: 96px;
+  padding: 0 28px 0 16px;
+  border-radius: 12px 18px 0 0;
+  background: var(--cream);
+  font: 500 12px/1 var(--font-mono);
+  letter-spacing: 0.06em;
 }
 
-.info {
+.count {
+  position: absolute;
+  top: 14px;
+  right: 20px;
+  font: 500 11px/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  opacity: 0.62;
+}
+
+.title {
+  max-width: 30ch;
+  padding-right: 56px; /* clear of the counter */
+  font-size: clamp(22px, 2.6vw, 36px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.cols {
   display: grid;
-  gap: 12px;
+  gap: 14px;
+  margin-top: 18px;
 }
 
 .label {
-  display: block;
-  font: 500 11px/1.2 var(--font-mono);
-  letter-spacing: 0.1em; /* ref */
-  text-transform: uppercase;
-  opacity: 0.72;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.3;
 }
 
-.value {
-  margin: 5px 0 0;
-  font-size: clamp(18px, 2.2vw, 28px); /* ref */
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-
-.summary {
+.body {
   margin-top: 6px;
   font-size: 16px;
   line-height: 1.45;
-  opacity: 0.8;
+  color: color-mix(in srgb, var(--ink) 82%, var(--cream));
 }
 
-/* ---------- Metric demo ---------- */
-.demo {
+.body strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ---------- Media area: holds the metric demo for now ---------- */
+.media {
   display: grid;
   place-content: center;
   justify-items: center;
-  min-height: 200px;
   width: 100%;
+  height: clamp(150px, 24vh, 300px);
+  margin-top: 18px;
   border: 0;
-  border-radius: 16px; /* ref */
+  border-radius: 10px;
   background: var(--back);
   color: var(--ink);
   font: inherit;
@@ -181,18 +116,14 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.demo:disabled {
-  cursor: default;
-}
-
-.demo:focus-visible {
+.media:focus-visible {
   outline-color: var(--ink);
 }
 
 .num {
   display: block;
   color: var(--red);
-  font-size: clamp(56px, 11vw, 140px); /* ref */
+  font-size: clamp(48px, 8vw, 110px);
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.04em;
@@ -201,7 +132,7 @@
 
 .bar {
   display: block;
-  width: min(200px, 60vw); /* ref 200px */
+  width: min(200px, 60vw);
   height: 10px;
   margin-top: 10px;
   border-radius: 9px;
@@ -219,7 +150,7 @@
 }
 
 .hint {
-  display: none;
+  display: block;
   margin-top: 10px;
   font: 500 11px/1 var(--font-mono);
   letter-spacing: 0.1em;
@@ -227,117 +158,39 @@
   opacity: 0.72;
 }
 
-/* ---------- Pinned panel ---------- */
-.work[data-mode="pin"] {
-  height: calc(100svh + var(--n) * 75svh); /* mobile: shorter run per project, normal scroll feel */
-  padding: 0;
-}
-
-[data-mode="pin"] .pin {
-  position: sticky;
-  top: 0;
-  display: grid;
-  place-items: center;
-  height: 100svh;
-  padding: 44px var(--gutter) 0; /* ref padding-top 44px, clears the nav */
-}
-
-[data-mode="pin"] .deck {
-  display: block;
-  height: min(calc(100svh - 220px), 600px);
-  margin: 0;
-  padding: 0;
-}
-
-[data-mode="pin"] .tabs {
-  display: flex;
-}
-
-[data-mode="pin"] .ownTab {
-  display: none;
-}
-
-[data-mode="pin"] .card {
+/* ---------- Card crane ----------
+   .perch is a fixed point at the crane's foot on the card's bottom-right corner (never moves).
+   .fly is what animates; the art hangs off it so its foot (31% across, bottom edge) is the point. */
+.perch {
+  --cw: clamp(40px, 3.75vw, 54px); /* desktop: 0.8 × the hero crane */
   position: absolute;
-  inset: 0;
-  z-index: var(--i);
-  transition: transform 0.9s var(--ease-out); /* ref */
-}
-
-[data-mode="pin"] .card[data-s="after"] {
-  transform: translateY(125%); /* ref 112%: lowered so the next card only peeks, clear of the counter */
-}
-
-[data-mode="pin"] .card[data-s="before"] {
-  transform: translateY(calc(var(--d) * -9px)) scale(calc(1 - var(--d) * 0.025)); /* ref */
-}
-
-[data-mode="pin"] .card[data-s="before"]::after {
-  opacity: calc(var(--d) * 0.1);
-}
-
-[data-mode="pin"] .demo {
-  flex: 1;
-  min-height: 0;
-}
-
-[data-mode="pin"] .hint {
-  display: block;
-}
-
-[data-mode="pin"] .count {
-  display: block;
-  position: absolute;
-  right: var(--gutter);
-  bottom: calc(22px + env(safe-area-inset-bottom, 0px)); /* ref */
-  font-size: 18px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-/* ---------- Companion crane ----------
-   A zero-size point at the crane's foot; Projects.tsx moves it with transform. The art hangs off
-   it so the foot (31% across, the bottom edge) sits on the point. */
-[data-mode="pin"] .pet {
-  --cw: clamp(40px, 4.4vw, 60px);
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 60;
+  right: 40px;
+  bottom: -6px;
+  z-index: 2;
   width: 0;
   height: 0;
-  opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s var(--ease-out);
 }
 
-.petHop {
+.fly {
   position: absolute;
   left: 0;
   top: 0;
+  width: 0;
+  height: 0;
+  opacity: 0; /* shown by Projects.tsx when the crane is here */
+  transition: opacity 0.2s var(--ease-out);
+  will-change: transform;
 }
 
-.petArt {
+.craneArt {
   position: absolute;
   left: calc(var(--cw) * -0.31);
   bottom: 0;
   display: block;
   width: var(--cw);
   height: auto;
-}
-
-/* Contact shadow where the foot touches the tab. Static. */
-.petFoot {
-  position: absolute;
-  left: calc(var(--cw) * -0.16);
-  top: -3px;
-  width: calc(var(--cw) * 0.36);
-  height: 5px;
-  border-radius: 50%;
-  background: var(--ink);
-  opacity: 0.35;
-  filter: blur(1.5px);
+  max-width: none;
 }
 
 /* ---------- "View ↗" bubble (desktop pointers only, moved by Projects.tsx) ---------- */
@@ -348,7 +201,7 @@
   z-index: 65;
   display: grid;
   place-items: center;
-  width: 90px; /* ref */
+  width: 90px;
   height: 90px;
   border-radius: 50%;
   background: var(--ink);
@@ -357,32 +210,46 @@
   font-weight: 500;
   pointer-events: none;
   transform: translate(-200px, -200px) scale(0);
-  transition: transform 0.14s ease-out; /* ref */
+  transition: transform 0.14s ease-out;
 }
 
 @media (min-width: 768px) {
+  .slot + .slot {
+    margin-top: 18vh;
+  }
+
   .card {
-    padding: 24px 28px; /* ref */
+    padding: 30px 36px 32px;
+    border-radius: 0 22px 22px 22px;
   }
 
-  .info {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px; /* ref */
+  .tab {
+    min-width: 150px; /* reference: about 1/6 of the card width */
   }
 
-  .demo {
-    min-height: 280px;
+  .media {
+    height: clamp(200px, 34vh, 340px); /* reference: card about 1.8:1 */
   }
 
-  .work[data-mode="pin"] {
-    height: calc(100vh + var(--n) * 100vh); /* ref 400vh for 3 */
+  .count {
+    top: 18px;
+    right: 28px;
   }
 
-  [data-mode="pin"] .pin {
-    height: 100vh;
+  .cols {
+    grid-template-columns: 1fr 1.6fr 1fr;
+    gap: 0;
+    margin-top: 22px;
   }
 
-  [data-mode="pin"] .deck {
-    height: min(66vh, 540px); /* ref */
+  /* Hairline dividers between the three columns, as in the reference. */
+  .col + .col {
+    margin-left: 24px;
+    padding-left: 24px;
+    border-left: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  }
+
+  .body {
+    font-size: 15px;
   }
 }

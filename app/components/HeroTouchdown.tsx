@@ -14,7 +14,8 @@ export default function HeroTouchdown() {
   const [burst, setBurst] = useState<{ n: number; size: number } | null>(null);
 
   useEffect(() => {
-    const land = () => {
+    const land = (e: Event) => {
+      if (typeof (e as CustomEvent).detail?.at === "number") return; // a card landing, not ours
       const size = spot.current?.offsetWidth ?? 0;
       if (size) setBurst((b) => ({ n: (b?.n ?? 0) + 1, size }));
     };
