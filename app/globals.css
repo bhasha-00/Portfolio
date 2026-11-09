@@ -15,9 +15,6 @@
   /* Layout, from reference/lofi-v4.html */
   --gutter: 6vw;
   --nav-top: calc(14px + env(safe-area-inset-top, 0px));
-  /* Mobile: the hero gives up this much height so the Projects peek (tab 36px + 16px of card)
-     sits below the art. Desktop keeps a full-height hero; the peek overlaps its bottom edge. */
-  --hero-shrink: 52px;
 
   /* Motion */
   --ease-out: cubic-bezier(.2, .8, .2, 1);
@@ -47,12 +44,6 @@ body {
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
   -webkit-font-smoothing: antialiased;
-}
-
-@media (min-width: 768px) {
-  :root {
-    --hero-shrink: 0px;
-  }
 }
 
 h1, h2, h3 {

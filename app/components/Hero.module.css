@@ -3,8 +3,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - var(--hero-shrink));
-  min-height: calc(100svh - var(--hero-shrink));
+  min-height: 100vh;
+  min-height: 100svh;
   padding: 110px var(--gutter) 0; /* ref .hero */
   overflow: hidden;
 }
@@ -203,6 +203,20 @@
 /* While the crane is perched on the Projects tabs, the companion there is the crane (Projects.tsx). */
 :global(html[data-crane="away"]) .crane {
   opacity: 0;
+}
+
+/* ref .cue: left 7vw, bottom 22px, 12px, .14em tracking, .8 opacity */
+.cue {
+  position: absolute;
+  left: 7vw;
+  bottom: 22px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  z-index: 2;
 }
 
 @media (min-width: 768px) {
