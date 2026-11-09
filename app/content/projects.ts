@@ -29,7 +29,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     name: "LSNeo Lite",
-    title: "Cataloguing a book went from a 10-minute guess to a scan and confirm",
+    title: "Simplified cataloguing from 10 minute guesswork to a scan and confirm flow",
     problem: "Librarians added 300-400 books a batch, 5-10 minutes each. Incomplete records broke search.",
     whatIDid:
       "Talked to librarians to find what slowed them down. Merged 7 ways of adding a book into one scan-and-confirm flow, with every state documented for handoff.",
@@ -38,6 +38,7 @@ export const projects: Project[] = [
   },
   {
     name: "Design system",
+    title: "Turned static frames into a tokenized design system",
     problem:
       "Every designer drew their own components, with no tokens or variants. A new designer took a month or more to match the look.",
     whatIDid: "Listed every existing element and when to use each. Built a 3-layer token system: Brand → Alias → Mapped.",
@@ -46,6 +47,7 @@ export const projects: Project[] = [
   },
   {
     name: "Chatbot",
+    title: "Optimizing response syntax for chatbot adoption",
     problem:
       "Lack of query guidance led admins to enter vague queries, while unclear errors left users unsure of the bot’s capabilities and limitations.",
     whatIDid:
@@ -55,6 +57,7 @@ export const projects: Project[] = [
   },
   {
     name: "NOVA",
+    title: "From firefighting to foresight : Making batch load visible before it overloads the system",
     problem:
       "A 30-year-old platform was struggling at scale. One batch could stall 300,000 reports, and the ops team spent its days firefighting.",
     whatIDid:
@@ -65,6 +68,7 @@ export const projects: Project[] = [
   },
   {
     name: "BlaBlaCar (concept)",
+    title: "Redesigning the search to evaluation journey to improve activation",
     problem:
       "Riders couldn’t tell if a ride fit their route. Checking meant leaving the app, and nothing remembered the answer for the next trip.",
     whatIDid:

@@ -88,7 +88,7 @@
   font-weight: 600;
   letter-spacing: -0.015em;
   line-height: 1.2;
-  text-wrap: balance;
+  width: 100%; /* titles run the full width of the card */
 }
 
 /* Text column, then media (stacked on mobile, side by side on desktop). */
