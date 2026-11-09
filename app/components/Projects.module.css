@@ -44,24 +44,21 @@
   min-height: fit-content;
   margin: auto 0;
   padding: 22px 20px 20px;
-  border: 2px solid var(--line);
   border-radius: 0 16px 16px 16px;
   background: var(--cream);
   color: var(--ink);
 }
 
-/* Folder tab, outlined like the card; its paper covers the card's top border beneath it. */
+/* Folder tab, same paper as the card, sitting on its top edge. */
 .tab {
   position: absolute;
-  left: -2px;
-  bottom: calc(100% - 2px);
+  left: 0;
+  bottom: calc(100% - 1px);
   display: flex;
   align-items: center;
   width: 120px;
   height: 32px;
   padding: 0 16px;
-  border: 2px solid var(--line);
-  border-bottom: 0;
   border-radius: 12px 12px 0 0;
   background: var(--cream);
   font: 500 12px/1 var(--font-mono);
@@ -127,6 +124,14 @@
 
 .text strong {
   font-weight: 600;
+}
+
+.note {
+  margin-top: 6px;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--ink) 72%, var(--cream));
 }
 
 /* ---------- Media: holds the metric demo for now ---------- */
@@ -199,14 +204,14 @@
   position: sticky;
   top: 0;
   z-index: 5;
-  height: 100svh;
+  height: var(--slot-h, 100svh); /* same as a card slot, set by Projects.tsx */
   pointer-events: none;
 }
 
 /* Card 01 overlaps the perch layer, so the layer takes no space but keeps its full height
    (a sticky element is released by its margin box: it must leave with the last card). */
 .perchRow + .slot {
-  margin-top: -100svh;
+  margin-top: calc(-1 * var(--slot-h, 100svh));
 }
 
 .perch {

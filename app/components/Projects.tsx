@@ -52,6 +52,8 @@ export default function Projects() {
   const slots = useRef<(HTMLLIElement | null)[]>([]);
   const cards = useRef<(HTMLElement | null)[]>([]);
   const perch = useRef<HTMLSpanElement>(null);
+  const work = useRef<HTMLElement>(null);
+  const perchRow = useRef<HTMLLIElement>(null);
   const fly = useRef<HTMLSpanElement>(null);
   const nums = useRef<(HTMLSpanElement | null)[]>([]);
   const bars = useRef<(HTMLSpanElement | null)[]>([]);
@@ -73,13 +75,16 @@ export default function Projects() {
   const show = useCallback((j: number, v: number) => {
     const d = projects[j].demo;
     const n = nums.current[j];
-    if (n) n.textContent = `${Math.round(v)}${d.suffix ?? ""}`;
+    if (!d) return;
+    if (n) n.textContent = `${d.prefix ?? ""}${Math.round(v)}${d.suffix ?? ""}`;
     bars.current[j]?.style.setProperty("--v", String(clamp(v / 100, 0, 1)));
   }, []);
 
   const count = useCallback(
     (j: number) => {
-      const { from, to } = projects[j].demo;
+      const d = projects[j].demo;
+      if (!d) return;
+      const { from, to } = d;
       cancelAnimationFrame(counts.current[j]);
       if (reduced) return show(j, to);
       show(j, from);
@@ -99,18 +104,31 @@ export default function Projects() {
     if (reduced === null) return;
     const raf = counts.current;
 
-    // A card taller than the screen sticks once its bottom is in view, so it is never cut off.
-    const fit = () =>
-      slots.current.forEach((s) => {
-        if (s) s.style.top = `${Math.min(0, innerHeight - s.offsetHeight)}px`;
-      });
+    // Every card gets the same fixed height (the tallest card's), so each one sticks in exactly the
+    // same place and the next covers it completely. A card taller than the screen sticks once its
+    // bottom is in view, so it is never cut off. The crane's perch follows the same numbers.
+    const fit = () => {
+      const w = work.current, row = perchRow.current, pt = perch.current, first = slots.current[0];
+      const cs = cards.current.filter((c): c is HTMLElement => !!c);
+      if (!w || !row || !pt || !first || !cs.length) return;
+      w.style.removeProperty("--card-h");
+      const H = Math.ceil(Math.max(...cs.map((c) => c.offsetHeight)));
+      w.style.setProperty("--card-h", `${H}px`);
+      const st = getComputedStyle(first);
+      const padTop = parseFloat(st.paddingTop), padBottom = parseFloat(st.paddingBottom);
+      const slotH = Math.max(innerHeight, padTop + H + padBottom);
+      const top = `${Math.min(0, innerHeight - slotH)}px`;
+      w.style.setProperty("--slot-h", `${slotH}px`);
+      slots.current.forEach((s) => s && (s.style.top = top));
+      row.style.top = top;
+      pt.style.top = `${padTop + Math.max(0, (innerHeight - padTop - padBottom - H) / 2)}px`;
+    };
     fit();
-    const ro = new ResizeObserver(fit);
-    slots.current.forEach((s) => s && ro.observe(s));
+    document.fonts?.ready.then(fit);
     addEventListener("resize", fit);
 
     // Demos: start once a card is over 60% visible; reset when it has left the screen.
-    projects.forEach((p, j) => show(j, reduced ? p.demo.to : p.demo.from));
+    projects.forEach((p, j) => p.demo && show(j, reduced ? p.demo.to : p.demo.from));
     const ran = projects.map(() => false);
     const io = new IntersectionObserver(
       (entries) => {
@@ -123,7 +141,7 @@ export default function Projects() {
           } else if (!e.isIntersecting && ran[j]) {
             ran[j] = false;
             cancelAnimationFrame(counts.current[j]);
-            if (!reduced) show(j, projects[j].demo.from);
+            if (!reduced) show(j, projects[j].demo?.from ?? 0);
           }
         }
       },
@@ -132,7 +150,6 @@ export default function Projects() {
     cards.current.forEach((c) => c && io.observe(c));
 
     return () => {
-      ro.disconnect();
       io.disconnect();
       removeEventListener("resize", fit);
       raf.forEach(cancelAnimationFrame);
@@ -264,13 +281,13 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className={styles.work} aria-labelledby="projects-title">
+    <section ref={work} id="projects" className={styles.work} aria-labelledby="projects-title">
       <h2 id="projects-title" className="sr-only">
         Projects
       </h2>
       <ol className={styles.stack}>
         {/* The crane's perch: holds still on the top card's top-right edge while cards slide under. */}
-        <li className={styles.perchRow} aria-hidden="true">
+        <li ref={perchRow} className={styles.perchRow} aria-hidden="true">
           <span ref={perch} className={styles.perch}>
             <PerchPuff size={craneWidth} />
             <span ref={fly} className={styles.fly}>
@@ -309,7 +326,7 @@ export default function Projects() {
                 {pad(j + 1)} / {pad(N)}
               </span>
               <h3 id={`project-${j}`} className={styles.title}>
-                {p.title}
+                {p.title ?? p.name}
               </h3>
 
               <div className={styles.body}>
@@ -325,40 +342,46 @@ export default function Projects() {
                   <div className={styles.col}>
                     <h4 className={styles.label}>Outcome</h4>
                     <p className={styles.text}>{rich(p.outcome)}</p>
+                    {p.note && <p className={styles.note}>{p.note}</p>}
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  className={styles.media}
-                  onClick={() => count(j)}
-                  onPointerMove={follow}
-                  onPointerLeave={unfollow}
-                >
-                  <span className="sr-only">{p.outcome.replace(/\*\*/g, "")}. </span>
-                  <span
-                    ref={(n) => {
-                      nums.current[j] = n;
-                    }}
-                    className={styles.num}
-                    aria-hidden="true"
+                {p.demo ? (
+                  <button
+                    type="button"
+                    className={styles.media}
+                    onClick={() => count(j)}
+                    onPointerMove={follow}
+                    onPointerLeave={unfollow}
                   >
-                    {p.demo.to}
-                    {p.demo.suffix}
-                  </span>
-                  {p.demo.bar && (
-                    <span className={styles.bar} aria-hidden="true">
-                      <span
-                        ref={(b) => {
-                          bars.current[j] = b;
-                        }}
-                        className={styles.fill}
-                        style={{ "--v": p.demo.to / 100 } as CSSProperties}
-                      />
+                    <span className="sr-only">{p.outcome.replace(/\*\*/g, "")}. </span>
+                    <span
+                      ref={(n) => {
+                        nums.current[j] = n;
+                      }}
+                      className={styles.num}
+                      aria-hidden="true"
+                    >
+                      {p.demo.prefix}
+                      {p.demo.to}
+                      {p.demo.suffix}
                     </span>
-                  )}
-                  <span className={styles.hint}>Tap to replay</span>
-                </button>
+                    {p.demo.bar && (
+                      <span className={styles.bar} aria-hidden="true">
+                        <span
+                          ref={(b) => {
+                            bars.current[j] = b;
+                          }}
+                          className={styles.fill}
+                          style={{ "--v": p.demo.to / 100 } as CSSProperties}
+                        />
+                      </span>
+                    )}
+                    <span className={styles.hint}>Tap to replay</span>
+                  </button>
+                ) : (
+                  <div className={styles.media} aria-hidden="true" onPointerMove={follow} onPointerLeave={unfollow} />
+                )}
               </div>
             </article>
           </li>
