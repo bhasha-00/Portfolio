@@ -336,7 +336,7 @@ export default function Projects() {
                     <p className={styles.text}>{rich(p.problem)}</p>
                   </div>
                   <div className={styles.col}>
-                    <h4 className={styles.label}>What I Did</h4>
+                    <h4 className={styles.label}>What I did</h4>
                     <p className={styles.text}>{rich(p.whatIDid)}</p>
                   </div>
                   <div className={styles.col}>

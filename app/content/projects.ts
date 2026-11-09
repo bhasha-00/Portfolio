@@ -1,5 +1,5 @@
 // Case study cards, in order. Edit freely: the cards and their metric demos are built from this
-// list. Wrap a phrase in **double asterisks** to make it bold.
+// list. Text is shown exactly as written here.
 
 export type Project = {
   /** Project name (shown as the title until a result-led `title` is written). */
@@ -30,18 +30,18 @@ export const projects: Project[] = [
   {
     name: "LSNeo Lite",
     title: "Cataloguing a book went from a 10-minute guess to a scan and confirm",
-    problem: "Librarians added 300-400 books a batch, **5-10 minutes each**. Incomplete records broke search.",
+    problem: "Librarians added 300-400 books a batch, 5-10 minutes each. Incomplete records broke search.",
     whatIDid:
       "Talked to librarians to find what slowed them down. Merged 7 ways of adding a book into one scan-and-confirm flow, with every state documented for handoff.",
-    outcome: "**~60-70%** less manual entry per title",
-    demo: { from: 0, to: 60, prefix: "~", suffix: "–70%", bar: true },
+    outcome: "~60-70% less manual entry per title",
+    demo: { from: 0, to: 60, prefix: "~", suffix: "-70%", bar: true },
   },
   {
     name: "Design system",
     problem:
-      "**Every designer drew their own components**, with no tokens or variants. A new designer took a month or more to match the look.",
+      "Every designer drew their own components, with no tokens or variants. A new designer took a month or more to match the look.",
     whatIDid: "Listed every existing element and when to use each. Built a 3-layer token system: Brand → Alias → Mapped.",
-    outcome: "**26 components**, each with real variants. **150+ variants** across width, state, icon, and helper text.",
+    outcome: "26 components, each with real variants. 150+ variants across width, state, icon, and helper text.",
     demo: { from: 0, to: 150, suffix: "+" },
   },
   {
@@ -50,7 +50,7 @@ export const projects: Project[] = [
       "Lack of query guidance led admins to enter vague queries, while unclear errors left users unsure of the bot’s capabilities and limitations.",
     whatIDid:
       "Reviewed the bot as a new user and watched real use. Redesigned the flow and responses, and set component rules the admin team adopted.",
-    outcome: "**~40%** fewer support queries",
+    outcome: "~40% fewer support queries",
     demo: { from: 0, to: 40, prefix: "~", suffix: "%" },
   },
   {
@@ -59,7 +59,7 @@ export const projects: Project[] = [
       "A 30-year-old platform was struggling at scale. One batch could stall 300,000 reports, and the ops team spent its days firefighting.",
     whatIDid:
       "Designed the module’s dashboards and workflows. Added a pipeline view that shows load against capacity, and widgets for frequent tasks, so work stays in one flow.",
-    outcome: "**6 → 3 clicks** on frequent tasks, and batch load is visible before it overloads.",
+    outcome: "6 → 3 clicks on frequent tasks, and batch load is visible before it overloads.",
     note: "*In client testing, not yet in production.",
     demo: { from: 6, to: 3, suffix: " clicks" },
   },
