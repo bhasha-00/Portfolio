@@ -220,6 +220,18 @@
   opacity: 0;
 }
 
+/* While the paper folds it is off the desk: no landing shadow until the new shape sits. */
+.craneAmbient,
+.craneFoot {
+  transition: opacity 0.25s var(--ease-out);
+}
+
+:global(html[data-folding]) .craneCast,
+:global(html[data-folding]) .craneAmbient,
+:global(html[data-folding]) .craneFoot {
+  opacity: 0;
+}
+
 /* ref .cue: left 7vw, bottom 22px, 12px, .14em tracking, .8 opacity */
 .cue {
   position: absolute;

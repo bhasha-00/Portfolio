@@ -53,7 +53,13 @@ export default function Origami({ className, children }: { className?: string; c
     if (!run.current) rest(shape);
   }, [shape]);
 
-  useEffect(() => () => run.current?.stop(), []);
+  useEffect(
+    () => () => {
+      run.current?.stop();
+      delete document.documentElement.dataset.folding;
+    },
+    [],
+  );
 
   const next = () => {
     // A tap mid-fold: count the shape in progress as reached and go on from there.
@@ -73,6 +79,8 @@ export default function Origami({ className, children }: { className?: string; c
     }
 
     const s = svg.current!, w = world.current!, r = art.current!;
+    // While the paper is moving there is no landing shadow; it returns once the shape sits.
+    document.documentElement.dataset.folding = "";
     const out = unfold(sequences[from]).map((st) => ({ ...st, d: st.d * UNFOLD }));
     // The first fold crossfades the paper colour (the square changes paper).
     const up = sequences[to].map((st, i) => ({ ...st, d: st.d * FOLD, pop: i === 0 || st.pop }));
@@ -106,6 +114,7 @@ export default function Origami({ className, children }: { className?: string; c
           window.setTimeout(() => {
             if (run.current?.to !== to) return;
             run.current = null;
+            delete document.documentElement.dataset.folding;
             setShape(to);
           }, 260),
         );
