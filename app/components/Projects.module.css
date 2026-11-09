@@ -72,7 +72,7 @@
   color: var(--cream);
   font: 500 12px/1 var(--font-mono);
   letter-spacing: 0.08em;
-  opacity: 0.8;
+  opacity: 0.88; /* faint, but still 4.5:1 on red */
 }
 
 .title {
