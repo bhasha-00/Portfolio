@@ -63,8 +63,6 @@ export default function Hero() {
           </div>
         </div>
       </div>
-
-      <p className={styles.cue}>Scroll for work</p>
     </section>
   );
 }

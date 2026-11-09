@@ -235,7 +235,8 @@ export default function Projects() {
                 }}
                 type="button"
                 className={styles.tab}
-                data-s={j > act ? "hide" : j === act ? "on" : "off"}
+                // Tab 01 shows from the start: it is part of the peek under the hero.
+                data-s={j > Math.max(act, 0) ? "hide" : j === Math.max(act, 0) ? "on" : "off"}
                 aria-current={j === act ? "true" : undefined}
                 onClick={() => jump(j)}
               >

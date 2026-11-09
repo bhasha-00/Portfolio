@@ -4,9 +4,17 @@
    - data-mode="pin":   one pinned panel; scrolling steps through the cards.
    Only transform and opacity animate. */
 
+/* Peek: the section is pulled up under the hero so the first card's tab and a 16px sliver of the
+   card sit at the bottom of the first screen. The pulled-up strip is transparent and takes no taps. */
 .work {
   position: relative;
+  margin-top: calc(var(--hero-shrink) - 110px - 40px - 16px); /* stack: padding + tab room + sliver */
   padding: 110px var(--gutter) 96px;
+  pointer-events: none;
+}
+
+.work :is(button, article) {
+  pointer-events: auto;
 }
 
 .deck {
@@ -229,7 +237,11 @@
 
 /* ---------- Pinned panel ---------- */
 .work[data-mode="pin"] {
+  --pin-h: 100svh;
+  --deck-h: min(calc(100svh - 220px), 600px);
   height: calc(100svh + var(--n) * 75svh); /* mobile: shorter run per project, normal scroll feel */
+  /* Pull up by the deck's top offset in the pin (44px pad + centring), plus the 16px sliver. */
+  margin-top: calc(var(--hero-shrink) - 16px - 44px - (var(--pin-h) - 44px - var(--deck-h)) / 2);
   padding: 0;
 }
 
@@ -238,13 +250,13 @@
   top: 0;
   display: grid;
   place-items: center;
-  height: 100svh;
+  height: var(--pin-h);
   padding: 44px var(--gutter) 0; /* ref padding-top 44px, clears the nav */
 }
 
 [data-mode="pin"] .deck {
   display: block;
-  height: min(calc(100svh - 220px), 600px);
+  height: var(--deck-h);
   margin: 0;
   padding: 0;
 }
@@ -375,14 +387,8 @@
   }
 
   .work[data-mode="pin"] {
+    --pin-h: 100vh;
+    --deck-h: min(66vh, 540px); /* ref */
     height: calc(100vh + var(--n) * 100vh); /* ref 400vh for 3 */
-  }
-
-  [data-mode="pin"] .pin {
-    height: 100vh;
-  }
-
-  [data-mode="pin"] .deck {
-    height: min(66vh, 540px); /* ref */
   }
 }
