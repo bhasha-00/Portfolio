@@ -29,13 +29,21 @@
   overflow: visible;
 }
 
-.puff circle {
+/* Cloud: --back body, a --cream shade along the underside (the image's pale band), ink outline. */
+.body {
   fill: var(--back);
 }
 
-.stroked {
+.under {
+  fill: var(--cream);
+}
+
+.line {
+  fill: none;
   stroke: var(--ink);
   stroke-width: 1.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
 }
 

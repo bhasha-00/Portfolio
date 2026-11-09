@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import styles from "./LandingPuff.module.css";
 
 type Props = {
@@ -9,21 +9,26 @@ type Props = {
   y: number;
   /** Crane width in px: puffs and shadow scale from it. */
   size: number;
-  /** 1.5px ink outline on each puff. */
+  /** 1.5px ink outline and inner curls on each cloud. On by default. */
   stroke?: boolean;
   /** Called once the burst has finished (or straight away with reduced motion). */
   onDone?: () => void;
 };
 
-const PUFFS = 5;
-const DUR = 600;
+const DUR = 1500; // slow and calm: the clouds drift out and settle, nothing snaps
+// Ring directions in degrees (0 = right, 90 = down): two clouds to each side, one tucked behind.
+const ANGLES = [195, 160, -15, 20, -95];
+// Cloud outline in a 120 × 76 box: flat-ish base, rounded bumps on top.
+const CLOUD =
+  "M22 64C10 64 5 53 12 46C8 34 21 26 32 31C34 17 52 11 62 21C71 9 93 13 93 29C106 27 115 40 107 50C113 59 105 67 95 65C89 73 71 73 64 67C56 73 39 73 34 66C29 69 22 68 22 64Z";
 const rand = (lo: number, hi: number) => lo + Math.random() * (hi - lo);
 
-// One landing burst under the crane's foot, seen from above: five paper-coloured puffs push out in
-// a ring and fade, while a contact shadow spreads and sharpens, then settles. Plays once, then
+// One landing under the crane's foot: small cartoon clouds drift gently out to the sides, swell a
+// little and fade, while a contact shadow spreads and sharpens, then settles. Plays once, then
 // unmounts itself. Web Animations only (cancelled on unmount), so re-mounting with a new `key`
 // interrupts a burst cleanly. Never takes taps, focus or space.
-export default function LandingPuff({ x, y, size, stroke = false, onDone }: Props) {
+export default function LandingPuff({ x, y, size, stroke = true, onDone }: Props) {
+  const uid = useId().replace(/:/g, "");
   const puffs = useRef<(HTMLSpanElement | null)[]>([]);
   const soft = useRef<HTMLSpanElement>(null);
   const sharp = useRef<HTMLSpanElement>(null);
@@ -31,15 +36,14 @@ export default function LandingPuff({ x, y, size, stroke = false, onDone }: Prop
   const done = useRef(onDone);
   done.current = onDone;
 
-  // Per-puff variation, fixed for this burst: ring angle, size and start delay.
-  const [ring] = useState(() => {
-    const turn = rand(0, 360);
-    return Array.from({ length: PUFFS }, (_, i) => ({
-      a: ((turn + (i * 360) / PUFFS + rand(-14, 14)) * Math.PI) / 180,
-      d: size * 0.3 * rand(0.82, 1.18),
-      delay: i * 28 + rand(0, 24),
-    }));
-  });
+  // Per-cloud variation, fixed for this landing: direction, width and start delay.
+  const [ring] = useState(() =>
+    ANGLES.map((deg, i) => ({
+      a: ((deg + rand(-8, 8)) * Math.PI) / 180,
+      w: size * (i === 4 ? 0.5 : 0.68) * rand(0.88, 1.12),
+      delay: i * 70 + rand(0, 50),
+    })),
+  );
 
   useEffect(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -48,21 +52,31 @@ export default function LandingPuff({ x, y, size, stroke = false, onDone }: Prop
       return;
     }
     const anims: Animation[] = [];
-    const r0 = size * 0.08, r1 = size * 0.5;
+    const r0 = size * 0.12, r1 = size * 0.62, rise = size * 0.1;
 
     ring.forEach((p, i) => {
       const el = puffs.current[i];
       if (!el) return;
-      const cx = Math.cos(p.a), cy = Math.sin(p.a);
-      const at = (r: number, s: number) => `translate(${cx * r}px, ${cy * r}px) scale(${s})`;
+      // Spread wide, travel shallow: clouds roll out along the desk and lift a touch as they go.
+      const cx = Math.cos(p.a), cy = Math.sin(p.a) * 0.45;
+      const at = (r: number, up: number, s: number) =>
+        `translate(${cx * r}px, ${cy * r - up}px) scale(${s})`;
       const timing = { duration: DUR, delay: p.delay, fill: "both" as const };
       anims.push(
-        el.animate([{ transform: at(r0, 0.4) }, { transform: at(r1, 1.3) }], {
+        el.animate([{ transform: at(r0, 0, 0.55) }, { transform: at(r1, rise, 1.05) }], {
           ...timing,
-          easing: "cubic-bezier(.2,.8,.3,1)",
+          easing: "cubic-bezier(.22,.61,.36,1)", // long, soft ease-out
         }),
-        // Fully there for the first 40%, gone over the last 60%.
-        el.animate([{ opacity: 1 }, { opacity: 1, offset: 0.4 }, { opacity: 0 }], { ...timing, easing: "linear" }),
+        // Fades in softly, holds, then dissolves over the last 60%.
+        el.animate(
+          [
+            { opacity: 0 },
+            { opacity: 1, offset: 0.16, easing: "linear" },
+            { opacity: 1, offset: 0.4, easing: "cubic-bezier(.4,0,.6,1)" },
+            { opacity: 0 },
+          ],
+          { ...timing, easing: "linear" },
+        ),
       );
     });
 
@@ -131,15 +145,24 @@ export default function LandingPuff({ x, y, size, stroke = false, onDone }: Prop
             puffs.current[i] = el;
           }}
           className={styles.puff}
-          style={{ width: p.d, height: p.d }}
+          style={{ width: p.w, height: (p.w * 76) / 120 }}
         >
-          <svg viewBox="0 0 20 20" width="100%" height="100%">
-            <circle
-              cx="10"
-              cy="10"
-              r={stroke ? 9.25 : 10}
-              className={stroke ? styles.stroked : undefined}
-            />
+          {/* Cartoon cloud: bumpy top, soft underside shade, two inner curls (after the brief's image). */}
+          <svg viewBox="0 0 120 76" width="100%" height="100%">
+            <defs>
+              <clipPath id={`${uid}-${i}`}>
+                <path d={CLOUD} />
+              </clipPath>
+            </defs>
+            <path d={CLOUD} className={styles.body} />
+            <ellipse cx="60" cy="74" rx="58" ry="15" className={styles.under} clipPath={`url(#${uid}-${i})`} />
+            {stroke && (
+              <>
+                <path d={CLOUD} className={styles.line} />
+                <path d="M64 44c5-6 14-4 15 3" className={styles.line} />
+                <path d="M30 46c3-5 10-4 11 1" className={styles.line} />
+              </>
+            )}
           </svg>
         </span>
       ))}
