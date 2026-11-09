@@ -77,3 +77,7 @@ Feel: a precise, warm paper object. Bold red, hand-sketched, with one origami co
 - Motion that delays content. Nothing waits for the origami.
 - Copying other designers' signatures (taped notes, grid textures, stamps, mascots).
 - More than two font families.
+
+## AI Tinkering (built, step 4)
+- Cards are the art cut from `ai.svg` (public/ai/card-N.svg), text drawn as shapes, so no extra font loads. Inside these cards only, the art keeps its own colours: indigo #4F46E5 on lavender #EDEDF8 (one-liner) and #FEFBEB (name pill). Not tokens; do not reuse elsewhere.
+- Fan: centred stack to slots at -11 / -3 / +5 degrees, one by one, scrubbed by scroll. Hover / focus / tap: straighten to 0, lift 8px, deeper shadow, 200ms. Phones: vertical stack, tilts -4 / 3 / -2.

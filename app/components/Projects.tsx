@@ -13,7 +13,7 @@ import {
 } from "react";
 import { projects, type Project } from "../content/projects";
 import { controls, flightFrames, type Pt } from "./craneFlight";
-import LandingPuff from "./LandingPuff";
+import PerchPuff from "./companion/PerchPuff";
 import Origami from "./companion/Origami";
 import styles from "./Projects.module.css";
 
@@ -49,20 +49,6 @@ function Shot({ image }: { image: NonNullable<Project["image"]> }) {
   );
 }
 
-// Puff under the perched crane when it lands.
-function PerchPuff({ size }: { size: () => number }) {
-  const [burst, setBurst] = useState<{ n: number; s: number } | null>(null);
-  useEffect(() => {
-    const land = (e: Event) => {
-      if ((e as CustomEvent).detail?.at !== "cards") return;
-      const s = size();
-      if (s) setBurst((b) => ({ n: (b?.n ?? 0) + 1, s }));
-    };
-    addEventListener("crane:land", land);
-    return () => removeEventListener("crane:land", land);
-  }, [size]);
-  return burst ? <LandingPuff key={burst.n} x={0} y={0} size={burst.s} onDone={() => setBurst(null)} /> : null;
-}
 
 // Case studies, one per screen: each card is sticky and fills the viewport, so the next slides up
 // over the last as you scroll. When card 01 comes up, the paper crane flies once from the hero to a
@@ -177,79 +163,98 @@ export default function Projects() {
     };
   }, [reduced, count, show]);
 
-  // ---------- The crane: hero ⇄ perch ----------
+  // ---------- The crane's route: hero → cards → AI Tinkering (middle card), and back ----------
+  // Stops: 0 = the hero art, 1 = the cards' perch, 2 = the middle AI card. Stops 1 and 2 each own a
+  // crane element; the one flying is always the destination's (or, going home, the current one), so
+  // it travels with whatever it lands on.
   useEffect(() => {
     if (reduced === null) return;
     const html = document.documentElement;
-    const el = fly.current!;
-    let onPerch: boolean | null = null; // where it is, or is heading
-    let flight: Animation | null = null;
+    const perchOf = (k: number) =>
+      k === 1 ? perch.current : document.querySelector<HTMLElement>('[data-perch="ai"]');
+    const flyOf = (k: number) =>
+      k === 1 ? fly.current : document.querySelector<HTMLElement>('[data-perch="ai"] [data-fly]');
+    const LAND = ["hero", "cards", "ai"];
+    let at = -1; // where it is, or is heading
+    let holder = 0; // whose element shows it now
+    let flight: { anim: Animation; el: HTMLElement } | null = null;
     let raf = 0;
 
     const heroFoot = () => {
       const r = document.querySelector<HTMLElement>("[data-intro-target]")?.getBoundingClientRect();
       return r && r.width ? { p: { x: r.left + r.width * 0.31, y: r.bottom }, w: r.width } : null;
     };
-    const perchPt = (): Pt => {
-      const r = perch.current!.getBoundingClientRect();
-      return { x: r.left, y: r.top };
+    const pointOf = (k: number): Pt | null => {
+      const r = perchOf(k)?.getBoundingClientRect();
+      return r ? { x: r.left, y: r.top } : null;
+    };
+    const showOnly = (k: number) => {
+      [1, 2].forEach((i) => {
+        const e = flyOf(i);
+        if (!e) return;
+        e.style.opacity = i === k ? "1" : "0";
+        e.style.visibility = i === k ? "visible" : "hidden";
+      });
     };
 
     // Put the crane straight where it belongs: no flight, no puff.
-    const place = (toPerch: boolean) => {
-      flight?.cancel();
+    const place = (k: number) => {
+      flight?.anim.cancel();
       flight = null;
-      el.style.transform = "";
-      el.style.opacity = toPerch ? "1" : "0";
-      el.style.visibility = toPerch ? "visible" : "hidden";
-      html.dataset.crane = toPerch ? "away" : "home";
+      [1, 2].forEach((i) => flyOf(i) && (flyOf(i)!.style.transform = ""));
+      showOnly(k);
+      html.dataset.crane = k === 0 ? "home" : "away";
+      holder = k;
     };
 
-    const go = (toPerch: boolean) => {
+    const go = (to: number) => {
       const c = craneWidth();
       const hero = heroFoot();
-      if (!c || !hero) return place(toPerch);
-      const origin = perchPt();
-      const heroScale = hero.w / c;
+      const f = to === 0 ? Math.max(holder, 1) : to; // the element that flies
+      const el = flyOf(f), origin = pointOf(f), dest = to === 0 ? hero?.p : pointOf(to);
+      if (!c || !hero || !el || !origin || !dest) return place(to);
+      const scale = (k: number) => (k === 0 ? hero.w / c : 1);
 
       // Where it is now (mid-flight if interrupted), in viewport px, and its scale.
       let from: Pt, s0: number;
       if (flight) {
-        const r = el.firstElementChild!.getBoundingClientRect();
+        const r = flight.el.firstElementChild!.getBoundingClientRect();
         from = { x: r.left + r.width * 0.31, y: r.bottom };
         s0 = r.height / (c * CRANE_ASPECT) || 1;
-      } else if (toPerch) {
+      } else if (holder === 0) {
         from = hero.p;
-        s0 = heroScale;
+        s0 = scale(0);
       } else {
-        from = origin;
+        from = pointOf(holder) ?? origin;
         s0 = 1;
       }
-      // The path is drawn hero → perch; flying home runs it backwards.
-      const [a, b] = toPerch ? [from, origin] : [hero.p, from];
+      // Paths are drawn down the page; flying back up runs the same curve backwards.
+      const up = to < at;
+      const [a, b] = up ? [dest, from] : [from, dest];
       const P = controls(a, b, "dive").map((p) => ({ x: p.x - origin.x, y: p.y - origin.y }));
 
-      flight?.cancel();
+      flight?.anim.cancel();
+      [1, 2].forEach((i) => i !== f && flyOf(i) && (flyOf(i)!.style.transform = ""));
+      showOnly(f);
       html.dataset.crane = "away";
-      el.style.opacity = "1";
-      el.style.visibility = "visible";
-      const anim = el.animate(flightFrames(P, s0, toPerch ? 1 : heroScale, !toPerch), {
+      const anim = el.animate(flightFrames(P, s0, scale(to), up), {
         duration: 1100,
         easing: "linear",
         fill: "forwards",
       });
-      flight = anim;
+      flight = { anim, el };
+      holder = f;
       anim.onfinish = () => {
-        if (flight !== anim) return;
+        if (flight?.anim !== anim) return;
         anim.cancel();
         flight = null;
         el.style.transform = "";
-        if (!toPerch) {
-          el.style.opacity = "0";
-          el.style.visibility = "hidden";
+        if (to === 0) {
+          showOnly(-1);
           html.dataset.crane = "home";
+          holder = 0;
         }
-        dispatchEvent(new CustomEvent("crane:land", { detail: { at: toPerch ? "cards" : "hero" } }));
+        dispatchEvent(new CustomEvent("crane:land", { detail: { at: LAND[to] } }));
       };
     };
 
@@ -261,18 +266,21 @@ export default function Projects() {
         if (c) c.toggleAttribute("data-covered", j < N - 1 && tops[j + 1] <= tops[j] + 2);
       });
       const first = slots.current[0]?.getBoundingClientRect();
-      let want = !!first && first.top < innerHeight * TRIGGER;
-      if (html.dataset.intro !== "done") want = false; // nothing moves under the intro
-      if (want === onPerch) return;
-      if (onPerch === null || reduced) place(want);
+      const ai = document.getElementById("ai-tinkering")?.getBoundingClientRect();
+      let want = 0;
+      if (first && first.top < innerHeight * TRIGGER) want = 1;
+      if (ai && ai.top < innerHeight * 0.25) want = 2; // the fan is well under way
+      if (html.dataset.intro !== "done") want = 0; // nothing moves under the intro
+      if (want === at) return;
+      if (at === -1 || reduced) place(want);
       else go(want);
-      onPerch = want;
+      at = want;
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
     };
     const onResize = () => {
-      if (flight && onPerch !== null) place(onPerch);
+      if (flight && at !== -1) place(at);
       onScroll();
     };
 
@@ -286,7 +294,7 @@ export default function Projects() {
       removeEventListener("scroll", onScroll);
       removeEventListener("resize", onResize);
       cancelAnimationFrame(raf);
-      flight?.cancel();
+      flight?.anim.cancel();
       delete html.dataset.crane;
     };
   }, [reduced, craneWidth]);
@@ -313,7 +321,7 @@ export default function Projects() {
         {/* The crane's perch: holds still on the top card's top-right edge while cards slide under. */}
         <li ref={perchRow} className={styles.perchRow} aria-hidden="true">
           <span ref={perch} className={styles.perch}>
-            <PerchPuff size={craneWidth} />
+            <PerchPuff at="cards" size={craneWidth} />
             <span ref={fly} className={styles.fly}>
               {/* Tap to refold: crane → rabbit → parrot (the same companion as in the hero). */}
               <Origami className={styles.craneArt}>
