@@ -352,8 +352,10 @@ export default function Projects() {
                       src={p.image.src}
                       alt={p.image.alt}
                       fill
-                      quality={80}
-                      sizes="(max-width: 767px) 88vw, 560px"
+                      quality={90}
+                      // Real rendered width (mobile: card inner width; desktop: the media column),
+                      // so 2× and 3× screens get a correspondingly larger, sharp file.
+                      sizes="(max-width: 767px) calc(100vw - 2 * 6vw - 40px), (max-width: 1440px) 42vw, 600px"
                       className={styles.shotImg}
                     />
                   </div>
