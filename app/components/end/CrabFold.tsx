@@ -15,6 +15,13 @@ const K: Classes = {
   shadow: styles.shadow,
 };
 const rest = (i: number): Poly[] => (i < 0 ? crabStart : restAfter(i, flatten));
+// Haptics on the green: a short tick when the outlined part is tapped, a softer double tick on a
+// miss. Phones that cannot vibrate (iOS Safari, desktops) just skip it.
+const buzz = (p: number | number[]) => {
+  try {
+    navigator.vibrate?.(p);
+  } catch {}
+};
 const pts = (p: [number, number][]) => p.map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(" ");
 
 // The click-to-fold crab on the End section's green paper. No words: the part to fold next is
@@ -96,8 +103,14 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
   }, [i, still]);
 
   const onClick = (e: MouseEvent<SVGSVGElement>) => {
-    if ((e.target as Element).getAttribute("data-target") !== null) fold();
-    else if (i < N && !busy.current) setNudge((n) => n + 1); // missed: a small shake toward "try the outline"
+    if (busy.current || i >= N) return;
+    if ((e.target as Element).getAttribute("data-target") !== null) {
+      buzz(12);
+      fold();
+    } else {
+      buzz([6, 50, 6]);
+      setNudge((n) => n + 1); // missed: a small shake toward "try the outline"
+    }
   };
   const onKey = (e: KeyboardEvent<SVGSVGElement>) => {
     if (e.key === "Enter" || e.key === " ") {

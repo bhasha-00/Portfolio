@@ -42,9 +42,19 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* No box around the paper; keyboard focus is a dashed ink line just inside its edge, the same mark
+   as the parts to fold. */
+.start:focus,
 .start:focus-visible {
-  outline: 2px solid var(--cream);
-  outline-offset: 6px;
+  outline: none;
+}
+
+.start:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 2px dashed var(--ink);
+  pointer-events: none;
 }
 
 /* Folding: the handwriting and photo go (the fold draws the same paper), and the square's shadow
