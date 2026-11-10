@@ -67,9 +67,16 @@
   transition: transform 0.9s cubic-bezier(0.3, 0.7, 0.2, 1);
 }
 
+/* The card frame, from the card SVGs (450 tall): cream, radius 16, photo inset 12 and 385 tall,
+   caption pill 33 tall at 405. Sized in cqh (card height = 100cqh), so it scales as one. */
 .face {
   position: absolute;
   inset: 0;
+  container-type: size;
+  overflow: hidden;
+  border-radius: 3.56cqh;
+  background: var(--cream);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent); /* nav pill */
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -78,13 +85,23 @@
   transform: rotateY(180deg);
 }
 
-/* Each card keeps its own shape, centred in the slot (the slot fits the widest of its kind). */
-.art {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* the shadow follows the painted card, not the letterbox */
-  filter: drop-shadow(0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent)); /* nav pill */
+/* Every card in a slot is the same size; the photo is cropped to fit, so a flip leaves no gap. */
+.photo {
+  position: absolute;
+  top: 2.667cqh;
+  left: 2.667cqh;
+  right: 2.667cqh;
+  width: calc(100% - 5.333cqh);
+  height: 85.56cqh;
+  object-fit: cover;
+}
+
+.caption {
+  position: absolute;
+  top: 90cqh;
+  left: 2.667cqh;
+  width: auto;
+  height: 7.33cqh;
 }
 
 /* Hover, focus, press: straighten to 0° (undo the card's current angle), lift 8px. */

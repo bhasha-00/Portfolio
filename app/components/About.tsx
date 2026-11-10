@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
-import { aboutLine, crafts, DESK, PHONE, slots } from "../content/about";
+import { aboutLine, CH, crafts, DESK, PH, PHONE, slots } from "../content/about";
 import styles from "./About.module.css";
 
 const clamp = (v: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
@@ -16,7 +16,8 @@ const showing = (f: Faces) => (f.turns % 2 ? f.b : f.a);
 
 // About. Three cards (one wide, two tall, as in the reference row) sprawl from a centred stack into
 // a straight row, one by one, scrubbed by scroll, exactly as AI Tinkering. Then, every few seconds,
-// one card flips over (rotateY, transform only) to reveal another piece of the same shape; a tap or
+// one card flips over (rotateY, transform only) to reveal another piece of the same shape, at the
+// same size (its photo is cropped to fit, so there is no gap); a tap or
 // click flips it straight away. Hover, focus or tap lifts the card 8px. Phones: the wide card on
 // top, the tall pair under it, each swinging in as it comes into view. Reduced motion: no fan and
 // no automatic flips; a tap swaps the card without turning it.
@@ -117,10 +118,12 @@ export default function About() {
         inView.current = e.isIntersecting;
         if (e.isIntersecting && !preloaded) {
           preloaded = true;
-          crafts.forEach((c) => {
-            const im = new window.Image();
-            im.src = c.src;
-          });
+          crafts.forEach((c) =>
+            [c.photo, c.caption].forEach((src) => {
+              const im = new window.Image();
+              im.src = src;
+            }),
+          );
         }
       },
       { rootMargin: "50% 0px" },
@@ -186,14 +189,9 @@ export default function About() {
                   <span className={styles.flipper} style={{ transform: `rotateY(${f.turns * 180}deg)` }}>
                     {(["a", "b"] as const).map((k) => (
                       <span key={k} className={`${styles.face} ${k === "b" ? styles.back : ""}`} aria-hidden="true">
-                        <Image
-                          src={crafts[f[k]].src}
-                          alt=""
-                          width={crafts[f[k]].w}
-                          height={crafts[f[k]].h}
-                          className={styles.art}
-                          unoptimized
-                        />
+                        {/* The card frame, as the SVGs: photo inset 12, caption pill under it. */}
+                        <Image src={crafts[f[k]].photo} alt="" width={crafts[f[k]].pw} height={PH} className={styles.photo} unoptimized />
+                        <Image src={crafts[f[k]].caption} alt="" width={crafts[f[k]].cw} height={CH} className={styles.caption} unoptimized />
                       </span>
                     ))}
                   </span>

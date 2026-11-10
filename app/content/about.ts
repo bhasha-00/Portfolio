@@ -1,25 +1,32 @@
-// About cards. The art (cream frame, photo, handwritten caption pill, shadow) is exported from the
-// card SVGs as drawn, at 3x (1374px tall): public/about/*.webp. The captions are embedded in the
-// SVGs at only 2x, so they soften past that. The caption is drawn into the art, so `name`
-// is its text for screen readers and search.
+// About cards, rebuilt from the card SVGs: the cream frame is CSS; the photo and the handwritten
+// caption pill are cut out at 3x (public/about/*-photo.webp, *-caption.webp). Every card in a slot
+// is the same size and its photo is cropped to fit (object-fit: cover), so a flip leaves no gap.
+// The captions are embedded in the SVGs at only 2x, so they soften past that. `name` is the
+// caption's text, for screen readers and search.
 
 export type Shape = "wide" | "tall";
 
 export type Craft = {
   name: string;
-  src: string;
-  /** Art size in px. */
-  w: number;
-  h: number;
+  /** The photo (1155px tall) and its width. */
+  photo: string;
+  pw: number;
+  /** The caption pill (99px tall) and its width. */
+  caption: string;
+  cw: number;
   shape: Shape;
 };
 
-const charcoal: Craft = { name: "Charcoal sketching", src: "/about/charcoal-3x.webp", w: 951, h: 1374, shape: "tall" };
-const sanjhi: Craft = { name: "Sanjhi, paper cutting craft", src: "/about/sanjhi-3x.webp", w: 2151, h: 1374, shape: "wide" };
-const gourd: Craft = { name: "Gourd lamp", src: "/about/gourd-lamp-3x.webp", w: 945, h: 1374, shape: "tall" };
-const print: Craft = { name: "Print design", src: "/about/print-3x.webp", w: 1803, h: 1374, shape: "wide" };
-const clock: Craft = { name: "Clock designed using sanjhi", src: "/about/clock-3x.webp", w: 945, h: 1374, shape: "tall" };
-const paper: Craft = { name: "Paper sculpture", src: "/about/paper-3x.webp", w: 1650, h: 1374, shape: "wide" };
+const PH = 1155; // photo height, px
+const CH = 99; // caption height, px
+export { PH, CH };
+
+const charcoal: Craft = { name: "Charcoal sketching", photo: "/about/charcoal-photo.webp", pw: 852, caption: "/about/charcoal-caption.webp", cw: 498, shape: "tall" };
+const sanjhi: Craft = { name: "Sanjhi, paper cutting craft", photo: "/about/sanjhi-photo.webp", pw: 2053, caption: "/about/sanjhi-caption.webp", cw: 231, shape: "wide" };
+const gourd: Craft = { name: "Gourd lamp", photo: "/about/gourd-lamp-photo.webp", pw: 848, caption: "/about/gourd-lamp-caption.webp", cw: 324, shape: "tall" };
+const print: Craft = { name: "Print design", photo: "/about/print-photo.webp", pw: 1707, caption: "/about/print-caption.webp", cw: 339, shape: "wide" };
+const clock: Craft = { name: "Clock designed using sanjhi", photo: "/about/clock-photo.webp", pw: 848, caption: "/about/clock-caption.webp", cw: 651, shape: "tall" };
+const paper: Craft = { name: "Paper sculpture", photo: "/about/paper-photo.webp", pw: 1552, caption: "/about/paper-caption.webp", cw: 405, shape: "wide" };
 
 /** All six, in the order a slot cycles through its shape's cards. */
 export const crafts: Craft[] = [sanjhi, gourd, charcoal, print, clock, paper];
@@ -33,8 +40,7 @@ export type Slot = {
   shape: Shape;
   /** The card it shows first (index into crafts). */
   first: number;
-  /** Box size and centre in stage units. The box fits the widest card of its shape; narrower cards
-   *  sit centred in it, so a flip never moves the neighbours. */
+  /** Card size and centre in stage units. */
   desk: { x: number; y: number; w: number; h: number };
   phone: { x: number; y: number; w: number; h: number };
   /** The fan: the angle a card swings through on its way out of the stack, in degrees. */
@@ -50,4 +56,4 @@ export const slots: Slot[] = [
   { shape: "tall", first: 2, desk: { x: 886, y: 210, w: 224, h: 326 }, phone: { x: 273, y: 372, w: 174, h: 252 }, swing: 5, tilt: -3 },
 ];
 
-export const aboutLine = "From an industrial design background, I have always been curious why things work the way they do";
+export const aboutLine = "Shaped by industrial design, grounded in the act of building";
