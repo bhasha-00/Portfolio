@@ -39,9 +39,10 @@ export default function Hero() {
             height={1615}
             quality={90}
             priority
-            // Twice the drawn size (88vw / 640px), so there is detail to zoom into: most screens
-            // get the full 2000px original rather than a copy that only matches their density.
-            sizes="(max-width: 767px) 176vw, 1280px"
+            // Desktop: twice the drawn 640px, so there is detail to zoom into (most get the full
+            // 2000px). Phones: the drawn 88vw only, because the hero is the LCP element and the
+            // doubled copy cost mobile Lighthouse about 6 points (LCP 3.1–3.5s).
+            sizes="(max-width: 767px) 88vw, 1280px"
             className={styles.art}
           />
           {/* Landing puff at the crane's foot; before the crane in the DOM, so it sits underneath. */}
