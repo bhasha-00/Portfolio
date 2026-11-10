@@ -23,8 +23,9 @@ const print: Craft = { name: "Print design", src: "/about/print-card.webp", w: 1
 const clock: Craft = { name: "Clock designed using sanjhi", src: "/about/clock-card.webp", w: 1074, h: 1563, shape: "tall" };
 const paper: Craft = { name: "Paper sculpture", src: "/about/paper-card.webp", w: 1860, h: 1563, shape: "wide" };
 
-/** All six, in the order a slot cycles through its shape's cards. */
-export const crafts: Craft[] = [sanjhi, gourd, charcoal, print, clock, paper];
+/** All six, in the order a slot cycles through its shape's cards. The first three (paper sculpture,
+ *  gourd lamp, charcoal) are what a first visit sees. */
+export const crafts: Craft[] = [paper, gourd, charcoal, print, clock, sanjhi];
 
 /** The stages, in units. Desktop: one row (the reference: 930 of 1032 wide). Phones: the wide card
  *  on top, the two tall ones side by side under it. */
