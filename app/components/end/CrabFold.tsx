@@ -122,17 +122,9 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
     }
   };
 
-  const next = i < N && !playing ? crabSteps[i] : null;
-  const target = next?.target ?? null;
-  // A flap to fold is drawn again on top, lifted with its own shadow; when the whole sheet is the
-  // part to fold (collapse, turn over), the whole paper lifts instead.
-  const flap = next?.kind === "fold" ? next.step.folds?.[0]?.polys[0] : undefined;
+  const target = i < N && !playing ? crabSteps[i].target : null;
   return (
-    <div
-      className={styles.fold}
-      data-nudge={nudge % 2 ? "a" : nudge ? "b" : undefined}
-      data-lift-all={(next && next.kind !== "fold") || undefined}
-    >
+    <div className={styles.fold} data-nudge={nudge % 2 ? "a" : nudge ? "b" : undefined}>
       <svg
         className={styles.svg}
         viewBox="20 20 160 160"
@@ -154,18 +146,7 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
           <g ref={flip}>
             <g ref={world} />
           </g>
-          {target && flap ? (
-            <g className={styles.lifted}>
-              <polygon className={styles.face} points={pts(target)} />
-              {!!flap.s && (
-                <polygon className={flap.s > 0 ? styles.shade : styles.lite} points={pts(target)} opacity={Math.abs(flap.s)} />
-              )}
-              <polygon className={styles.edge} points={pts(target)} />
-              <polygon className={styles.target} data-target="" points={pts(target)} />
-            </g>
-          ) : (
-            target && <polygon className={styles.target} data-target="" points={pts(target)} />
-          )}
+          {target && <polygon className={styles.target} data-target="" points={pts(target)} />}
         </g>
       </svg>
       <p className="sr-only" aria-live="polite">
