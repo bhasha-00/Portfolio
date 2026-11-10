@@ -43,12 +43,26 @@
   filter: drop-shadow(0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent)); /* nav pill */
 }
 
-/* The deeper shadow on hover / focus / tap: a soft layer that fades in behind the card. */
+/* The paper grain from the case study cards (globals.css), multiplied onto the art and clipped to
+   its outline: it shows on the cream and the name pill; on the black panel it is invisible. */
+.grain {
+  position: absolute;
+  inset: 0;
+  background: var(--paper-grain);
+  background-size: var(--paper-size);
+  mix-blend-mode: multiply;
+  -webkit-mask: var(--art) center / 100% 100% no-repeat;
+  mask: var(--art) center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
+/* Hover / focus / tap: the card lifts and its shadow deepens a little (a soft layer fading in
+   behind it). Kept close to the resting shadow, so it reads as lift, not as a dark patch. */
 .deep {
   position: absolute;
   inset: 4% 3% 2%;
   border-radius: 18px;
-  box-shadow: 0 22px 44px color-mix(in srgb, var(--ink) 34%, transparent);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--ink) 16%, transparent);
   opacity: 0;
   transition: opacity 0.2s var(--ease-out);
 }

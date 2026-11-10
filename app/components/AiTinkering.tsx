@@ -112,6 +112,8 @@ export default function AiTinkering() {
               >
                 <span className={styles.deep} aria-hidden="true" />
                 <Image src={c.art} alt="" width={Math.round(c.w)} height={Math.round(c.h)} className={styles.art} unoptimized />
+                {/* The case study cards' paper grain, clipped to this card's outline. */}
+                <span className={styles.grain} style={{ "--art": `url("${c.art}")` } as CSSProperties} aria-hidden="true" />
                 <span className="sr-only">
                   {c.name}: {c.line}
                 </span>
