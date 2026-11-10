@@ -8,8 +8,6 @@
   --vermilion: #D9432F; /* accent */
   --back: #FFF7E8;      /* paper back side in origami folds; also the white rabbit's paper */
   --lime: #C8D52E;      /* parrot paper (added 2026-11-10 at Bhasha's request) */
-  --indigo: #4F46E5;    /* key figures in case study text, on cream only (added 2026-11-11 at Bhasha's request) */
-
   /* Fonts (set by next/font in app/layout.tsx) */
   --font-sans: var(--font-geist), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;

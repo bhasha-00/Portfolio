@@ -169,7 +169,7 @@
 
 .text strong {
   font-weight: 600;
-  color: var(--indigo); /* key figures, as cs2.svg */
+  color: var(--ink); /* key figures: bold, in full ink against the softer body grey */
 }
 
 .note {
