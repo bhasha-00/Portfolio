@@ -49,9 +49,20 @@
   background-size: var(--paper-size);
   background-blend-mode: multiply;
   color: var(--ink);
-  box-shadow:
-    0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent), /* same as the nav pill */
-    0 -4px 24px color-mix(in srgb, var(--ink) 17%, transparent); /* cast up onto the card below (cs2.svg) */
+  isolation: isolate; /* keeps the shadow layer below with its own card */
+}
+
+/* One shadow, the nav pill's. The cards stack in one place, so a covered card's shadow fades out
+   as the next one arrives: only the top card's shows, never several on top of each other. */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent);
+  opacity: calc(1 - var(--cover, 0));
+  pointer-events: none;
 }
 
 /* ---------- Covered by the next card (cs2.svg). --cover is 0 → 1, set on scroll by Projects.tsx.
