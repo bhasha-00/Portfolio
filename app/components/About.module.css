@@ -30,7 +30,9 @@
 /* Full bleed; the row starts at the page gutter (60px in the reference) and runs off the right. */
 .viewport {
   overflow: hidden;
-  padding-bottom: 8px; /* room for the cards' baked shadow */
+  /* Room for the card shadow, which overflow would otherwise clip; the margins cancel it out. */
+  padding-block: 16px 40px;
+  margin-block: -16px -40px;
 }
 
 .track {
@@ -46,7 +48,6 @@
   animation-play-state: running;
 }
 
-.about[data-paused] .track,
 .viewport:hover .track {
   animation-play-state: paused;
 }
@@ -70,39 +71,13 @@
   display: block;
   width: 100%;
   height: 100%;
+  filter: drop-shadow(0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent)); /* nav pill, as the AI cards */
 }
 
 @keyframes drift {
   to {
     transform: translateX(-50%);
   }
-}
-
-/* Stops the loop (WCAG 2.2.2); the touch control. Quiet, under the row at the right gutter. */
-.pause {
-  align-self: flex-end;
-  margin-right: var(--gutter);
-  padding: 8px 14px;
-  border: 0;
-  border-radius: 999px;
-  background: var(--cream);
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: transform 0.2s var(--ease-out);
-  -webkit-tap-highlight-color: transparent;
-}
-
-.pause:active {
-  transform: scale(0.96);
-}
-
-.pause:focus-visible {
-  outline: 2px solid var(--cream);
-  outline-offset: 3px;
 }
 
 /* Reduced motion: no loop and no second copy; a still row you can swipe or scroll sideways. */
@@ -117,8 +92,7 @@
     scroll-padding-inline: var(--gutter);
   }
 
-  .list[aria-hidden],
-  .pause {
+  .list[aria-hidden] {
     display: none;
   }
 }

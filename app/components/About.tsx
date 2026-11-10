@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import { aboutLine, crafts } from "../content/about";
 import styles from "./About.module.css";
 
@@ -15,10 +15,9 @@ const DURATION = crafts.reduce((s, c) => s + c.w / c.h, 0) * PACE;
 // About, from about II.svg: the line centred, then one row of craft cards at the same height,
 // drifting left in a seamless loop. CSS keyframes on transform only: the track holds the row twice
 // and moves by exactly one copy. It runs only while the section is on screen, pauses on hover,
-// focus or the Pause button, and under reduced motion becomes a still row you can swipe.
+// and under reduced motion becomes a still row you can swipe.
 export default function About() {
   const section = useRef<HTMLElement>(null);
-  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     const sec = section.current;
@@ -29,13 +28,7 @@ export default function About() {
   }, []);
 
   return (
-    <section
-      ref={section}
-      id="about"
-      className={styles.about}
-      data-paused={paused || undefined}
-      aria-labelledby="about-title"
-    >
+    <section ref={section} id="about" className={styles.about} aria-labelledby="about-title">
       <h2 id="about-title" className="sr-only">
         About
       </h2>
@@ -54,10 +47,6 @@ export default function About() {
           ))}
         </div>
       </div>
-
-      <button type="button" className={styles.pause} aria-pressed={paused} onClick={() => setPaused((p) => !p)}>
-        {paused ? "Play" : "Pause"}
-      </button>
     </section>
   );
 }
