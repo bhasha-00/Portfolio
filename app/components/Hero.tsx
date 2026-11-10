@@ -8,15 +8,21 @@ export default function Hero() {
   return (
     <section id="home" className={styles.hero} aria-labelledby="home-title">
       <div className={styles.top}>
+        {/* Three lines, set by hand: one step each. */}
         <p className={styles.headline}>
-          Translating business goals and user needs into interfaces that perform.
+          <span className={styles.step}>Translating business goals</span>{" "}
+          <span className={styles.step}>and user needs into</span>{" "}
+          <span className={styles.step}>interfaces that perform.</span>
         </p>
 
         <div className={styles.intro}>
           <h1 id="home-title" className={styles.name}>
             Bhasha Maheshwari
           </h1>
-          <p className={styles.role}>Product Designer</p>
+          {/* In Bhasha's hand (Figma Hand), as outlines from home.svg; "er" uses its own e and r. */}
+          <p className={styles.role}>
+            <img src="/hero/product-designer.svg" alt="Product designer" width={162} height={20} className={styles.hand} />
+          </p>
           <p className={styles.summary}>
             2+ years across B2B SaaS and AI-native projects. Strong focus in complex system, scale
             and end-to-end ownership.
