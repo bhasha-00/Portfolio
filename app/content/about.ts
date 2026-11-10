@@ -3,47 +3,51 @@
 // SVGs at only 2x, so they soften past that. The caption is drawn into the art, so `name`
 // is its text for screen readers and search.
 
+export type Shape = "wide" | "tall";
+
 export type Craft = {
   name: string;
   src: string;
   /** Art size in px. */
   w: number;
   h: number;
+  shape: Shape;
 };
 
-const charcoal: Craft = { name: "Charcoal sketching", src: "/about/charcoal-3x.webp", w: 951, h: 1374 };
-const sanjhi: Craft = { name: "Sanjhi, paper cutting craft", src: "/about/sanjhi-3x.webp", w: 2151, h: 1374 };
-const gourd: Craft = { name: "Gourd lamp", src: "/about/gourd-lamp-3x.webp", w: 945, h: 1374 };
-const print: Craft = { name: "Print design", src: "/about/print-3x.webp", w: 1803, h: 1374 };
-const clock: Craft = { name: "Clock designed using sanjhi", src: "/about/clock-3x.webp", w: 945, h: 1374 };
-const paper: Craft = { name: "Paper sculpture", src: "/about/paper-3x.webp", w: 1650, h: 1374 };
+const charcoal: Craft = { name: "Charcoal sketching", src: "/about/charcoal-3x.webp", w: 951, h: 1374, shape: "tall" };
+const sanjhi: Craft = { name: "Sanjhi, paper cutting craft", src: "/about/sanjhi-3x.webp", w: 2151, h: 1374, shape: "wide" };
+const gourd: Craft = { name: "Gourd lamp", src: "/about/gourd-lamp-3x.webp", w: 945, h: 1374, shape: "tall" };
+const print: Craft = { name: "Print design", src: "/about/print-3x.webp", w: 1803, h: 1374, shape: "wide" };
+const clock: Craft = { name: "Clock designed using sanjhi", src: "/about/clock-3x.webp", w: 945, h: 1374, shape: "tall" };
+const paper: Craft = { name: "Paper sculpture", src: "/about/paper-3x.webp", w: 1650, h: 1374, shape: "wide" };
 
-/** Where a card lands in the collage: centre (x, y) in stage units, and its layer (higher = in front). */
-export type Spot = { x: number; y: number; z: number };
+/** All six, in the order a slot cycles through its shape's cards. */
+export const crafts: Craft[] = [sanjhi, gourd, charcoal, print, clock, paper];
 
-/** The collage stages, in units. Every card is the same height in a stage; widths follow the art. */
-export const DESK = { w: 1200, h: 760, cardH: 340 };
-export const PHONE = { w: 360, h: 790, cardH: 200 };
+/** The stages, in units. Desktop: one row (the reference: 930 of 1032 wide). Phones: the wide card
+ *  on top, the two tall ones side by side under it. */
+export const DESK = { w: 1000, h: 420 };
+export const PHONE = { w: 360, h: 500 };
 
-export type Placed = Craft & {
-  desk: Spot;
-  phone: Spot;
+export type Slot = {
+  shape: Shape;
+  /** The card it shows first (index into crafts). */
+  first: number;
+  /** Box size and centre in stage units. The box fits the widest card of its shape; narrower cards
+   *  sit centred in it, so a flip never moves the neighbours. */
+  desk: { x: number; y: number; w: number; h: number };
+  phone: { x: number; y: number; w: number; h: number };
   /** The fan: the angle a card swings through on its way out of the stack, in degrees. */
   swing: number;
+  /** The same swing in the phone layout. */
+  tilt: number;
 };
 
-// An overlapping, upright cluster after the stamp reference: wide cards at the back, tall and
-// wide alternating so the outline stays ragged. Every card's caption sits bottom-left, so a card
-// in front only ever covers the top or right of the cards behind it: all captions stay readable.
-// Phones: a zig-zag where each card sits in front of the ones below it. Listed in fan order
-// (left to right on desktop).
-export const crafts: Placed[] = [
-  { ...charcoal, desk: { x: 170, y: 464, z: 1 }, phone: { x: 100, y: 270, z: 5 }, swing: -12 },
-  { ...sanjhi, desk: { x: 460, y: 194, z: 2 }, phone: { x: 180, y: 100, z: 6 }, swing: -7 },
-  { ...paper, desk: { x: 480, y: 560, z: 5 }, phone: { x: 130, y: 660, z: 1 }, swing: -3 },
-  { ...gourd, desk: { x: 830, y: 576, z: 3 }, phone: { x: 255, y: 290, z: 4 }, swing: 4 },
-  { ...print, desk: { x: 880, y: 200, z: 4 }, phone: { x: 180, y: 480, z: 3 }, swing: 8 },
-  { ...clock, desk: { x: 1030, y: 488, z: 6 }, phone: { x: 285, y: 680, z: 2 }, swing: 12 },
+// Desktop row from the reference: wide 510 + tall 224 + tall 224, gaps 19, cards 326 tall.
+export const slots: Slot[] = [
+  { shape: "wide", first: 0, desk: { x: 257, y: 210, w: 510, h: 326 }, phone: { x: 180, y: 115, w: 360, h: 230 }, swing: -11, tilt: -4 },
+  { shape: "tall", first: 1, desk: { x: 643, y: 210, w: 224, h: 326 }, phone: { x: 87, y: 372, w: 174, h: 252 }, swing: -3, tilt: 3 },
+  { shape: "tall", first: 2, desk: { x: 886, y: 210, w: 224, h: 326 }, phone: { x: 273, y: 372, w: 174, h: 252 }, swing: 5, tilt: -3 },
 ];
 
 export const aboutLine = "From an industrial design background, I have always been curious why things work the way they do";

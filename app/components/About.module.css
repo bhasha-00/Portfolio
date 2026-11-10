@@ -1,7 +1,7 @@
-/* About: the line centred on top, then the craft cards as an overlapping upright collage (after the
-   stamp reference). Cards are placed by centre (--dx/--dy desktop, --px/--py phones) and moved by
-   scroll scrubbing from About.tsx (transform only), as AI Tinkering. Desktop pins one screen while
-   the stack fans out; phones scroll past a taller collage. */
+/* About: the line centred on top, then three cards (one wide, two tall) that sprawl from a stack
+   into a row, as AI Tinkering, and flip over from time to time to show another piece. Slots are
+   placed by centre (--dx/--dy desktop, --px/--py phones) and moved by scroll scrubbing from
+   About.tsx; the flip is a rotateY on .flipper. Transform only throughout. */
 
 .about {
   position: relative;
@@ -27,29 +27,21 @@
   text-wrap: balance;
 }
 
-/* Phones: 360 × 790 units; every card 200 units tall. */
+/* Phones: 360 × 500 units; the wide card on top, the tall pair under it. */
 .stage {
   position: relative;
-  width: min(100%, 420px);
-  aspect-ratio: 360 / 790;
+  width: min(100%, 460px);
+  aspect-ratio: 360 / 500;
 }
 
 .slot {
   position: absolute;
   left: var(--px);
   top: var(--py);
-  z-index: var(--pz);
   width: var(--pw);
-  aspect-ratio: var(--ratio);
+  aspect-ratio: var(--pratio);
   transform: translate(-50%, -50%);
   will-change: transform;
-}
-
-/* Hover, focus or tap brings a card to the front. */
-.slot:hover,
-.slot:focus-within,
-.slot:has([aria-pressed="true"]) {
-  z-index: 20;
 }
 
 .card {
@@ -61,47 +53,49 @@
   border: 0;
   background: none;
   cursor: pointer;
+  perspective: 1400px;
   transform: none;
   transition: transform 0.2s var(--ease-out);
   -webkit-tap-highlight-color: transparent;
 }
 
+/* The turn: a half-turn per flip, accumulating, so it always turns the same way. */
+.flipper {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.9s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+/* Each card keeps its own shape, centred in the slot (the slot fits the widest of its kind). */
 .art {
-  position: relative;
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: contain; /* the shadow follows the painted card, not the letterbox */
   filter: drop-shadow(0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent)); /* nav pill */
 }
 
-/* The deeper shadow on hover / focus / tap: a soft layer that fades in behind the card. */
-.deep {
-  position: absolute;
-  inset: 4% 3% 3%;
-  border-radius: 16px;
-  box-shadow: 0 22px 44px color-mix(in srgb, var(--ink) 34%, transparent);
-  opacity: 0;
-  transition: opacity 0.2s var(--ease-out);
-}
-
-/* Straighten to 0° (undo the card's current angle), lift 8px. */
-.card[aria-pressed="true"],
-.card:focus-visible {
+/* Hover, focus, press: straighten to 0° (undo the card's current angle), lift 8px. */
+.card:focus-visible,
+.card:active {
   transform: rotate(calc(-1 * var(--a, 0deg))) translateY(-8px);
-}
-
-.card[aria-pressed="true"] .deep,
-.card:focus-visible .deep {
-  opacity: 1;
 }
 
 @media (hover: hover) {
   .card:hover {
     transform: rotate(calc(-1 * var(--a, 0deg))) translateY(-8px);
-  }
-
-  .card:hover .deep {
-    opacity: 1;
   }
 }
 
@@ -111,31 +105,38 @@
   border-radius: 18px;
 }
 
-/* ---------- Desktop: the pinned fan; 1200 × 760 units, every card 340 units tall ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .flipper {
+    transition: none;
+  }
+}
+
+/* ---------- Desktop: the pinned fan; 1000 × 420 units ---------- */
 @media (min-width: 768px) {
   .about {
-    height: 260vh; /* one screen pinned + the scroll that drives the fan */
+    height: 230vh; /* one screen pinned + the scroll that drives the fan */
     padding: 0;
   }
 
   .pin {
     position: sticky;
     top: 0;
+    justify-content: center;
     height: 100vh;
     height: 100svh;
-    padding: 104px var(--gutter) 32px;
-    gap: clamp(24px, 4vh, 48px);
+    padding: 96px var(--gutter) 32px;
+    gap: clamp(24px, 5vh, 64px);
   }
 
   .stage {
-    width: min(100%, 1300px, (100svh - 300px) * 1200 / 760);
-    aspect-ratio: 1200 / 760;
+    width: min(100%, 1240px, (100svh - 300px) * 1000 / 420);
+    aspect-ratio: 1000 / 420;
   }
 
   .slot {
     left: var(--dx);
     top: var(--dy);
-    z-index: var(--dz);
     width: var(--dw);
+    aspect-ratio: var(--dratio);
   }
 }
