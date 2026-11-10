@@ -81,5 +81,5 @@ Feel: a precise, warm paper object. Bold red, hand-sketched, with one origami co
 - More than two font families.
 
 ## AI Tinkering (built, step 4)
-- Cards are the art cut from `ai.svg` (public/ai/card-N.svg), text drawn as shapes, so no extra font loads. Inside these cards only, the art keeps its own colours: indigo #4F46E5 on lavender #EDEDF8 (one-liner) and #FEFBEB (name pill). Not tokens; do not reuse elsewhere.
+- Cards are the art cut from `ai.svg` (public/ai/card-N.svg), text drawn as shapes, so no extra font loads. Inside these cards only, the art keeps its own colours: the one-liner in grey #4E4E4E straight on the cream (re-exported 2026-11-11; it used to be indigo on a lavender pill) and the name pill in #FEFBEB. Not tokens; do not reuse elsewhere.
 - Layout: one straight row of upright cards (29.3% of the stage each, reference 1522 x 768). Motion: from a centred stack, one by one, scrubbed by scroll; each swings through -11 / -3 / +5 degrees mid-flight and lands at 0. Hover / focus / tap: lift 8px, deeper shadow, 200ms. Phones: vertical stack, same swing.
