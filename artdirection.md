@@ -24,6 +24,7 @@ Feel: a precise, warm paper object. Bold red, hand-sketched, with one origami co
 ```
 - Cream on red is about 5.8:1 (passes AA). Gold on red is about 3.6:1: use for large or decorative elements only, never body text.
 - **Texture: none.** Flat colour. (Revisit only if the hero feels heavy once built.)
+  - Exception (2026-11-10, at Bhasha's request): the green paper square in the End section is a photo of real paper, texture and its own green included. That square only; backgrounds stay flat.
 
 ## Type
 - **Geist** for headings, body and nav. **Geist Mono** only for small labels and chips (caps, wide tracking), e.g. "PROJECT 01 / ROLE / OUTCOME".
