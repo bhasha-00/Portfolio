@@ -27,7 +27,7 @@
    the LCP element; the flat red is there from the first paint. */
 .backdrop[data-ready] .texture {
   background: url("/bg/rays.webp") center / cover no-repeat;
-  opacity: 1;
+  opacity: 0.55; /* muted: it should read as texture in the red, not as graphics */
 }
 
 /* The burst: bg.svg's #F7D3CF at 12%, drawn in cream (the nearest token) at the same 12%. */
