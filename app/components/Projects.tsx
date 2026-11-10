@@ -366,6 +366,15 @@ export default function Projects() {
               <span className={styles.count} aria-hidden="true">
                 {pad(j + 1)} / {pad(N)}
               </span>
+              {/* Handwritten label (Figma Hand outlines); plain text until its export exists. */}
+              <p className={styles.label2}>
+                {p.label.art ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- a small vector, shown as-is
+                  <img src={p.label.art.src} alt={p.label.text} width={p.label.art.w} height={p.label.art.h} className={styles.hand} />
+                ) : (
+                  p.label.text
+                )}
+              </p>
               <h3 id={`project-${j}`} className={styles.title}>
                 {p.title ?? p.name}
               </h3>
