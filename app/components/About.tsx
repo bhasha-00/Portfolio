@@ -105,27 +105,31 @@ export default function About() {
   }, []);
 
   // Automatic flips: one slot at a time, only while the row is on screen and settled. A slot being
-  // hovered, or flipped by hand in the last few seconds, is skipped. The other cards preload the
-  // first time the section comes near, so a flip never reveals a blank face.
+  // hovered, or flipped by hand in the last few seconds, is skipped.
+  // All six cards load (full 3x files) once the section is two screens away: the three a first
+  // visit sees first, then the rest, so the row is crisp on arrival and a flip never shows a blank
+  // face. Nothing loads with the hero.
   useEffect(() => {
     const sec = section.current;
     if (!sec) return;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)");
-    let preloaded = false;
-    const io = new IntersectionObserver(
+    const io = new IntersectionObserver(([e]) => (inView.current = e.isIntersecting), { rootMargin: "50% 0px" });
+    const early = new IntersectionObserver(
       ([e]) => {
-        inView.current = e.isIntersecting;
-        if (e.isIntersecting && !preloaded) {
-          preloaded = true;
-          crafts.forEach((c) => {
-            const im = new window.Image();
-            im.src = c.src;
-          });
-        }
+        if (!e.isIntersecting) return;
+        early.disconnect();
+        const first = new Set(slots.map((s) => s.first));
+        const order = [...crafts.keys()].sort((x, y) => Number(first.has(y)) - Number(first.has(x)));
+        order.forEach((k) => {
+          const im = new window.Image();
+          im.fetchPriority = first.has(k) ? "high" : "low";
+          im.src = crafts[k].src;
+        });
       },
-      { rootMargin: "50% 0px" },
+      { rootMargin: "200% 0px" },
     );
     io.observe(sec);
+    early.observe(sec);
     let next = 0;
     const timer = setInterval(() => {
       if (!inView.current || !settled.current || reduce.matches || document.hidden) return;
@@ -136,6 +140,7 @@ export default function About() {
     }, EVERY);
     return () => {
       io.disconnect();
+      early.disconnect();
       clearInterval(timer);
     };
   }, [flip]);
