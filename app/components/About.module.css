@@ -94,6 +94,7 @@
   width: calc(100% - 5.333cqh);
   height: 85.56cqh;
   object-fit: cover;
+  border-radius: 1.78cqh; /* 8 of 450: follows the frame's 16 at a visible size */
 }
 
 .caption {
