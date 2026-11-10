@@ -1,0 +1,130 @@
+/* The click-to-fold crab (CrabFold.tsx), filling the End section's paper square. The paper keeps
+   the green photo on both sides (the back a little lighter); the outline of the next fold is ink. */
+
+.fold {
+  position: absolute;
+  inset: 0;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  cursor: pointer;
+  filter: drop-shadow(0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent)); /* nav pill */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.svg:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 6px;
+}
+
+.svg[aria-disabled] {
+  cursor: default;
+}
+
+/* Re-centres the shape as it gets smaller; transform only. */
+.lift {
+  transition: transform 0.6s var(--ease-out);
+}
+
+/* Fold engine faces. */
+.face {
+  fill: url(#crab-paper);
+}
+
+.shade {
+  fill: var(--ink);
+}
+
+.lite {
+  fill: var(--back); /* the paper's back, lighter */
+}
+
+.edge {
+  fill: none;
+  stroke: var(--ink);
+  stroke-opacity: 0.22;
+  stroke-width: 0.4;
+  stroke-linejoin: round;
+}
+
+.crease {
+  stroke: var(--ink);
+  stroke-opacity: 0.18;
+  stroke-width: 0.35;
+}
+
+.shadow {
+  fill: var(--ink);
+}
+
+/* The part to fold next: dashed ink outline, gently pulsing. Its inside takes the click. */
+.target {
+  fill: transparent;
+  stroke: var(--ink);
+  stroke-width: 0.9;
+  stroke-dasharray: 3 2.4;
+  stroke-linejoin: round;
+  pointer-events: all;
+  animation: pulse 1.1s var(--ease-out) infinite alternate;
+}
+
+@keyframes pulse {
+  from { opacity: 1; }
+  to { opacity: 0.4; }
+}
+
+/* A click off the outline: a small sideways nudge. Two names so every miss restarts it. */
+.fold[data-nudge="a"] .svg { animation: nudge-a 0.32s var(--ease-out); }
+.fold[data-nudge="b"] .svg { animation: nudge-b 0.32s var(--ease-out); }
+
+@keyframes nudge-a {
+  25% { transform: translateX(-5px); }
+  60% { transform: translateX(4px); }
+}
+
+@keyframes nudge-b {
+  25% { transform: translateX(-5px); }
+  60% { transform: translateX(4px); }
+}
+
+/* Fold again: a small cream circle at the paper's top-right corner, once the crab is done. */
+.again {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--cream);
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent);
+  transition: transform 0.2s var(--ease-out);
+}
+
+.again:active {
+  transform: scale(0.94);
+}
+
+.again:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .target,
+  .fold[data-nudge] .svg {
+    animation: none;
+  }
+
+  .lift {
+    transition: none;
+  }
+}

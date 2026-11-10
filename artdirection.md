@@ -60,6 +60,7 @@ Feel: a precise, warm paper object. Bold red, hand-sketched, with one origami co
 - **Play:** tap = refold into the next shape. Drag = carry it (tilts with movement). Release = it hops back to its perch.
 - **Implementation:** inline SVG polygons, animated in `requestAnimationFrame` (see prototype `run()` / `fold()`). Transform and opacity only. No video, no Lottie.
 - **Reduced motion:** show final shapes with no folding; companion static.
+- **End section, "Try a fold":** a click on the green paper removes the handwriting and starts a guided crab (end/crab.ts, end/CrabFold.tsx, on the intro's fold engine). No words: the part to fold next is outlined in dashed ink and pulses; clicking it plays that fold, a click elsewhere nudges the paper. Eight steps: collapse, two claws, turn over, bottom point up, two legs, turn over. Keyboard: Enter / Space folds; reduced motion lands each fold at once. A round button folds a fresh sheet.
 - Do not use Pokemon or any other third-party characters. The "critter" is original.
 
 ## Performance budget

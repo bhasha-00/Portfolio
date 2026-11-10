@@ -78,9 +78,11 @@ function face(g: Element, poly: Poly, k: Classes, live = false) {
   return { lite, under };
 }
 
-type Live = { update: (e: number) => void };
+export type Live = { update: (e: number) => void };
 
-function buildStep(world: SVGGElement, step: Step, k: Classes): Live {
+/** Draws a step into `world` and returns its updater (e 0..1). Used by play() and by the End
+    section's click-to-fold crab, which drives each step from its own click. */
+export function buildStep(world: SVGGElement, step: Step, k: Classes): Live {
   world.replaceChildren();
   step.base.forEach((p) => face(world, p, k));
   step.creases?.forEach(([a, b]) =>

@@ -30,6 +30,34 @@
   height: 100%;
 }
 
+/* The untouched sheet is a button: a click, tap, Enter or Space starts the fold. */
+.start {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: opacity 0.3s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.start:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 6px;
+}
+
+/* Folding: the handwriting and photo go (the fold draws the same paper), and the square's shadow
+   with them; the folding paper casts its own. */
+.sheet[data-folding] {
+  box-shadow: none;
+}
+
+.sheet[data-folding] .start {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .foot {
   position: relative;
   display: flex;
