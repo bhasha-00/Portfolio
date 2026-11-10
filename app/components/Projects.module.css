@@ -168,8 +168,7 @@
 }
 
 .text strong {
-  font-weight: 600;
-  color: var(--ink); /* key figures: bold, in full ink against the softer body grey */
+  font-weight: 600; /* key figures: bold only, same colour as the body text */
 }
 
 .note {
