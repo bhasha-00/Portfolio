@@ -1,23 +1,23 @@
-/* About, from about II.svg (1522 × 958): the line centred in cream on red, then one row of craft
-   cards, all the same height (458 at 1522 wide, about 30vw), running off the right edge. The row
-   drifts left in a seamless loop (transform only): the track holds it twice and moves by -50%. */
+/* About: the line centred on top, then the craft cards as an overlapping upright collage (after the
+   stamp reference). Cards are placed by centre (--dx/--dy desktop, --px/--py phones) and moved by
+   scroll scrubbing from About.tsx (transform only), as AI Tinkering. Desktop pins one screen while
+   the stack fans out; phones scroll past a taller collage. */
 
 .about {
-  --card-h: clamp(300px, 30vw, 458px);
-  --gap: clamp(20px, 2.1vw, 32px);
   position: relative;
+  padding: 110px var(--gutter) 72px;
+}
+
+.pin {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: clamp(40px, 5.5vw, 84px);
-  min-height: 100vh;
-  min-height: 100svh;
-  padding: 110px 0 48px;
+  align-items: center;
+  gap: 40px;
 }
 
 .line {
-  width: min(920px, 100% - 2 * var(--gutter));
-  margin: 0 auto;
+  width: min(920px, 100%);
+  margin: 0;
   color: var(--cream);
   font-size: clamp(22px, 2.4vw, 36px);
   font-weight: 600;
@@ -27,72 +27,115 @@
   text-wrap: balance;
 }
 
-/* Full bleed; the row starts at the page gutter (60px in the reference) and runs off the right. */
-.viewport {
-  overflow: hidden;
-  /* Room for the card shadow, which overflow would otherwise clip; the margins cancel it out. */
-  padding-block: 16px 40px;
-  margin-block: -16px -40px;
+/* Phones: 360 × 790 units; every card 200 units tall. */
+.stage {
+  position: relative;
+  width: min(100%, 420px);
+  aspect-ratio: 360 / 790;
 }
 
-.track {
-  display: flex;
-  width: max-content;
-  margin-left: var(--gutter);
+.slot {
+  position: absolute;
+  left: var(--px);
+  top: var(--py);
+  z-index: var(--pz);
+  width: var(--pw);
+  aspect-ratio: var(--ratio);
+  transform: translate(-50%, -50%);
   will-change: transform;
-  animation: drift var(--dur) linear infinite;
-  animation-play-state: paused; /* runs only while on screen; see [data-on] */
 }
 
-.about[data-on] .track {
-  animation-play-state: running;
-}
-
-.viewport:hover .track {
-  animation-play-state: paused;
-}
-
-/* The gap sits after each card, so one copy plus its gaps is exactly half the track. */
-.list {
-  display: flex;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+/* Hover, focus or tap brings a card to the front. */
+.slot:hover,
+.slot:focus-within,
+.slot:has([aria-pressed="true"]) {
+  z-index: 20;
 }
 
 .card {
-  flex: none;
-  height: var(--card-h);
-  aspect-ratio: var(--ratio);
-  margin-right: var(--gap);
-}
-
-.art {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent)); /* nav pill, as the AI cards */
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform: none;
+  transition: transform 0.2s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
 }
 
-@keyframes drift {
-  to {
-    transform: translateX(-50%);
+.art {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent)); /* nav pill */
+}
+
+/* The deeper shadow on hover / focus / tap: a soft layer that fades in behind the card. */
+.deep {
+  position: absolute;
+  inset: 4% 3% 3%;
+  border-radius: 16px;
+  box-shadow: 0 22px 44px color-mix(in srgb, var(--ink) 34%, transparent);
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-out);
+}
+
+/* Straighten to 0° (undo the card's current angle), lift 8px. */
+.card[aria-pressed="true"],
+.card:focus-visible {
+  transform: rotate(calc(-1 * var(--a, 0deg))) translateY(-8px);
+}
+
+.card[aria-pressed="true"] .deep,
+.card:focus-visible .deep {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: rotate(calc(-1 * var(--a, 0deg))) translateY(-8px);
+  }
+
+  .card:hover .deep {
+    opacity: 1;
   }
 }
 
-/* Reduced motion: no loop and no second copy; a still row you can swipe or scroll sideways. */
-@media (prefers-reduced-motion: reduce) {
-  .track {
-    animation: none;
-    padding-right: var(--gutter);
+.card:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 6px;
+  border-radius: 18px;
+}
+
+/* ---------- Desktop: the pinned fan; 1200 × 700 units, every card 340 units tall ---------- */
+@media (min-width: 768px) {
+  .about {
+    height: 260vh; /* one screen pinned + the scroll that drives the fan */
+    padding: 0;
   }
 
-  .viewport {
-    overflow-x: auto;
-    scroll-padding-inline: var(--gutter);
+  .pin {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    padding: 104px var(--gutter) 32px;
+    gap: clamp(24px, 4vh, 48px);
   }
 
-  .list[aria-hidden] {
-    display: none;
+  .stage {
+    width: min(100%, 1300px, (100svh - 300px) * 1200 / 700);
+    aspect-ratio: 1200 / 700;
+  }
+
+  .slot {
+    left: var(--dx);
+    top: var(--dy);
+    z-index: var(--dz);
+    width: var(--dw);
   }
 }
