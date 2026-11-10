@@ -1,32 +1,27 @@
-// About cards, rebuilt from the card SVGs: the cream frame is CSS; the photo and the handwritten
-// caption pill are cut out at 3x (public/about/*-photo.webp, *-caption.webp). Every card in a slot
-// is the same size and its photo is cropped to fit (object-fit: cover), so a flip leaves no gap.
-// The captions are embedded in the SVGs at only 2x, so they soften past that. `name` is the
-// caption's text, for screen readers and search.
+// About cards: Bhasha's re-exports with matched sizes and radii (tall 358 × 521, wide 620 × 521),
+// rendered from the card SVGs at 3x (1563px tall): public/about/*-card.webp. Every card of a shape
+// is the same size, so a flip leaves no gap. sanjhi-card.webp is a stand-in in the same format
+// (print's frame, sanjhi's photo cropped to fit) until sanjhi.svg is re-exported. The captions are
+// embedded in the SVGs at only 2x, so they soften past that. `name` is the caption's text, for
+// screen readers and search.
 
 export type Shape = "wide" | "tall";
 
 export type Craft = {
   name: string;
-  /** The photo (1155px tall) and its width. */
-  photo: string;
-  pw: number;
-  /** The caption pill (99px tall) and its width. */
-  caption: string;
-  cw: number;
+  src: string;
+  /** Art size in px. */
+  w: number;
+  h: number;
   shape: Shape;
 };
 
-const PH = 1155; // photo height, px
-const CH = 99; // caption height, px
-export { PH, CH };
-
-const charcoal: Craft = { name: "Charcoal sketching", photo: "/about/charcoal-photo.webp", pw: 852, caption: "/about/charcoal-caption.webp", cw: 498, shape: "tall" };
-const sanjhi: Craft = { name: "Sanjhi, paper cutting craft", photo: "/about/sanjhi-photo.webp", pw: 2053, caption: "/about/sanjhi-caption.webp", cw: 231, shape: "wide" };
-const gourd: Craft = { name: "Gourd lamp", photo: "/about/gourd-lamp-photo.webp", pw: 848, caption: "/about/gourd-lamp-caption.webp", cw: 324, shape: "tall" };
-const print: Craft = { name: "Print design", photo: "/about/print-photo.webp", pw: 1707, caption: "/about/print-caption.webp", cw: 339, shape: "wide" };
-const clock: Craft = { name: "Clock designed using sanjhi", photo: "/about/clock-photo.webp", pw: 848, caption: "/about/clock-caption.webp", cw: 651, shape: "tall" };
-const paper: Craft = { name: "Paper sculpture", photo: "/about/paper-photo.webp", pw: 1552, caption: "/about/paper-caption.webp", cw: 405, shape: "wide" };
+const charcoal: Craft = { name: "Charcoal sketching", src: "/about/charcoal-card.webp", w: 1080, h: 1563, shape: "tall" };
+const sanjhi: Craft = { name: "Sanjhi, paper cutting craft", src: "/about/sanjhi-card.webp", w: 1860, h: 1563, shape: "wide" };
+const gourd: Craft = { name: "Gourd lamp", src: "/about/gourd-lamp-card.webp", w: 1074, h: 1563, shape: "tall" };
+const print: Craft = { name: "Print design", src: "/about/print-card.webp", w: 1860, h: 1563, shape: "wide" };
+const clock: Craft = { name: "Clock designed using sanjhi", src: "/about/clock-card.webp", w: 1074, h: 1563, shape: "tall" };
+const paper: Craft = { name: "Paper sculpture", src: "/about/paper-card.webp", w: 1860, h: 1563, shape: "wide" };
 
 /** All six, in the order a slot cycles through its shape's cards. */
 export const crafts: Craft[] = [sanjhi, gourd, charcoal, print, clock, paper];
@@ -34,7 +29,7 @@ export const crafts: Craft[] = [sanjhi, gourd, charcoal, print, clock, paper];
 /** The stages, in units. Desktop: one row (the reference: 930 of 1032 wide). Phones: the wide card
  *  on top, the two tall ones side by side under it. */
 export const DESK = { w: 1000, h: 420 };
-export const PHONE = { w: 360, h: 500 };
+export const PHONE = { w: 360, h: 568 };
 
 export type Slot = {
   shape: Shape;
@@ -49,11 +44,12 @@ export type Slot = {
   tilt: number;
 };
 
-// Desktop row from the reference: wide 510 + tall 224 + tall 224, gaps 19, cards 326 tall.
+// Desktop row: wide 442 + tall 255 + tall 255, gaps 22, cards 371 tall (620 / 358 × 521 scaled).
+// Phones: wide 360 × 302 on top; tall 174 × 253 pair under it, 12 apart.
 export const slots: Slot[] = [
-  { shape: "wide", first: 0, desk: { x: 257, y: 210, w: 510, h: 326 }, phone: { x: 180, y: 115, w: 360, h: 230 }, swing: -11, tilt: -4 },
-  { shape: "tall", first: 1, desk: { x: 643, y: 210, w: 224, h: 326 }, phone: { x: 87, y: 372, w: 174, h: 252 }, swing: -3, tilt: 3 },
-  { shape: "tall", first: 2, desk: { x: 886, y: 210, w: 224, h: 326 }, phone: { x: 273, y: 372, w: 174, h: 252 }, swing: 5, tilt: -3 },
+  { shape: "wide", first: 0, desk: { x: 223, y: 210, w: 442, h: 371 }, phone: { x: 180, y: 151, w: 360, h: 302 }, swing: -11, tilt: -4 },
+  { shape: "tall", first: 1, desk: { x: 593.5, y: 210, w: 255, h: 371 }, phone: { x: 87, y: 441, w: 174, h: 253 }, swing: -3, tilt: 3 },
+  { shape: "tall", first: 2, desk: { x: 870.5, y: 210, w: 255, h: 371 }, phone: { x: 273, y: 441, w: 174, h: 253 }, swing: 5, tilt: -3 },
 ];
 
 export const aboutLine = "Shaped by industrial design, grounded in the act of building";
