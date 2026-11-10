@@ -1,0 +1,170 @@
+/* About, from about II.svg: the line in cream on red, then the craft cards. The cards loop upward
+   (transform only); each track holds its list twice and moves by exactly one copy (-50%). Phones:
+   line on top, one column. 768+: two columns in opposite directions. 1024+: line beside the reel. */
+
+.about {
+  --gap: 24px;
+  position: relative;
+  display: grid;
+  gap: 32px;
+  padding: 110px var(--gutter) 72px;
+}
+
+.text {
+  display: grid;
+  justify-items: start;
+  gap: 20px;
+}
+
+.line {
+  margin: 0;
+  max-width: 22ch;
+  color: var(--cream);
+  font-size: clamp(24px, 2.4vw, 36px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+/* Stops the loop (WCAG 2.2.2) and is the touch control. */
+.pause {
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pause:active {
+  transform: scale(0.96);
+}
+
+.pause:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 3px;
+}
+
+.reel {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap);
+  height: 78svh;
+  min-height: 480px;
+}
+
+.viewport {
+  overflow: hidden;
+  min-width: 0;
+}
+
+.track {
+  will-change: transform;
+  animation: drift var(--dur) linear infinite;
+  animation-play-state: paused; /* runs only while on screen; see [data-on] */
+}
+
+.reverse {
+  animation-direction: reverse;
+}
+
+.about[data-on] .track {
+  animation-play-state: running;
+}
+
+.about[data-paused] .track,
+.about .viewport:hover .track {
+  animation-play-state: paused;
+}
+
+/* The gap sits under each copy, so one copy plus its gap is exactly half the track. */
+.list {
+  display: grid;
+  gap: var(--gap);
+  margin: 0;
+  padding: 0 0 var(--gap);
+  list-style: none;
+}
+
+.card {
+  margin: 0;
+}
+
+.art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@keyframes drift {
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@media (min-width: 768px) {
+  .reel {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Line beside the reel; the reel runs the full height of the screen, edge to edge. */
+@media (min-width: 1024px) {
+  .about {
+    grid-template-columns: 4fr 6fr;
+    align-items: center;
+    gap: clamp(32px, 5vw, 96px);
+    height: 100vh;
+    height: 100svh;
+    padding-block: 0;
+  }
+
+  .reel {
+    height: 100%;
+    max-width: 780px;
+    justify-self: end;
+    width: 100%;
+  }
+}
+
+/* Reduced motion: no loop and no second copy; the cards are a still stack the page scrolls past. */
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+
+  .list[aria-hidden] {
+    display: none;
+  }
+
+  .pause {
+    display: none;
+  }
+
+  .reel {
+    height: auto;
+    min-height: 0;
+  }
+
+  .about {
+    height: auto;
+  }
+
+  @media (min-width: 1024px) {
+    .about {
+      align-items: start;
+      padding-block: 110px 72px;
+    }
+
+    .text {
+      position: sticky;
+      top: 110px;
+    }
+  }
+}

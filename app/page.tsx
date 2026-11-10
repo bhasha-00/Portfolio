@@ -1,6 +1,7 @@
 import Hero from "./components/Hero";
 import Projects from "./components/Projects";
 import AiTinkering from "./components/AiTinkering";
+import About from "./components/About";
 import { sections } from "./sections";
 import styles from "./page.module.css";
 
@@ -11,7 +12,8 @@ export default function Home() {
       <Hero />
       <Projects />
       <AiTinkering />
-      {sections.slice(3).map(({ id, label }) => (
+      <About />
+      {sections.slice(4).map(({ id, label }) => (
         <section key={id} id={id} className={styles.section} aria-labelledby={`${id}-title`}>
           <h2 id={`${id}-title`} className="sr-only">
             {label}
