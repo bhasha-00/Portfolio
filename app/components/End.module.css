@@ -67,27 +67,30 @@
   list-style: none;
 }
 
-/* Cream pill, ink text: the nav pill's colours (the design's lavender and indigo are not tokens). */
+/* Plain cream text links, semibold, on the subline's baseline (Bhasha's update to end II.svg).
+   The padding is the tap area; LinkedIn is underlined, the email gains one on hover. */
 .pill {
-  display: inline-flex;
-  align-items: center;
-  min-height: 38px;
-  padding: 0 14px;
-  border-radius: 16px;
-  background: var(--cream);
-  color: var(--ink);
-  font-size: 15px;
-  font-weight: 500;
+  display: inline-block;
+  padding: 8px 0;
+  color: var(--cream);
+  font-size: clamp(15px, 1.05vw, 16px);
+  font-weight: 600;
+  line-height: 1.4;
   text-decoration: none;
-  box-shadow: 0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
   transition: transform 0.2s var(--ease-out);
   -webkit-tap-highlight-color: transparent;
 }
 
 .underline {
   text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1px;
+}
+
+@media (hover: hover) {
+  .pill:hover {
+    text-decoration: underline;
+  }
 }
 
 .pill:active {
@@ -143,8 +146,11 @@
     align-items: flex-end;
   }
 
+  /* From the frame: 53 apart, LinkedIn ending 141 from the right edge of 1522 (gutter + 3.3vw). */
   .links {
     flex-wrap: nowrap;
-    padding-bottom: 6px;
+    gap: clamp(32px, 3.5vw, 56px);
+    margin-bottom: -8px; /* cancel the tap padding so the text sits on the subline's baseline */
+    padding-right: 3.3vw;
   }
 }
