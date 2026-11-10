@@ -26,7 +26,7 @@ Feel: a precise, warm paper object. Bold red, hand-sketched, with one origami co
 - **Texture: none.** Flat colour. (Revisit only if the hero feels heavy once built.)
   - Exception (2026-11-10, at Bhasha's request): the green paper square in the End section is a photo of real paper, texture and its own green included. That square only.
   - Exception (2026-11-11, at Bhasha's request, from bg.svg): the page background is a fixed layer (Backdrop.tsx) of red, a muted CSS dot grid (cream dots 1.3px every 22px at 22%, layer at 40%, from Bhasha's type + texture test), and bg.svg's burst shape in cream at 12%. Content scrolls over it; the burst starts low and rises to the centre over the first screen.
-  - Planned (same request): a paper grain on the beige surfaces (case study cards, About cards, nav), matching the green paper.
+  - Paper grain (same request): the cream surfaces drawn in code (case study cards and tabs, nav) carry the green paper's fibres, taken from the End photo as a near-white tile (public/bg/paper-grain.webp) multiplied onto --cream. Loads after the page. The About and AI cards are image exports, so they keep their own surface.
 
 ## Type
 - **Geist** for headings, body and nav. **Geist Mono** only for small labels and chips (caps, wide tracking), e.g. "PROJECT 01 / ROLE / OUTCOME".

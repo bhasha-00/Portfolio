@@ -7,7 +7,9 @@
   transform: translateX(-50%);
   z-index: 40;
   max-width: calc(100vw - 16px);
-  background: var(--cream);
+  background: var(--paper-grain), var(--cream); /* paper, see globals.css */
+  background-size: var(--paper-size);
+  background-blend-mode: multiply;
   padding: 5px;
   border-radius: 99px;
   /* Shadow tinted from --ink so no new colour is introduced. */
