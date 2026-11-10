@@ -1,6 +1,6 @@
 // About cards: Bhasha's re-exports with matched sizes and radii (tall 358 × 521, wide 620 × 521),
-// rendered from the card SVGs at 3x (1563px tall): public/about/*-v4.webp. The frame is redrawn
-// keeps Bhasha's own shape (16 outside with one square corner; the photo inside 8) and carries the site's paper grain,
+// rendered from the card SVGs at 3x (1563px tall): public/about/*-v4.webp. The frame keeps
+// Bhasha's own shape (16 outside with one square corner; the photo inside 8) and carries the site's paper grain,
 // baked in on the cream only (not the photos). The caption is vector: a cream pill and Bhasha's
 // outlined Figma Hand text from font2.svg, so it stays sharp. Every card of a shape is the same
 // size, so a flip leaves no gap. `name` is the caption's text, for screen readers and search.
