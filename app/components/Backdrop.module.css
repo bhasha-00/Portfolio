@@ -14,14 +14,14 @@
 }
 
 /* Dot grid from Bhasha's type + texture test: cream dots 1.3px across every 22px, at 22% (#F3E9DA38).
-   Drawn by CSS, so nothing downloads. The layer sits at 40% on top of that, so the dots stay muted:
+   Drawn by CSS, so nothing downloads. The layer sits at 52% on top of that, so the dots stay muted:
    texture in the red, not a pattern you read. */
 .texture {
   position: absolute;
   inset: 0;
   z-index: 0; /* the bottom layer: red, then this, then the burst, then the page */
   background: radial-gradient(circle, color-mix(in srgb, var(--cream) 22%, transparent) 1.3px, transparent 1.8px) 0 0 / 22px 22px;
-  opacity: 0.4;
+  opacity: 0.52;
 }
 
 /* The burst: bg.svg's #F7D3CF at 12%, drawn in cream (the nearest token) at the same 12%. */
