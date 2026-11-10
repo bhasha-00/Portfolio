@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 import styles from "./Backdrop.module.css";
 
-// The page background: Bhasha's red speed-line and halftone image (public/bg/rays.webp, kept
-// pixelated) and bg.svg's light "burst" shape (1522 × 768 frame). It is fixed: everything scrolls
+// The page background: red, a muted CSS dot grid (from Bhasha's type + texture test) and bg.svg's
+// light "burst" shape (1522 × 768 frame). It is fixed: everything scrolls
 // over it. On arrival the burst sits low and a touch larger (as home.svg: its centre 261.5 units
 // lower, 7.6% bigger); over the first screen of scrolling it rises to the centre (as bg.svg) and
 // stays. Transform only. Reduced motion: it starts centred and never moves.
@@ -18,15 +18,6 @@ const BURST =
 
 export default function Backdrop() {
   const burst = useRef<SVGSVGElement>(null);
-  const root = useRef<HTMLDivElement>(null);
-
-  // The texture loads once the page has (see Backdrop.module.css).
-  useEffect(() => {
-    const ready = () => root.current?.setAttribute("data-ready", "");
-    if (document.readyState === "complete") ready();
-    else addEventListener("load", ready, { once: true });
-    return () => removeEventListener("load", ready);
-  }, []);
 
   useEffect(() => {
     const el = burst.current;
@@ -60,7 +51,7 @@ export default function Backdrop() {
   }, []);
 
   return (
-    <div ref={root} className={styles.backdrop} aria-hidden="true">
+    <div className={styles.backdrop} aria-hidden="true">
       <div className={styles.texture} />
       <svg ref={burst} className={styles.burst} viewBox={`0 0 ${FRAME.w} ${FRAME.h}`} preserveAspectRatio="xMidYMid slice">
         <path d={BURST} />

@@ -25,7 +25,7 @@ Feel: a precise, warm paper object. Bold red, hand-sketched, with one origami co
 - Cream on red is about 5.8:1 (passes AA). Gold on red is about 3.6:1: use for large or decorative elements only, never body text.
 - **Texture: none.** Flat colour. (Revisit only if the hero feels heavy once built.)
   - Exception (2026-11-10, at Bhasha's request): the green paper square in the End section is a photo of real paper, texture and its own green included. That square only.
-  - Exception (2026-11-11, at Bhasha's request, from bg.svg): the page background is a fixed layer (Backdrop.tsx) of Bhasha's red speed-line and halftone image (public/bg/rays.webp, lighter rays on the red, kept a little pixelated), and bg.svg's burst shape in cream at 12%. Content scrolls over it; the burst starts low and rises to the centre over the first screen. The texture loads after the page so it never delays the hero.
+  - Exception (2026-11-11, at Bhasha's request, from bg.svg): the page background is a fixed layer (Backdrop.tsx) of red, a muted CSS dot grid (cream dots 1.3px every 22px at 22%, layer at 40%, from Bhasha's type + texture test), and bg.svg's burst shape in cream at 12%. Content scrolls over it; the burst starts low and rises to the centre over the first screen.
   - Planned (same request): a paper grain on the beige surfaces (case study cards, About cards, nav), matching the green paper.
 
 ## Type
