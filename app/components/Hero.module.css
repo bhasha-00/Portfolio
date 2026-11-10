@@ -87,12 +87,13 @@
   height: auto;
 }
 
-/* Gold paper crane, centred where the photo's crane was: (2052, 417) of 2400 × 1912.
-   Art (assets/crane-sm.webp) is 320 × 236; its foot touches down at 31% across, the very bottom. */
+/* Gold paper crane, in the clear space above the tablet: centred at (1600, 230) of 2000 × 1615
+   (workspace-v7). Art (assets/crane-sm.webp) is 320 × 236; its foot touches down at 31% across,
+   the very bottom. */
 .crane {
   position: absolute;
-  left: 85.52%;
-  top: 21.84%;
+  left: 80%;
+  top: 14.24%;
   width: 10.5%;
   aspect-ratio: 320 / 236;
   container-type: inline-size; /* shadow blur below is in cqw: 1cqw = 1% of the crane width */
@@ -190,12 +191,12 @@
   }
 }
 
-/* The crane's foot: 31% across, bottom edge of the .crane box above (centre 85.52% / 21.84%,
-   10.5% wide, 320 × 236 art on a 2400 × 1912 photo). Width = crane width, for the landing puff. */
+/* The crane's foot: 31% across, bottom edge of the .crane box above (centre 80% / 14.24%,
+   10.5% wide, 320 × 236 art on a 2000 × 1615 photo). Width = crane width, for the landing puff. */
 .touchdown {
   position: absolute;
-  left: 83.53%;
-  top: 26.7%;
+  left: 78%;
+  top: 19.04%;
   width: 10.5%;
   height: 0;
   pointer-events: none;

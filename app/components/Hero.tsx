@@ -29,14 +29,14 @@ export default function Hero() {
       </div>
 
       {/* Hero art: designer workspace, top-down. Decorative, so empty alt.
-          The gold paper crane from the intro rests where the photo's crane was. */}
+          The gold paper crane from the intro rests in the clear space above the tablet. */}
       <div className={styles.stage}>
         <div className={styles.artBox}>
           <Image
-            src="/hero/workspace-v6.webp"
+            src="/hero/workspace-v7.webp"
             alt=""
-            width={2400}
-            height={1912}
+            width={2000}
+            height={1615}
             quality={80}
             priority
             sizes="(max-width: 767px) 88vw, 640px"
