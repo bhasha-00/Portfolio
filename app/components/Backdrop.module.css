@@ -13,8 +13,8 @@
   background: var(--red);
 }
 
-/* Red + two halftone plates at their bg.svg opacities, pre-composited (75KB). Scaled up without
-   smoothing, so the dots stay a little pixelated. */
+/* Bhasha's red speed-line and halftone background (public/bg/rays.webp, 1920 × 1200, 39KB), in
+   place of bg.svg's dark plates. Scaled up without smoothing, so the dots stay a little pixelated. */
 .texture {
   position: absolute;
   inset: 0;
@@ -26,7 +26,7 @@
 /* Only after the page has loaded (Backdrop.tsx), so it never competes with the hero art, which is
    the LCP element; the flat red is there from the first paint. */
 .backdrop[data-ready] .texture {
-  background: url("/bg/texture.webp") center / cover no-repeat;
+  background: url("/bg/rays.webp") center / cover no-repeat;
   opacity: 1;
 }
 

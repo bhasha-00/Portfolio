@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 import styles from "./Backdrop.module.css";
 
-// The page background, from bg.svg (1522 × 768): red, two halftone plates (pre-composited into
-// public/bg/texture.webp, kept pixelated) and a light "burst" shape. It is fixed: everything scrolls
+// The page background: Bhasha's red speed-line and halftone image (public/bg/rays.webp, kept
+// pixelated) and bg.svg's light "burst" shape (1522 × 768 frame). It is fixed: everything scrolls
 // over it. On arrival the burst sits low and a touch larger (as home.svg: its centre 261.5 units
 // lower, 7.6% bigger); over the first screen of scrolling it rises to the centre (as bg.svg) and
 // stays. Transform only. Reduced motion: it starts centred and never moves.
