@@ -9,9 +9,8 @@ import styles from "./About.module.css";
 const PACE = 7;
 const DURATION = crafts.reduce((s, c) => s + c.w / c.h, 0) * PACE;
 
-// Card height (keep in step with --card-h in About.module.css): clamp(300px, 30vw, 458px).
-const sizes = (ratio: number) =>
-  `(max-width: 1000px) ${Math.round(300 * ratio)}px, (max-width: 1526px) ${Math.round(30 * ratio)}vw, ${Math.round(458 * ratio)}px`;
+// The cards are served as exported (3x, about 900KB for all six, lazy) rather than resized by
+// next/image, so they stay sharp when zoomed: a resized copy only matches the screen's density.
 
 // About, from about II.svg: the line centred, then one row of craft cards at the same height,
 // drifting left in a seamless loop. CSS keyframes on transform only: the track holds the row twice
@@ -48,7 +47,7 @@ export default function About() {
             <ul key={copy} className={styles.list} aria-hidden={copy === 1 || undefined} inert={copy === 1}>
               {crafts.map((c) => (
                 <li key={c.src} className={styles.card} style={{ "--ratio": `${c.w} / ${c.h}` } as CSSProperties}>
-                  <Image src={c.src} alt={copy ? "" : c.name} width={c.w} height={c.h} sizes={sizes(c.w / c.h)} className={styles.art} />
+                  <Image src={c.src} alt={copy ? "" : c.name} width={c.w} height={c.h} className={styles.art} unoptimized />
                 </li>
               ))}
             </ul>
