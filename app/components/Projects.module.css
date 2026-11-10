@@ -49,7 +49,28 @@
   background-size: var(--paper-size);
   background-blend-mode: multiply;
   color: var(--ink);
-  box-shadow: 0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent); /* same as the nav pill */
+  box-shadow:
+    0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent), /* same as the nav pill */
+    0 -4px 24px color-mix(in srgb, var(--ink) 17%, transparent); /* cast up onto the card below (cs2.svg) */
+}
+
+/* ---------- Covered by the next card (cs2.svg). --cover is 0 → 1, set on scroll by Projects.tsx.
+   The paper darkens a touch (#F0EDDE → #E8E4D2 in the mock: about 4.5% ink) and the type falls to
+   32%. Opacity only. */
+.card::after,
+.tab::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--ink);
+  opacity: calc(var(--cover, 0) * 0.045);
+  pointer-events: none;
+}
+
+.card > :not(.tab, .count),
+.tab .ink {
+  opacity: calc(1 - var(--cover, 0) * 0.68);
 }
 
 /* Folder tab, same paper as the card, sitting on its top edge. */
@@ -129,6 +150,7 @@
 
 .text strong {
   font-weight: 600;
+  color: var(--indigo); /* key figures, as cs2.svg */
 }
 
 .note {

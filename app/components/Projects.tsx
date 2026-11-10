@@ -261,9 +261,15 @@ export default function Projects() {
     const update = () => {
       raf = 0;
       // A covered card hides its "01 / 03" label (it sits outside the card, under the next one's).
+      // --cover runs 0 → 1 as the next card travels from the bottom of the screen to this card's
+      // top: the card darkens and its type falls to 32% with it (cs2.svg).
       const tops = cards.current.map((c) => c?.getBoundingClientRect().top ?? 0);
       cards.current.forEach((c, j) => {
-        if (c) c.toggleAttribute("data-covered", j < N - 1 && tops[j + 1] <= tops[j] + 2);
+        if (!c) return;
+        c.toggleAttribute("data-covered", j < N - 1 && tops[j + 1] <= tops[j] + 2);
+        const run = innerHeight - tops[j];
+        const cover = j < N - 1 && run > 0 ? Math.min(1, Math.max(0, 1 - (tops[j + 1] - tops[j]) / run)) : 0;
+        c.style.setProperty("--cover", cover.toFixed(3));
       });
       const first = slots.current[0]?.getBoundingClientRect();
       const ai = document.getElementById("ai-tinkering")?.getBoundingClientRect();
@@ -355,7 +361,7 @@ export default function Projects() {
               aria-labelledby={`project-${j}`}
             >
               <span className={styles.tab} aria-hidden="true">
-                {pad(j + 1)}
+                <span className={styles.ink}>{pad(j + 1)}</span>
               </span>
               <span className={styles.count} aria-hidden="true">
                 {pad(j + 1)} / {pad(N)}
