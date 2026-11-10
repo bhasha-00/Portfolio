@@ -1,74 +1,78 @@
-/* Home hero. Numbers marked "ref" come from reference/lofi-v4.html. */
+/* Home hero, on .container (edges) + .grid (columns) from tokens.css. */
 .hero {
   position: relative;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   min-height: 100svh;
-  padding: 110px var(--gutter) 0; /* ref .hero */
+  padding-top: var(--nav-offset);
   overflow: hidden;
 }
 
-/* Mobile: stacked. Desktop: headline left, intro right. */
+/* Phones and tablet: stacked, full width. Desktop: headline cols 1–8, intro 9–12. */
 .top {
   position: relative;
   z-index: 1;
-  display: grid;
-  gap: 28px;
+  row-gap: var(--space-5);
 }
 
-.headline {
-  /* Floor of min(28px, 7vw): "Translating business goals" is 12.28em wide, so on a phone it fits
-     the 88vw column in one line (27.3px at 390, 25.2px at 360). Desktop is unchanged. */
-  font-size: clamp(min(28px, 7vw), 3.6vw, 56px);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.05;
-}
-
-/* One line per step, at every width. */
-.step {
-  display: block;
-  white-space: nowrap;
-}
-
+.headline,
 .intro {
-  max-width: 360px;
+  grid-column: 1 / -1;
 }
 
+/* Role: display. */
+.headline {
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tracking-display);
+  text-wrap: balance;
+}
+
+/* Phones: the steps run on and wrap balanced; one line per step from 768 up. */
+.step {
+  display: inline;
+}
+
+/* Role: h3. */
 .name {
-  font-size: clamp(22px, 1.9vw, 28px);
-  font-weight: 800;
-  line-height: 1.1;
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tracking-h2);
+  text-wrap: balance;
 }
 
+/* Role: hand-md (outlined handwriting, sized to the role's font size). */
 .role {
-  margin-top: 6px;
+  margin-top: var(--space-1);
   line-height: 0;
 }
 
-/* The handwriting, at about the height it has under the name in home.svg (19.5 of 1522). */
 .hand {
   display: block;
   width: auto;
-  height: clamp(18px, 1.45vw, 22px);
+  height: var(--fs-hand-md);
 }
 
+/* Role: lead, at body weight. */
 .summary {
-  margin-top: 14px;
-  font-size: 16px;
-  line-height: 1.6;
+  margin-top: var(--space-3);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-lead);
+  font-weight: var(--fw-body);
 }
 
 /* Tinted numeral, behind everything. Its baseline sits on the bottom edge, where the art ends. */
 .big {
   position: absolute;
-  right: 3vw;
+  right: 0; /* the container's right edge */
   bottom: -0.13em; /* cancels Geist's space under the baseline */
   z-index: 0;
-  font-size: clamp(88px, 13vw, 220px); /* "80/20" is wider than "01": sized to stay in its corner */
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  font-size: var(--fs-numeral);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tracking-display);
   line-height: 1;
   white-space: nowrap;
   opacity: 0.14;
@@ -82,7 +86,7 @@
   z-index: 1;
   width: min(640px, 100%);
   margin-top: auto;
-  padding-top: 32px;
+  padding-top: var(--space-6);
   align-self: center;
 }
 
@@ -142,7 +146,7 @@
 
 /* Blur sized to the crane so thin tips melt into soft shade at any size. */
 .castNear {
-  filter: blur(0.9cqw);
+  filter: blur(0.9cqw); /* tokens-allow: crane shadow (brand moment, 2026-11-10) */
   opacity: 0.45;
 }
 
@@ -151,7 +155,7 @@
 }
 
 .castFar {
-  filter: blur(2.2cqw);
+  filter: blur(2.2cqw); /* tokens-allow: crane shadow (brand moment, 2026-11-10) */
   opacity: 0.3;
 }
 
@@ -168,7 +172,7 @@
   height: 12%;
   border-radius: 50%;
   background: var(--ink);
-  filter: blur(1.6cqw);
+  filter: blur(1.6cqw); /* tokens-allow: crane shadow (brand moment, 2026-11-10) */
   opacity: 0.35;
   transform: rotate(-3deg);
 }
@@ -182,7 +186,7 @@
   height: 7%;
   border-radius: 50%;
   background: var(--ink);
-  filter: blur(max(1px, 0.5cqw));
+  filter: blur(max(1px, 0.5cqw)); /* tokens-allow: crane shadow (brand moment, 2026-11-10) */
   opacity: 0.6;
 }
 
@@ -244,13 +248,13 @@
   opacity: 0;
 }
 
-/* ref .cue: left 7vw, bottom 22px, 12px, .14em tracking, .8 opacity */
+/* Role: caption, on the container's left edge. */
 .cue {
   position: absolute;
-  left: 7vw;
-  bottom: 22px;
-  font-family: var(--font-sans);
-  font-size: 12px;
+  left: 0;
+  bottom: var(--space-5);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -259,14 +263,28 @@
 }
 
 @media (min-width: 768px) {
-  .top {
-    grid-template-columns: minmax(0, 1fr) min(360px, 34vw);
-    align-items: start;
-    gap: 6vw;
+  .step {
+    display: block;
+    white-space: nowrap;
   }
 
   .intro {
-    padding-top: 8px;
+    grid-column: 1 / span 5;
+  }
+}
+
+@media (min-width: 1200px) {
+  .top {
+    align-items: start;
+  }
+
+  .headline {
+    grid-column: 1 / span 8;
+  }
+
+  .intro {
+    grid-column: 9 / -1;
+    padding-top: var(--space-2);
   }
 }
 

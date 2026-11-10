@@ -6,9 +6,9 @@ import styles from "./Hero.module.css";
 // Static home hero. Layout and spacing from reference/lofi-v4.html; type and colour from artdirection.md.
 export default function Hero() {
   return (
-    <section id="home" className={styles.hero} aria-labelledby="home-title">
-      <div className={styles.top}>
-        {/* Three lines, set by hand: one step each. */}
+    <section id="home" className={`container ${styles.hero}`} aria-labelledby="home-title">
+      <div className={`grid ${styles.top}`}>
+        {/* Three lines, set by hand, from 768 up; phones wrap it balanced. */}
         <p className={styles.headline}>
           <span className={styles.step}>Translating business goals</span>{" "}
           <span className={styles.step}>and user needs into</span>{" "}
@@ -24,8 +24,8 @@ export default function Hero() {
             <img src="/hero/product-designer.svg" alt="Product designer" width={162} height={20} className={styles.hand} />
           </p>
           <p className={styles.summary}>
-            2+ years across B2B SaaS and AI-native projects. Strong focus in complex system, scale
-            and end-to-end ownership.
+            2+ years across B2B SaaS and AI‑native projects. Strong focus on complex systems, scale
+            and end‑to‑end ownership.
           </p>
         </div>
       </div>

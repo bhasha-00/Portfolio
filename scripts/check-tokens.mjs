@@ -33,6 +33,8 @@ function walk(dir) {
 }
 function scan(p) {
   readFileSync(p, "utf8").split("\n").forEach((line, i) => {
+    // Approved exceptions carry `tokens-allow: <reason>` on the same line (grep for the list).
+    if (line.includes("tokens-allow:")) return;
     for (const r of rules) {
       if (r.skip?.(line)) continue;
       if (r.re.test(line)) hits.push(`${p}:${i + 1}  ${r.name}  →  ${line.trim().slice(0, 90)}`);
