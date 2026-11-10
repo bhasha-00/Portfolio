@@ -111,7 +111,7 @@
   border-radius: 18px;
 }
 
-/* ---------- Desktop: the pinned fan; 1200 × 700 units, every card 340 units tall ---------- */
+/* ---------- Desktop: the pinned fan; 1200 × 760 units, every card 340 units tall ---------- */
 @media (min-width: 768px) {
   .about {
     height: 260vh; /* one screen pinned + the scroll that drives the fan */
@@ -128,8 +128,8 @@
   }
 
   .stage {
-    width: min(100%, 1300px, (100svh - 300px) * 1200 / 700);
-    aspect-ratio: 1200 / 700;
+    width: min(100%, 1300px, (100svh - 300px) * 1200 / 760);
+    aspect-ratio: 1200 / 760;
   }
 
   .slot {
