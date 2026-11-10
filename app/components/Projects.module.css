@@ -98,7 +98,7 @@
   background: var(--paper-grain), var(--cream); /* same sheet as the card */
   background-size: var(--paper-size);
   background-blend-mode: multiply;
-  font: 500 12px/1 var(--font-mono);
+  font: 500 12px/1 var(--font-sans);
   letter-spacing: 0.06em;
 }
 
@@ -108,7 +108,7 @@
   right: 4px;
   bottom: calc(100% + 10px);
   color: var(--cream);
-  font: 500 12px/1 var(--font-mono);
+  font: 500 12px/1 var(--font-sans);
   letter-spacing: 0.08em;
   opacity: 0.88; /* faint, but still 4.5:1 on red */
   transition: opacity 0.2s var(--ease-out);
@@ -246,7 +246,7 @@
 .hint {
   display: block;
   margin-top: 10px;
-  font: 500 11px/1 var(--font-mono);
+  font: 500 11px/1 var(--font-sans);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   opacity: 0.75;

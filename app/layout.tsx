@@ -1,22 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Caveat } from "next/font/google";
 import Nav from "./components/Nav";
 import Backdrop from "./components/Backdrop";
 import Intro from "./components/intro/Intro";
+import "./tokens.css";
 import "./globals.css";
 
+// Exactly two families (tokens.css): Geist and one hand font.
 const geist = Geist({
   subsets: ["latin"],
   display: "swap",
   preload: true,
-  variable: "--font-geist",
+  variable: "--nf-geist",
 });
 
-const geistMono = Geist_Mono({
+const hand = Caveat({
   subsets: ["latin"],
   display: "swap",
-  preload: false, // only small labels below the fold use mono
-  variable: "--font-geist-mono",
+  preload: false, // chips and eyebrows only, never the hero headline
+  variable: "--nf-hand",
 });
 
 export const metadata: Metadata = {
@@ -35,7 +37,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${geist.variable} ${hand.variable}`} suppressHydrationWarning>
       <head>
         {/* Blocking on purpose (tiny, cached): decides before first paint whether the intro plays. */}
         {/* eslint-disable-next-line @next/next/no-sync-scripts */}

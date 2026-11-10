@@ -10,6 +10,9 @@ Feel: a precise, warm paper object. Bold red, hand-sketched, with one origami co
 - **Check:** screenshots at 390px and 1440px vs the prototype, Lighthouse mobile run, a 10-second recruiter scan.
 
 ## Tokens
+`app/tokens.css` is the only place raw values live (imported once in `app/layout.tsx`). Everything else uses `var(--token)`. `npm run check:tokens` fails on raw colours, raw font sizes, `clamp()` font sizes, extra families, gradients/filters and off-scale spacing.
+
+Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 ```css
 :root{
   --red:#A82A1E;      /* hero + page background */
@@ -27,12 +30,32 @@ Feel: a precise, warm paper object. Bold red, hand-sketched, with one origami co
   - Exception (2026-11-11, at Bhasha's request, from bg.svg): the page background is a fixed layer (Backdrop.tsx) of red, a muted CSS dot grid (cream dots 1.3px every 22px at 22%, layer at 52%, from Bhasha's type + texture test), and bg.svg's burst shape in cream at 12%. Content scrolls over it; the burst starts low and rises to the centre over the first screen.
   - Paper grain (same request): the cream surfaces drawn in code (case study cards and tabs, nav) carry the green paper's fibres, taken from the End photo as a near-white tile (public/bg/paper-grain.webp) multiplied onto --cream. Loads after the page. The AI cards get the same grain as a layer clipped to their outline; the About cards are photo exports and keep their own surface.
 
+- Roles: `--text-on-red` (cream), `--text-on-cream` (ink), `--text-muted` (~6.3:1 on cream), `--divider` (ink 12%), `--dim-overlay` + `--dim-text-opacity` (covered card), `--cloud-fill`.
+- Radius `--r-sm` 8 / `--r-md` 16 / `--r-pill`; elevation `--shadow-card`. Motion `--dur-fast` 150 / `--dur-base` 250 / `--dur-card` 500, `--ease-out`.
+
 ## Type
-- **Geist** for headings, body and nav. **Geist Mono** only for small labels and chips (caps, wide tracking), e.g. "PROJECT 01 / ROLE / OUTCOME".
+- Exactly two families, both via `next/font/google` in `app/layout.tsx`: **Geist** (`--nf-geist` → `--font-sans`) for everything set in type, and **Caveat** (`--nf-hand` → `--font-hand`) for chips, eyebrows and "Try a fold?". No Geist Mono, no monospace.
+- Every text element maps to one role. No raw sizes, no `clamp()` sizes. Line heights sit on the 4px grid.
+
+| Role | 390 | 768 | 1200+ | Use |
+|---|---|---|---|---|
+| display | 40/44 | 48/52 | 56/60 | hero headline, weight 800, -0.03em |
+| h2 | 28/32 | 32/36 | 40/44 | card + section titles, 700, -0.02em |
+| h3 | 24/32 | 28/32 | 28/32 | name, sub-heads |
+| lead | 20/28 | | | summary, column labels (600) |
+| body | 16/24 | | | body, 400 |
+| small | 14/20 | | | nav, captions |
+| caption | 12/16 | | | counters, chips |
+| hand-sm / md / lg | 16/20 · 20/24 · 24/28 | | | chips · eyebrows, role line · "Try a fold?" |
+
+- Counters: Geist 500, `font-variant-numeric: tabular-nums`. Metrics: weight 700.
+- Headings use `text-wrap: balance`.
 - Nav: Geist 500, normal case.
-- Headings: weight 700-800, letter-spacing about -0.03em, line-height about 1.0. Name: `clamp(64px, 13vw, 180px)`.
-- Body: 400, at least 16px on mobile.
-- Load with `next/font/google`, Latin subset, `display: swap`, preload the heading weight. No other families.
+
+## Spacing and grid
+- Spacing, 4px base: `--space-1` 4 · `-2` 8 · `-3` 12 · `-4` 16 · `-5` 24 · `-6` 32 · `-7` 48 · `-8` 64 · `-9` 96. Every margin, padding and gap uses one of these.
+- Grid: `.container` (max 1280) + `.grid`. Columns / margin / gutter: 4 / 20 / 16 below 768; 8 / 40 / 24 at 768–1199; 12 / 80 / 24 at 1200+. Every section sits in `.container .grid`, so all left edges match.
+- `--card-pad` 24 / 32 / 48 on all four sides. `--nav-offset` 96.
 - Optional (only if the hero looks too plain): one serif accent word. Test before committing.
 
 ## Home (hero)

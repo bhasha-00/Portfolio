@@ -1,0 +1,103 @@
+/* tokens.css — the only place raw values are allowed.
+   Everything else uses var(--token). Checked by scripts/check-tokens.mjs */
+
+:root {
+  /* ---------- Colour (brand) ---------- */
+  --red: #A82A1E;        /* page + hero background */
+  --cream: #F3E9DA;      /* cards, nav pill, text on red */
+  --ink: #2A1410;        /* text on cream */
+  --gold: #E8B04A;       /* crane, decorative only, never text */
+  --green: #2E7D6B;      /* paper square; cream on green = 4.1:1, large text only */
+  --vermilion: #D9432F;  /* reserved accent; unused until needed */
+  --back: #FFF7E8;       /* origami back side, landing puffs */
+  --lime: #C8D52E;       /* parrot paper only (2026-11-10, Bhasha's request) */
+
+  /* ---------- Colour (roles, derived from brand only) ---------- */
+  --text-on-red: var(--cream);                                   /* 5.8:1 */
+  --text-on-cream: var(--ink);
+  --text-muted: color-mix(in srgb, var(--ink) 72%, var(--cream)); /* ~6.3:1 on cream */
+  --divider: color-mix(in srgb, var(--ink) 12%, transparent);
+  --dim-overlay: color-mix(in srgb, var(--ink) 8%, transparent);  /* covered card */
+  --dim-text-opacity: 0.32;                                       /* covered card content */
+  --cloud-fill: color-mix(in srgb, var(--cream) 12%, transparent);
+
+  /* ---------- Fonts: exactly two families ---------- */
+  /* next/font sets --nf-geist and --nf-hand via its `variable` option */
+  --font-sans: var(--nf-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-hand: var(--nf-hand), "Segoe Print", cursive;
+
+  /* ---------- Type scale (minor third 1.2 from 16, snapped to whole px) ----------
+     steps: 12 14 16 20 24 28 32 40 48 56  — line-heights on the 4px grid */
+  --fs-caption: 12px;  --lh-caption: 16px;   /* counters, chips */
+  --fs-small: 14px;    --lh-small: 20px;     /* nav, captions */
+  --fs-body: 16px;     --lh-body: 24px;      /* body, 400 */
+  --fs-lead: 20px;     --lh-lead: 28px;      /* summary, column labels (600) */
+  --fs-h3: 24px;       --lh-h3: 32px;        /* name, sub-heads (mobile) */
+  --fs-h2: 28px;       --lh-h2: 32px;        /* card + section titles (mobile) */
+  --fs-display: 40px;  --lh-display: 44px;   /* hero headline (mobile) */
+
+  /* hand font runs ~2px bigger for the same optical size */
+  --fs-hand-sm: 16px;  --lh-hand-sm: 20px;   /* chips */
+  --fs-hand-md: 20px;  --lh-hand-md: 24px;   /* eyebrows, role line */
+  --fs-hand-lg: 24px;  --lh-hand-lg: 28px;   /* "Try a fold?" */
+
+  --fw-body: 400; --fw-label: 600; --fw-h2: 700; --fw-display: 800;
+  --tracking-display: -0.03em; --tracking-h2: -0.02em; --tracking-chip: 0.02em;
+
+  /* ---------- Spacing (4px base) ---------- */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 64px; --space-9: 96px;
+
+  /* ---------- Radius / elevation ---------- */
+  --r-sm: 8px; --r-md: 16px; --r-pill: 999px;
+  --shadow-card: 0 8px 24px color-mix(in srgb, var(--ink) 20%, transparent);
+
+  /* ---------- Layout: 4 / 8 / 12 columns ---------- */
+  --container-max: 1280px;
+  --margin: 20px;      /* 390 */
+  --gutter: 16px;
+  --cols: 4;
+  --card-pad: var(--space-5);   /* 24 mobile, 48 desktop */
+  --nav-offset: 96px;           /* sticky cards stop below the nav */
+
+  /* ---------- Layers ---------- */
+  --z-bg: -1; --z-content: 1; --z-nav: 50; --z-crane: 60;
+
+  /* ---------- Motion (UI under 300ms; brand moments are exempt) ---------- */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --dur-fast: 150ms; --dur-base: 250ms; --dur-card: 500ms;
+}
+
+/* Tablet 768–1199 */
+@media (min-width: 768px) {
+  :root {
+    --margin: 40px; --gutter: 24px; --cols: 8; --card-pad: var(--space-6);
+    --fs-h3: 28px; --lh-h3: 32px;
+    --fs-h2: 32px; --lh-h2: 36px;
+    --fs-display: 48px; --lh-display: 52px;
+  }
+}
+
+/* Desktop 1200+ */
+@media (min-width: 1200px) {
+  :root {
+    --margin: 80px; --cols: 12; --card-pad: var(--space-7);
+    --fs-h2: 40px; --lh-h2: 44px;
+    --fs-display: 56px; --lh-display: 60px;
+  }
+}
+
+/* Layout primitives */
+.container {
+  width: min(100% - 2 * var(--margin), var(--container-max));
+  margin-inline: auto;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur-base: 0ms; --dur-card: 0ms; }
+}

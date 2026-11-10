@@ -13,7 +13,10 @@ Next.js (App Router) + TypeScript + CSS (variables or CSS modules). Deploy on Ve
 5. **Ask before adding a dependency.** Prefer plain CSS and inline SVG.
 
 ## Hard rules
-- Colours and fonts come only from the tokens in `artdirection.md`. No new colours, no new font families.
+- Colours, fonts, type sizes and spacing come only from `app/tokens.css` (documented in `artdirection.md`). No new colours, no new font families, no indigo.
+- Two families: Geist (`--nf-geist`) and Caveat (`--nf-hand`), loaded with `next/font`. No Geist Mono.
+- Type roles: display, h2, h3, lead, body, small, caption, hand-sm/md/lg (`--fs-*` / `--lh-*`). Spacing: `--space-1..9` (4 8 12 16 24 32 48 64 96). Grid: `.container` + `.grid`, 4/8/12 columns.
+- Run `npm run check:tokens` before every commit; it must print "Tokens clean."
 - No texture, no gradients, no glassmorphism.
 - No WebGL or video on first paint. Hero must be usable in about 1s.
 - Animate transform and opacity only. Respect `prefers-reduced-motion`.
