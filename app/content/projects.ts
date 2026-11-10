@@ -45,7 +45,7 @@ export const projects: Project[] = [
   },
   {
     name: "Design system",
-    label: { text: "Design system" },
+    label: { text: "Design system", art: { src: "/projects/label-design-system.svg", w: 91.43, h: 16.01 } },
     title: "Turned static frames into a tokenized design system",
     problem:
       "Every designer drew their own components, with no tokens or variants. A new designer took a month or more to match the look.",
@@ -55,7 +55,7 @@ export const projects: Project[] = [
   },
   {
     name: "Chatbot",
-    label: { text: "Conversational bot" },
+    label: { text: "Conversational bot", art: { src: "/projects/label-conversational-bot.svg", w: 121.43, h: 16.01 } },
     title: "Optimizing response syntax for chatbot adoption",
     problem:
       "Lack of query guidance led admins to enter vague queries with unclear errors, **leaving users unsure of the bot’s capabilities and limitations**.",
@@ -66,7 +66,7 @@ export const projects: Project[] = [
   },
   {
     name: "NOVA",
-    label: { text: "Visualization" },
+    label: { text: "Visualization", art: { src: "/projects/label-visualization.svg", w: 81.56, h: 16.01 } },
     title: "From firefighting to foresight: making batch load visible before it overloads the system",
     problem:
       "A 30-year-old platform was struggling at scale. One batch failure could stall 300,000 reports, and the ops team spent its days firefighting.",
