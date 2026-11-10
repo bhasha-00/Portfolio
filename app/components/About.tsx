@@ -2,57 +2,32 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { aboutLine, craftColumns, crafts, type Craft } from "../content/about";
+import { aboutLine, crafts } from "../content/about";
 import styles from "./About.module.css";
 
-// Seconds per card-height of travel: the same pace in every column, whatever its length.
-const PACE = 11;
-const travel = (list: Craft[]) => list.reduce((s, c) => s + c.h / c.w, 0) * PACE;
+// Seconds per card-height of travel, so the pace is the same at every screen size.
+const PACE = 7;
+const DURATION = crafts.reduce((s, c) => s + c.w / c.h, 0) * PACE;
 
-// About. The line on the left; the craft cards drift upward in a seamless loop on the right (two
-// columns in opposite directions; one column on phones). CSS keyframes on transform only: each
-// track holds its list twice and moves by exactly one copy. It runs only while the section is on
-// screen, pauses on hover or with the Pause button, and stands still under reduced motion.
+// Card height (keep in step with --card-h in About.module.css): clamp(300px, 30vw, 458px).
+const sizes = (ratio: number) =>
+  `(max-width: 1000px) ${Math.round(300 * ratio)}px, (max-width: 1526px) ${Math.round(30 * ratio)}vw, ${Math.round(458 * ratio)}px`;
+
+// About, from about II.svg: the line centred, then one row of craft cards at the same height,
+// drifting left in a seamless loop. CSS keyframes on transform only: the track holds the row twice
+// and moves by exactly one copy. It runs only while the section is on screen, pauses on hover,
+// focus or the Pause button, and under reduced motion becomes a still row you can swipe.
 export default function About() {
   const section = useRef<HTMLElement>(null);
   const [paused, setPaused] = useState(false);
-  // One column or two, picked on the client so only one set of images loads. The reel keeps its
-  // height until then, so nothing shifts.
-  const [wide, setWide] = useState<boolean | null>(null);
 
   useEffect(() => {
     const sec = section.current;
     if (!sec) return;
     const io = new IntersectionObserver(([e]) => sec.toggleAttribute("data-on", e.isIntersecting));
     io.observe(sec);
-    const mq = matchMedia("(min-width: 768px)");
-    const pick = () => setWide(mq.matches);
-    pick();
-    mq.addEventListener("change", pick);
-    return () => {
-      io.disconnect();
-      mq.removeEventListener("change", pick);
-    };
+    return () => io.disconnect();
   }, []);
-
-  const track = (list: Craft[], key: string, sizes: string, reverse = false) => (
-    <div key={key} className={styles.viewport}>
-      <div
-        className={`${styles.track} ${reverse ? styles.reverse : ""}`}
-        style={{ "--dur": `${travel(list).toFixed(1)}s` } as CSSProperties}
-      >
-        {[0, 1].map((copy) => (
-          <ul key={copy} className={styles.list} aria-hidden={copy === 1 || undefined} inert={copy === 1}>
-            {list.map((c) => (
-              <li key={c.src} className={styles.card}>
-                <Image src={c.src} alt={copy ? "" : c.name} width={c.w} height={c.h} sizes={sizes} className={styles.art} />
-              </li>
-            ))}
-          </ul>
-        ))}
-      </div>
-    </div>
-  );
 
   return (
     <section
@@ -62,23 +37,28 @@ export default function About() {
       data-paused={paused || undefined}
       aria-labelledby="about-title"
     >
-      <div className={styles.text}>
-        <h2 id="about-title" className="sr-only">
-          About
-        </h2>
-        <p className={styles.line}>{aboutLine}</p>
-        <button type="button" className={styles.pause} aria-pressed={paused} onClick={() => setPaused((p) => !p)}>
-          {paused ? "Play" : "Pause"}
-        </button>
+      <h2 id="about-title" className="sr-only">
+        About
+      </h2>
+      <p className={styles.line}>{aboutLine}</p>
+
+      <div className={styles.viewport}>
+        <div className={styles.track} style={{ "--dur": `${DURATION.toFixed(1)}s` } as CSSProperties}>
+          {[0, 1].map((copy) => (
+            <ul key={copy} className={styles.list} aria-hidden={copy === 1 || undefined} inert={copy === 1}>
+              {crafts.map((c) => (
+                <li key={c.src} className={styles.card} style={{ "--ratio": `${c.w} / ${c.h}` } as CSSProperties}>
+                  <Image src={c.src} alt={copy ? "" : c.name} width={c.w} height={c.h} sizes={sizes(c.w / c.h)} className={styles.art} />
+                </li>
+              ))}
+            </ul>
+          ))}
+        </div>
       </div>
 
-      <div className={styles.reel}>
-        {wide === false && track(crafts, "one", "88vw")}
-        {wide &&
-          craftColumns.map((list, i) =>
-            track(list, i ? "right" : "left", "(max-width: 1023px) 44vw, (max-width: 1440px) 27vw, 390px", i === 1),
-          )}
-      </div>
+      <button type="button" className={styles.pause} aria-pressed={paused} onClick={() => setPaused((p) => !p)}>
+        {paused ? "Play" : "Pause"}
+      </button>
     </section>
   );
 }
