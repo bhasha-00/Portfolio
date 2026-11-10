@@ -1,6 +1,6 @@
 // About cards: Bhasha's re-exports with matched sizes and radii (tall 358 × 521, wide 620 × 521),
-// rendered from the card SVGs at 3x (1563px tall): public/about/*-v2.webp. The frame is redrawn
-// with the AI Tinkering cards' corners (24 top, 16 bottom) and carries the site's paper grain,
+// rendered from the card SVGs at 3x (1563px tall): public/about/*-v4.webp. The frame is redrawn
+// keeps Bhasha's own shape (16 outside with one square corner; the photo inside 8) and carries the site's paper grain,
 // baked in on the cream only (not the photos). The caption is vector: a cream pill and Bhasha's
 // outlined Figma Hand text from font2.svg, so it stays sharp. Every card of a shape is the same
 // size, so a flip leaves no gap. `name` is the caption's text, for screen readers and search.
@@ -16,11 +16,11 @@ export type Craft = {
   shape: Shape;
 };
 
-const charcoal: Craft = { name: "Charcoal sketching", src: "/about/charcoal-v2.webp", w: 1080, h: 1563, shape: "tall" };
-const gourd: Craft = { name: "Gourd lamp", src: "/about/gourd-lamp-v2.webp", w: 1074, h: 1563, shape: "tall" };
-const print: Craft = { name: "Print", src: "/about/print-v2.webp", w: 1860, h: 1563, shape: "wide" };
-const clock: Craft = { name: "Clock making", src: "/about/clock-v2.webp", w: 1074, h: 1563, shape: "tall" };
-const paper: Craft = { name: "Paper sculpture", src: "/about/paper-v2.webp", w: 1860, h: 1563, shape: "wide" };
+const charcoal: Craft = { name: "Charcoal sketching", src: "/about/charcoal-v4.webp", w: 1080, h: 1563, shape: "tall" };
+const gourd: Craft = { name: "Gourd lamp", src: "/about/gourd-lamp-v4.webp", w: 1074, h: 1563, shape: "tall" };
+const print: Craft = { name: "Print", src: "/about/print-v4.webp", w: 1860, h: 1563, shape: "wide" };
+const clock: Craft = { name: "Clock making", src: "/about/clock-v4.webp", w: 1074, h: 1563, shape: "tall" };
+const paper: Craft = { name: "Paper sculpture", src: "/about/paper-v4.webp", w: 1860, h: 1563, shape: "wide" };
 
 /** All five, in the order a slot cycles through its shape's cards. The first three (paper sculpture,
  *  gourd lamp, charcoal) are what a first visit sees. The wide slot alternates paper sculpture and
