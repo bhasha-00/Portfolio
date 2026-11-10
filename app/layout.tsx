@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Nav from "./components/Nav";
+import Backdrop from "./components/Backdrop";
 import Intro from "./components/intro/Intro";
 import "./globals.css";
 
@@ -41,6 +42,7 @@ export default function RootLayout({
         <script src="/intro-gate.js" />
       </head>
       <body>
+        <Backdrop />
         <Intro />
         <Nav />
         <main>{children}</main>

@@ -1,0 +1,42 @@
+/* The fixed page background (Backdrop.tsx). Sized to the largest viewport (lvh) so a phone's
+   collapsing address bar never uncovers its edge. Behind everything; never takes a tap. */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--red);
+}
+
+/* Red + two halftone plates at their bg.svg opacities, pre-composited (75KB). Scaled up without
+   smoothing, so the dots stay a little pixelated. */
+.texture {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  image-rendering: pixelated;
+  transition: opacity 0.6s var(--ease-out);
+}
+
+/* Only after the page has loaded (Backdrop.tsx), so it never competes with the hero art, which is
+   the LCP element; the flat red is there from the first paint. */
+.backdrop[data-ready] .texture {
+  background: url("/bg/texture.webp") center / cover no-repeat;
+  opacity: 1;
+}
+
+/* The burst: bg.svg's #F7D3CF at 12%, drawn in cream (the nearest token) at the same 12%. */
+.burst {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--cream);
+  fill-opacity: 0.12;
+  will-change: transform;
+}
