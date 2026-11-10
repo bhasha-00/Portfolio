@@ -49,7 +49,7 @@ export const tinkers: Tinker[] = [
   {
     name: "Slither",
     line: "A pocket-sized throwback to the Nokia snake days",
-    art: "/ai/card-3.svg",
+    art: "/ai/card-3-v2.svg",
     w: 449.13,
     h: 481.56,
     x: 81.3,
