@@ -12,8 +12,26 @@
   height: 100%;
   overflow: visible;
   cursor: pointer;
-  filter: drop-shadow(0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent)); /* nav pill */
+  /* A sheet on the table: a tight contact shadow and a soft one further out. */
+  filter:
+    drop-shadow(0 2px 3px color-mix(in srgb, var(--ink) 22%, transparent))
+    drop-shadow(0 10px 24px color-mix(in srgb, var(--ink) 26%, transparent));
+  transition: transform 0.3s var(--ease-out);
   -webkit-tap-highlight-color: transparent;
+}
+
+/* When the whole sheet is the part to fold (collapse, turn over), it lifts a little. */
+.fold[data-lift-all] .svg {
+  transform: translateY(-4px);
+  filter:
+    drop-shadow(0 4px 5px color-mix(in srgb, var(--ink) 24%, transparent))
+    drop-shadow(0 16px 30px color-mix(in srgb, var(--ink) 30%, transparent));
+}
+
+/* The flap to fold next, lifted a touch off the paper with its own small shadow. */
+.lifted {
+  transform: translate(-0.6px, -1.6px);
+  filter: drop-shadow(0.4px 1.8px 1.4px color-mix(in srgb, var(--ink) 42%, transparent));
 }
 
 /* No box around the paper. Keyboard focus shows on the green itself: the outline of the part to

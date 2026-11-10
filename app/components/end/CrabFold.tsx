@@ -36,6 +36,7 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
   const [i, setI] = useState(0); // next step to fold; N when the crab is done
   const [lift, setLift] = useState(centreY(crabStart));
   const [nudge, setNudge] = useState(0);
+  const [playing, setPlaying] = useState(false); // a fold is moving: no outline, no lift
   const busy = useRef(false);
   const reduce = useRef(false);
 
@@ -67,6 +68,7 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
   const fold = useCallback(async () => {
     if (busy.current || i >= N) return;
     busy.current = true;
+    setPlaying(true);
     const s = crabSteps[i], w = world.current!, end = rest(i);
     if (s.kind === "fold") {
       const live = buildStep(w, s.step, K);
@@ -99,6 +101,7 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
     w.style.opacity = "1";
     setLift(centreY(end));
     setI(i + 1);
+    setPlaying(false);
     busy.current = false;
   }, [i, still]);
 
@@ -119,9 +122,17 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
     }
   };
 
-  const target = i < N ? crabSteps[i].target : null;
+  const next = i < N && !playing ? crabSteps[i] : null;
+  const target = next?.target ?? null;
+  // A flap to fold is drawn again on top, lifted with its own shadow; when the whole sheet is the
+  // part to fold (collapse, turn over), the whole paper lifts instead.
+  const flap = next?.kind === "fold" ? next.step.folds?.[0]?.polys[0] : undefined;
   return (
-    <div className={styles.fold} data-nudge={nudge % 2 ? "a" : nudge ? "b" : undefined}>
+    <div
+      className={styles.fold}
+      data-nudge={nudge % 2 ? "a" : nudge ? "b" : undefined}
+      data-lift-all={(next && next.kind !== "fold") || undefined}
+    >
       <svg
         className={styles.svg}
         viewBox="20 20 160 160"
@@ -143,7 +154,18 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
           <g ref={flip}>
             <g ref={world} />
           </g>
-          {target && <polygon className={styles.target} data-target="" points={pts(target)} />}
+          {target && flap ? (
+            <g className={styles.lifted}>
+              <polygon className={styles.face} points={pts(target)} />
+              {!!flap.s && (
+                <polygon className={flap.s > 0 ? styles.shade : styles.lite} points={pts(target)} opacity={Math.abs(flap.s)} />
+              )}
+              <polygon className={styles.edge} points={pts(target)} />
+              <polygon className={styles.target} data-target="" points={pts(target)} />
+            </g>
+          ) : (
+            target && <polygon className={styles.target} data-target="" points={pts(target)} />
+          )}
         </g>
       </svg>
       <p className="sr-only" aria-live="polite">
