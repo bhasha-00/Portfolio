@@ -8,10 +8,11 @@
   padding: var(--space-8) 0 var(--space-9);
 }
 
-/* Phones: the front card 77% of the screen, sides at 80% scale with ~10px clear of it. */
+/* Phones: the front card 77% of the screen, sides at 80% scale with ~10px clear of it. The card is
+   taller than ai.svg's, so the media keeps about the desktop share of it (the footer text wraps). */
 .stage {
   --card-w: min(77vw, 320px);
-  --card-ratio: 582 / 623; /* the card's shape in ai.svg */
+  --card-ratio: 582 / 708;
   --dx: 93.3%;
   --side: 0.8;
 }
@@ -33,6 +34,7 @@
   box-shadow: var(--shadow-card);
   font: inherit;
   text-align: left;
+  text-decoration: none; /* the front card is a link when its tool is out */
   cursor: pointer;
   transform: none;
   transition: transform var(--dur-base) var(--ease-out);
@@ -190,6 +192,7 @@
      width out, so the row spans the container. Short screens: the card keeps clear of the nav. */
   .stage {
     --card-w: min(41.7cqw, (100svh - 176px) * 582 / 623);
+    --card-ratio: 582 / 623; /* the card's shape in ai.svg */
     --dx: 82.2%;
     --side: 0.756;
   }
@@ -209,5 +212,19 @@
 }
 
 .clip[data-on] {
+  opacity: 1;
+}
+
+/* "Coming soon" over the media (gf.svg art, its words in the card's label): faded in on click. */
+.soon {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+  pointer-events: none;
+}
+
+.soon[data-on] {
   opacity: 1;
 }

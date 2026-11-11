@@ -121,12 +121,16 @@ export function useSpread(fan: Fan[]) {
       const next = (frontRef.current + (e.key === "ArrowLeft" ? 1 : 2)) % N;
       bring(next);
       // Keep focus on the card that came to the front.
-      slots.current[next]?.querySelector("button")?.focus({ preventScroll: true });
+      slots.current[next]?.querySelector<HTMLElement>("button, a")?.focus({ preventScroll: true });
     },
   };
 
-  /** True right after a swipe: the click it fires is not a tap. */
-  const swiped = () => !!swipe.current?.done;
+  /** True right after a swipe: the click it fires is not a tap. Asked once per click. */
+  const swiped = () => {
+    const d = !!swipe.current?.done;
+    if (d) swipe.current = null;
+    return d;
+  };
 
   /** Stacking: front on top, the card leaving the front next, the one crossing behind lowest. */
   const zOf = (i: number) => (roleOf(i, front) === 0 ? 3 : i === prev ? 2 : 1);
