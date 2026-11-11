@@ -70,6 +70,7 @@ export default function CaseBar({
             <a
               href={`#${id}`}
               data-id={id}
+              data-label={label}
               className={styles.tab}
               aria-current={active === id ? "true" : undefined}
               onClick={() => select(id)}

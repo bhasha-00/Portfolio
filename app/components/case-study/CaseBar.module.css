@@ -67,7 +67,19 @@
 
 /* The marked tab: red text, no pill, so the bar stays quiet (red on cream, 5.3:1). */
 .tab[aria-current] {
-  color: var(--red); /* same weight as the rest, so the tabs never shift */
+  color: var(--red);
+  font-weight: var(--fw-label);
+}
+
+/* Each tab is already as wide as its bold label (an invisible copy below), so marking one bold
+   never nudges the others. */
+.tab::after {
+  content: attr(data-label);
+  display: block;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  font-weight: var(--fw-label);
 }
 
 @media (hover: hover) and (pointer: fine) {
