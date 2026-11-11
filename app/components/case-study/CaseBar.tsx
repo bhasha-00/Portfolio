@@ -51,7 +51,9 @@ export default function CaseBar({
     const ul = list.current;
     const a = active ? ul?.querySelector<HTMLElement>(`[data-id="${active}"]`) : null;
     if (!ul || !a) return;
-    const left = a.offsetLeft - ul.clientWidth / 2 + a.offsetWidth / 2;
+    // Centre it in the strip: measured against the strip itself (offsetLeft would count "← Projects").
+    const r = a.getBoundingClientRect(), u = ul.getBoundingClientRect();
+    const left = ul.scrollLeft + (r.left - u.left) - (u.width - r.width) / 2;
     ul.scrollTo({ left, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   }, [active]);
 
