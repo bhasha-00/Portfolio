@@ -5,7 +5,8 @@ import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type Poin
 // The three-card spread shared by AI Tinkering and About (Spread.module.css): one card in front, the
 // other two smaller, tucked behind it on either side. Bringing a side card to the front turns the
 // ring (CSS transition on .pos). On the way in the cards fan out of a centred stack into the spread,
-// one by one, left to right, each swinging through its angle and landing upright: scrubbed by scroll
+// one by one, left to right, each swinging through its angle and landing upright, and gather back as
+// the section leaves (from 768): scrubbed by scroll
 // from 768 (the section is pinned), on phones as the row comes into view. Swipe and the arrow keys
 // turn the ring too. Reduced motion: no fan, and the CSS durations are 0, so turns are instant.
 
@@ -54,9 +55,16 @@ export function useSpread(fan: Fan[]) {
 
       let p: number;
       if (wide.matches) {
+        // In, hold, out: the cards fan out as the section arrives, sit spread through the middle of
+        // the pinned stretch, and gather back into the stack as it leaves (scrolling down past it
+        // mirrors scrolling up into it). `s` is the scroll since the section's top crossed 60%.
         const r = sec.getBoundingClientRect();
         const lead = innerHeight * 0.6, run = sec.offsetHeight - innerHeight;
-        p = clamp((lead - r.top) / (lead + run * 0.75));
+        const s = lead - r.top;
+        const inEnd = lead + run * 0.45; // fully spread
+        const outStart = lead + run * 0.8; // start gathering
+        const outEnd = lead + run + innerHeight * 0.4; // stacked as the section's bottom passes 60%
+        p = s < outStart ? clamp(s / inEnd) : clamp(1 - (s - outStart) / (outEnd - outStart));
       } else {
         p = clamp((innerHeight * 0.98 - st.getBoundingClientRect().top) / (innerHeight * 0.6));
       }
