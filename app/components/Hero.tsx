@@ -24,7 +24,7 @@ export default function Hero() {
             <img src="/hero/product-designer.svg" alt="Product designer" width={162} height={20} className={styles.hand} />
           </p>
           <p className={styles.summary}>
-            2+ years across B2B SaaS and AI‑native projects. Strong focus on complex systems, scale
+            2+ years across B2B SaaS. Strong focus on complex systems, scale
             and end‑to‑end ownership.
           </p>
         </div>

@@ -34,7 +34,7 @@
   --fs-lead: 20px;     --lh-lead: 28px;      /* summary, column labels (600) */
   --fs-h3: 24px;       --lh-h3: 32px;        /* name, sub-heads (mobile) */
   --fs-h2: 28px;       --lh-h2: 32px;        /* card + section titles (mobile) */
-  --fs-display: 40px;  --lh-display: 44px;   /* hero headline (mobile) */
+  --fs-display: 32px;  --lh-display: 36px;   /* hero headline (mobile) */
   --fs-numeral: 96px;                        /* decorative "80/20" behind the hero only, line-height 1 */
 
   /* hand font runs ~2px bigger for the same optical size */
@@ -75,7 +75,7 @@
     --margin: 40px; --gutter: 24px; --cols: 8; --card-pad: var(--space-6);
     --fs-h3: 28px; --lh-h3: 32px;
     --fs-h2: 32px; --lh-h2: 36px;
-    --fs-display: 48px; --lh-display: 52px;
+    --fs-display: 40px; --lh-display: 44px;
     --fs-numeral: 128px;
   }
 }
@@ -85,7 +85,7 @@
   :root {
     --margin: 80px; --cols: 12; --card-pad: var(--space-7);
     --fs-h2: 40px; --lh-h2: 44px;
-    --fs-display: 56px; --lh-display: 60px;
+    --fs-display: 48px; --lh-display: 52px;
     --fs-numeral: 192px;
   }
 }

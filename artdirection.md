@@ -39,7 +39,7 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 
 | Role | 390 | 768 | 1200+ | Use |
 |---|---|---|---|---|
-| display | 40/44 | 48/52 | 56/60 | hero headline, weight 800, -0.03em |
+| display | 32/36 | 40/44 | 48/52 | hero headline only, weight 800, -0.03em (one step down, 2026-11-11) |
 | h2 | 28/32 | 32/36 | 40/44 | card + section titles, 700, -0.02em |
 | h3 | 24/32 | 28/32 | 28/32 | name, sub-heads |
 | lead | 20/28 | | | summary, column labels (600) |
@@ -61,7 +61,7 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 
 ## Home (hero)
 - Cream pill nav, top centre: Home, Projects, AI Tinkering, About.
-- Headline large, top-left: **"Translating business goals and user needs into interfaces that perform."** Display role. Phones: wraps balanced. From 768: three set lines. From 1280: headline cols 1–8, intro cols 9–12 (below 1280 they stack; 8 columns are too narrow for the first line at 56px until about 1250).
+- Headline large, top-left: **"Translating business goals and user needs into interfaces that perform."** Display role. Phones: wraps balanced. From 768: three set lines. From 1200: headline cols 1–8, intro cols 9–12. Name: h3 at weight 700. Summary: body 16/24: "2+ years across B2B SaaS. Strong focus on complex systems, scale and end‑to‑end ownership."
 - Top-right column: name (Geist 800), "Product Designer", then one short summary sentence. No icons.
 - Hand-sketched figure (girl, top-down, seated with laptop, papers, tube, bowl), centred low. Ink line plus flat blue/orange accents. Until the real art exists, use the SVG placeholder from the prototype.
 - Large tinted numeral ("01") at about 14% opacity behind, right side.

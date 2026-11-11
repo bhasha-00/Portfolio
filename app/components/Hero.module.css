@@ -39,7 +39,7 @@
 .name {
   font-size: var(--fs-h3);
   line-height: var(--lh-h3);
-  font-weight: var(--fw-display);
+  font-weight: var(--fw-h2);
   letter-spacing: var(--tracking-h2);
   text-wrap: balance;
 }
@@ -56,11 +56,11 @@
   height: var(--fs-hand-md);
 }
 
-/* Role: lead, at body weight. */
+/* Role: body. */
 .summary {
   margin-top: var(--space-3);
-  font-size: var(--fs-lead);
-  line-height: var(--lh-lead);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
   font-weight: var(--fw-body);
 }
 
@@ -273,9 +273,9 @@
   }
 }
 
-/* Side by side from 1280, not 1200: "Translating business goals" at display 56 is 706px, and
-   8 columns only reach that from about 1250 (at 1200 it ran 31px into the intro column). */
-@media (min-width: 1280px) {
+/* Side by side from 1200: "Translating business goals" at display 48 is about 590px; 8 columns
+   are 685px at 1200. */
+@media (min-width: 1200px) {
   .top {
     align-items: start;
   }
