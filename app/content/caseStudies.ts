@@ -175,6 +175,7 @@ const lsneo: CaseStudy = {
       title: "When a book doesn't cooperate",
       blocks: [
         { type: "label", text: "Onboarding for new users" },
+        { type: "media", media: { label: "Onboarding for new users", kind: "image", ratio: 16 / 9 } },
         {
           type: "p",
           text: "A librarian is never stuck, they search by what they can see on the book instead of what they can scan; **useful for local books with no ISBN**",
