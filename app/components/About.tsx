@@ -1,9 +1,21 @@
 "use client";
 
 import Image, { getImageProps } from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { aboutLine, crafts, slots, type Shape } from "../content/about";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { aboutLine, crafts, HAND_H, slots, type Shape } from "../content/about";
 import styles from "./About.module.css";
+
+// A word in Bhasha's handwriting: her outline as a mask, filled with the text colour (a token), so
+// it stays sharp and takes the colour of where it sits. Decorative: the words are given as text too.
+function Hand({ src, w, className }: { src: string; w: number; className: string }) {
+  return (
+    <span
+      className={className}
+      style={{ "--src": `url("${src}")`, "--ratio": `${w} / ${HAND_H}` } as CSSProperties}
+      aria-hidden="true"
+    />
+  );
+}
 
 const clamp = (v: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
 const easeOut = (t: number) => 1 - (1 - t) ** 3; // one strong ease-out; never ease-in
@@ -164,7 +176,8 @@ export default function About() {
       </h2>
       <div className={styles.pin}>
         <p className={styles.line}>
-          {aboutLine.lead} <span className={styles.hand}>{aboutLine.hand}</span>
+          {aboutLine.lead} <span className="sr-only">{aboutLine.hand.text}</span>
+          <Hand src={aboutLine.hand.src} w={aboutLine.hand.w} className={styles.lineHand} />
         </p>
         <div ref={stage} className={styles.stage}>
           {slots.map((s, i) => {
@@ -199,7 +212,9 @@ export default function About() {
                           <span className={`${styles.media} ${c.cutout ? styles.cutout : ""}`}>
                             <Image src={c.src} alt="" fill sizes={SIZES[c.shape]} quality={80} className={styles.photo} />
                           </span>
-                          <span className={styles.chip}>{c.name}</span>
+                          <span className={styles.chip}>
+                            <Hand src={c.hand.src} w={c.hand.w} className={styles.chipHand} />
+                          </span>
                         </span>
                       );
                     })}

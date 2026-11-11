@@ -34,7 +34,8 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 - Radius `--r-sm` 8 / `--r-md` 16 / `--r-pill`; elevation `--shadow-card`. Motion `--dur-fast` 150 / `--dur-base` 250 / `--dur-card` 500, `--ease-out`.
 
 ## Type
-- Exactly two families, both via `next/font/google` in `app/layout.tsx`: **Geist** (`--nf-geist` → `--font-sans`) for everything set in type, and **Caveat** (`--nf-hand` → `--font-hand`) for chips, eyebrows and "Try a fold?". No Geist Mono, no monospace.
+- Exactly two families, both via `next/font/google` in `app/layout.tsx`: **Geist** (`--nf-geist` → `--font-sans`) for everything set in type, and **Caveat** (`--nf-hand` → `--font-hand`) as the fallback hand font. No Geist Mono, no monospace.
+- Handwriting is Bhasha's own (Figma Hand) everywhere, as outlines: "Product designer" (hero), the case study eyebrows, the AI card names, the About captions and "act of creating", "Try a fold?". Caveat shows only where an outline is missing.
 - Every text element maps to one role. No raw sizes, no `clamp()` sizes. Line heights sit on the 4px grid.
 
 | Role | 390 | 768 | 1200+ | Use |
@@ -113,8 +114,8 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 - Layout (2026-11-11): the section is a `.container`; from 768 one straight row of upright cards on three equal columns with the grid gutter (on 12 columns exactly 1–4, 5–8, 9–12; 24px gutters at 1440); phones stack them full width, 48px apart. Shadow: `--shadow-card` on a box behind each card (also fills the 8px gap between its panels); paper grain at 0.25. Motion: from a centred stack, one by one, scrubbed by scroll; each swings through -11 / -3 / +5 degrees mid-flight and lands at 0. Hover / focus / tap: lift 8px, deeper shadow, 200ms. Phones: vertical stack, same swing.
 
 ## About (2026-11-11)
-- Heading: "Shaped by industrial design, grounded in the *act of creating*", h2 700, left-aligned to the container (`text-wrap: balance`); "act of creating" in Caveat 600 at `--fs-hand-h2` (36 / 40 / 48, one step above the h2 so it reads level).
-- Tiles: each one element (About.tsx face): cream with grain at 0.25, `--r-md`, `--shadow-card`, `overflow: hidden`, `--space-3` (12) padding on all sides and 8 from photo to caption, as in Bhasha's card; no notches. The photo on `--ink` with `--r-sm`, filling the space above a caption chip (Caveat, hand-sm 16/20, on `--back`, pill). Paper sculpture is a cut-out on transparency: it fills its frame like the others, straight on the tile's cream (no ink), as in paper.svg.
+- Heading: "Shaped by industrial design, grounded in the *act of creating*", h2 700, left-aligned to the container (`text-wrap: balance`); "act of creating" in Bhasha's handwriting (Figma Hand outline, public/about/hand/act-of-creating.svg), x-height level with the h2, on its baseline, filled with `--text-on-red`.
+- Tiles: each one element (About.tsx face): cream with grain at 0.25, `--r-md`, `--shadow-card`, `overflow: hidden`, `--space-3` (12) padding on all sides and 8 from photo to caption, as in Bhasha's card; no notches. The photo on `--ink` with `--r-sm`, filling the space above a caption chip (pill on `--back`) holding the word in Bhasha's handwriting: Figma Hand outlines cut from font2.svg (public/about/hand/*.svg), one shared box and baseline, 20px tall (hand-sm line height), filled with `--text-on-cream`. Paper sculpture is a cut-out on transparency: it fills its frame like the others, straight on the tile's cream (no ink), as in paper.svg.
 - Photos: extracted from Bhasha's card SVGs as they frame them (paper turned 90°, gourd lamp cropped to its left photo): public/about/photos/*.webp, through next/image. The old `*-v4.webp` exports are unused.
 - Grid: desktop 6 / 3 / 3 of 12 (24px gutters at 1440), tablet 4 / 2 / 2 of 8, phones the wide tile on top and the tall pair (2 + 2) under it. All tiles in a row share one height (the tall tiles' 358 × 521 shape).
 - Motion unchanged: the fan from a stack into the row, the flip every few seconds and on tap, hover/focus lift; reduced motion lands them without the fan and swaps without turning.

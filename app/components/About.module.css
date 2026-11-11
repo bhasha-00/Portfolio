@@ -26,13 +26,22 @@
   text-wrap: balance;
 }
 
-/* "act of creating" in the hand font, sized up to sit optically level with the h2 around it. */
-.hand {
-  font-family: var(--font-hand);
-  font-size: var(--fs-hand-h2);
-  line-height: var(--lh-h2);
-  font-weight: var(--fw-label);
-  letter-spacing: 0;
+/* Bhasha's handwriting (About.tsx Hand): her outline as a mask, filled with the text colour. Each
+   word's box is 15.6 units tall with the baseline 11.7 down, so one height sets the scale for all. */
+.lineHand,
+.chipHand {
+  display: inline-block;
+  aspect-ratio: var(--ratio);
+  background: currentColor;
+  -webkit-mask: var(--src) center / contain no-repeat;
+  mask: var(--src) center / contain no-repeat;
+}
+
+/* "act of creating": its x-height level with the h2's (box 1.2 × the h2 size), sitting on the
+   h2's baseline (the 3.9 units below the baseline hang under it). */
+.lineHand {
+  height: calc(var(--fs-h2) * 1.2);
+  vertical-align: calc(var(--fs-h2) * 1.2 * -0.25);
 }
 
 .stage {
@@ -137,18 +146,20 @@
   background: none;
 }
 
-/* Caption chip, role hand-sm (16px: never below body size). */
+/* Caption chip, role hand-sm: the word in Bhasha's hand, its box the role's line height (20px). */
 .chip {
+  display: flex;
   align-self: flex-start;
   max-width: 100%;
   padding: var(--space-1) var(--space-3);
   border-radius: var(--r-pill);
   background: var(--back);
-  font-family: var(--font-hand);
-  font-size: var(--fs-hand-sm);
-  line-height: var(--lh-hand-sm);
-  letter-spacing: var(--tracking-chip);
-  text-align: left;
+  color: var(--text-on-cream);
+}
+
+.chipHand {
+  height: var(--lh-hand-sm);
+  max-width: 100%;
 }
 
 /* Hover, focus, press: straighten to 0° (undo the card's current angle), lift 8px. */
