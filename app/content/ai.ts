@@ -10,9 +10,6 @@ export type Tinker = {
   /** Art size in px (its viewBox). */
   w: number;
   h: number;
-  /** Where the card lands, from the reference layout (1522 × 768): centre in %. Cards land upright. */
-  x: number;
-  y: number;
   /** The fan: the angle a card swings through on its way out of the stack, in degrees. */
   swing: number;
   /** The same swing in the phone layout (vertical stack). */
@@ -30,8 +27,6 @@ export const tinkers: Tinker[] = [
     art: "/ai/card-1.svg",
     w: 453.98,
     h: 485,
-    x: 18.8,
-    y: 50,
     swing: -11,
     tilt: -4,
   },
@@ -41,8 +36,6 @@ export const tinkers: Tinker[] = [
     art: "/ai/card-2.svg",
     w: 448.07,
     h: 480.74,
-    x: 50.1,
-    y: 50,
     swing: -3,
     tilt: 3,
   },
@@ -52,8 +45,6 @@ export const tinkers: Tinker[] = [
     art: "/ai/card-3-v2.svg",
     w: 449.13,
     h: 481.56,
-    x: 81.3,
-    y: 50,
     swing: 5,
     tilt: -2,
   },

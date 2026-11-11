@@ -31,7 +31,7 @@ export default function AiTinkering() {
     let raf = 0;
 
     const place = (el: HTMLDivElement, dx: number, dy: number, a: number) => {
-      el.style.transform = `translate(-50%, -50%) translate(${dx}px, ${dy}px) rotate(${a}deg)`;
+      el.style.transform = `translate(${dx}px, ${dy}px) rotate(${a}deg)`;
       el.style.setProperty("--a", `${a}deg`); // the hover straightens by exactly this much
     };
 
@@ -52,8 +52,10 @@ export default function AiTinkering() {
           if (!el) return;
           // One by one, left to right: each card has its own slice of the scroll.
           const t = easeOut(clamp((p - i * 0.2) / 0.5));
-          // From the centred stack (slightly offset, so the stack reads as a stack) to its slot.
-          const sx = ((50 - c.x) / 100) * W + (i - 1) * 6, sy = ((50 - c.y) / 100) * H + (i - 1) * 4;
+          // From the centred stack (slightly offset, so the stack reads as a stack) to its grid
+          // column: the offset from the stage's centre to the slot's resting centre (layout, no transform).
+          const sx = W / 2 - (el.offsetLeft + el.offsetWidth / 2) + (i - 1) * 6;
+          const sy = H / 2 - (el.offsetTop + el.offsetHeight / 2) + (i - 1) * 4;
           // The fan: it swings through its angle mid-flight and lands upright.
           place(el, sx * (1 - t), sy * (1 - t), still ? 0 : c.swing * Math.sin(Math.PI * t));
         });
@@ -88,7 +90,7 @@ export default function AiTinkering() {
   }, []);
 
   return (
-    <section ref={section} id="ai-tinkering" className={styles.ai} aria-labelledby="ai-tinkering-title">
+    <section ref={section} id="ai-tinkering" className={`container ${styles.ai}`} aria-labelledby="ai-tinkering-title">
       <h2 id="ai-tinkering-title" className="sr-only">
         AI Tinkering
       </h2>
@@ -101,7 +103,7 @@ export default function AiTinkering() {
                 slots.current[i] = el;
               }}
               className={styles.slot}
-              style={{ "--x": `${c.x}%`, "--y": `${c.y}%`, "--ratio": `${c.w} / ${c.h}`, zIndex: i + 1 } as CSSProperties}
+              style={{ "--ratio": `${c.w} / ${c.h}`, zIndex: i + 1 } as CSSProperties}
             >
               <button
                 type="button"
@@ -110,6 +112,7 @@ export default function AiTinkering() {
                 onClick={() => setPressed((p) => (p === i ? -1 : i))}
                 onBlur={() => setPressed((p) => (p === i ? -1 : p))}
               >
+                <span className={styles.shade} aria-hidden="true" />
                 <span className={styles.deep} aria-hidden="true" />
                 <Image src={c.art} alt="" width={Math.round(c.w)} height={Math.round(c.h)} className={styles.art} unoptimized />
                 {/* The case study cards' paper grain, clipped to this card's outline. */}

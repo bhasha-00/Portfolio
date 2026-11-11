@@ -1,18 +1,17 @@
-/* AI Tinkering. Desktop: one pinned stage in the reference's proportions (1522 × 768); the cards
-   are placed by centre (--x, --y) and moved by Projects-style scroll scrubbing (transform only, set
-   from AiTinkering.tsx). Phones: a plain vertical stack. */
+/* AI Tinkering, on .container (AiTinkering.tsx). From 768: one pinned row of three equal columns
+   with the grid gutter (on 12 columns that is exactly 1–4, 5–8, 9–12); the cards fan out from a
+   centred stack into it, scrubbed by scroll (transform only, from AiTinkering.tsx).
+   Phones: a vertical stack, full container width. */
 
 .ai {
   position: relative;
-  padding: 72px var(--page-inset) 96px;
+  padding: var(--space-8) 0 var(--space-9);
 }
 
 .stage {
   position: relative;
   display: grid;
-  gap: 48px;
-  max-width: 520px;
-  margin: 0 auto;
+  gap: var(--space-7);
 }
 
 .slot {
@@ -21,7 +20,7 @@
   will-change: transform;
 }
 
-/* The card: the art cut from ai.svg, with the nav pill's shadow following its outline. */
+/* The card: the art cut from ai.svg, with --shadow-card on a box behind it. */
 .card {
   position: relative;
   display: block;
@@ -40,7 +39,24 @@
   display: block;
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent)); /* nav pill */
+}
+
+/* Shadow boxes behind the art, on the card's outline inside the art file (4px clear at the sides,
+   8px at the bottom; corners 24 top, 16 bottom, as % of the box). One box shadow covers both
+   panels, including the 8px gap between them. */
+.shade,
+.deep {
+  position: absolute;
+  top: 0;
+  left: 0.9%;
+  right: 0.9%;
+  bottom: 1.66%;
+  border-radius: 5.45% 5.45% 3.64% 3.64% / 5.07% 5.07% 3.38% 3.38%;
+  pointer-events: none;
+}
+
+.shade {
+  box-shadow: var(--shadow-card);
 }
 
 /* The paper grain from the case study cards (globals.css), multiplied onto the art and clipped to
@@ -51,6 +67,7 @@
   background: var(--paper-grain);
   background-size: var(--paper-size);
   mix-blend-mode: multiply;
+  opacity: 0.25; /* same grain strength as the case study cards */
   -webkit-mask: var(--art) center / 100% 100% no-repeat;
   mask: var(--art) center / 100% 100% no-repeat;
   pointer-events: none;
@@ -59,12 +76,9 @@
 /* Hover / focus / tap: the card lifts and its shadow deepens a little (a soft layer fading in
    behind it). Kept close to the resting shadow, so it reads as lift, not as a dark patch. */
 .deep {
-  position: absolute;
-  inset: 4% 3% 2%;
-  border-radius: 18px;
   box-shadow: 0 12px 28px color-mix(in srgb, var(--ink) 16%, transparent);
   opacity: 0;
-  transition: opacity 0.2s var(--ease-out);
+  transition: opacity var(--dur-fast) var(--ease-out);
 }
 
 /* Straighten to 0° (undo the card's current angle), lift 8px. */
@@ -143,25 +157,15 @@
     position: sticky;
     top: 0;
     display: grid;
-    place-items: center;
+    align-items: center;
     height: 100vh;
-    padding: 64px 24px 24px; /* narrow sides: the cards are large */
+    padding: var(--space-8) 0 var(--space-5); /* nav above; the row spans the container */
     overflow: visible;
   }
 
   .stage {
-    display: block;
-    width: min(100%, 1600px, (100vh - 88px) * 1522 / 768);
-    max-width: none;
-    aspect-ratio: 1522 / 768;
-    margin: 0;
-  }
-
-  .slot {
-    position: absolute;
-    left: var(--x);
-    top: var(--y);
-    width: 29.3%; /* reference: 446 of 1522 */
-    transform: translate(-50%, -50%);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--gutter);
+    align-items: center;
   }
 }
