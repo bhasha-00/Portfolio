@@ -5,15 +5,14 @@
   top: var(--nav-top);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 40;
+  z-index: var(--z-nav);
   max-width: calc(100vw - 16px);
   background: var(--paper-grain), var(--cream); /* paper, see globals.css */
   background-size: var(--paper-size);
   background-blend-mode: multiply;
-  padding: 5px;
-  border-radius: 99px;
-  /* Shadow tinted from --ink so no new colour is introduced. */
-  box-shadow: 0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent);
+  padding: var(--space-1);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-card);
 }
 
 .list {
@@ -25,12 +24,12 @@
 .link {
   position: relative;
   display: block;
-  padding: 8px 13px; /* reference: 8px 13px, 13px type, ~33px tall */
-  border-radius: 99px;
+  padding: var(--space-2) var(--space-3); /* role: small, Geist 500 */
+  border-radius: var(--r-pill);
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: var(--fs-small);
   font-weight: 500;
-  line-height: 17px;
+  line-height: var(--lh-small);
   text-decoration: none;
   white-space: nowrap;
   color: var(--ink);

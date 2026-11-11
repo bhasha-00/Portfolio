@@ -20,7 +20,7 @@
   position: absolute;
   inset: 0;
   z-index: 0; /* the bottom layer: red, then this, then the burst, then the page */
-  background: radial-gradient(circle, color-mix(in srgb, var(--cream) 22%, transparent) 1.3px, transparent 1.8px) 0 0 / 22px 22px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--cream) 22%, transparent) 1.3px, transparent 1.8px) 0 0 / 22px 22px; /* tokens-allow: page dot grid (art direction exception) */
   opacity: 0.52;
 }
 

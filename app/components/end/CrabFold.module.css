@@ -12,7 +12,7 @@
   height: 100%;
   overflow: visible;
   cursor: pointer;
-  filter: drop-shadow(0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent)); /* nav pill, cards */
+  filter: drop-shadow(0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent)); /* tokens-allow: folding paper shadow follows the crab outline (brand moment) */
   -webkit-tap-highlight-color: transparent;
 }
 

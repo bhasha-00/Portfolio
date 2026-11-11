@@ -55,9 +55,9 @@
 
 /* Fixed blurs; the sharp one sits on top. Neither blur animates. */
 .soft {
-  filter: blur(4px);
+  filter: blur(4px); /* tokens-allow: landing puff shadow (brand moment) */
 }
 
 .sharp {
-  filter: blur(1px);
+  filter: blur(1px); /* tokens-allow: landing puff shadow (brand moment) */
 }

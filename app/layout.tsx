@@ -36,7 +36,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#A82A1E",
+  themeColor: "#A82A1E", // tokens-allow: Next metadata needs a literal colour; this is --red
 };
 
 export default function RootLayout({

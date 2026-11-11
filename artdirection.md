@@ -10,7 +10,7 @@ Feel: a precise, warm paper object. Bold red, hand-sketched, with one origami co
 - **Check:** screenshots at 390px and 1440px vs the prototype, Lighthouse mobile run, a 10-second recruiter scan.
 
 ## Tokens
-`app/tokens.css` is the only place raw values live (imported once in `app/layout.tsx`). Everything else uses `var(--token)`. `npm run check:tokens` fails on raw colours, raw font sizes, `clamp()` font sizes, extra families, gradients/filters and off-scale spacing. Approved exceptions carry `tokens-allow: <reason>` on the same line (grep for the full list). So far: the hero crane's four blur shadows (brand moment, 2026-11-10).
+`app/tokens.css` is the only place raw values live (imported once in `app/layout.tsx`). Everything else uses `var(--token)`. `npm run check:tokens` fails on raw colours, raw font sizes, `clamp()` font sizes, extra families, gradients/filters and off-scale spacing. Approved exceptions carry `tokens-allow: <reason>` on the same line (grep for the full list). The full list (2026-11-11): shadows that follow a folded or cut outline, where a box shadow cannot (hero crane, origami companion, intro fold and model, landing puffs, folding crab); the page dot grid (an art-direction exception); Next's `themeColor`, which needs a literal (= `--red`); the dev-only grid overlay's baseline.
 
 Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 ```css
