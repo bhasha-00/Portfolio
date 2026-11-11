@@ -196,8 +196,8 @@ export default function About() {
                       const c = crafts[f[k]];
                       return (
                         <span key={k} className={`${styles.face} ${k === "b" ? styles.back : ""}`} aria-hidden="true">
-                          <span className={`${styles.media} ${c.whole ? styles.cutout : ""}`}>
-                            <Image src={c.src} alt="" fill sizes={SIZES[c.shape]} quality={80} className={`${styles.photo} ${c.whole ? styles.whole : ""}`} />
+                          <span className={`${styles.media} ${c.cutout ? styles.cutout : ""}`}>
+                            <Image src={c.src} alt="" fill sizes={SIZES[c.shape]} quality={80} className={styles.photo} />
                           </span>
                           <span className={styles.chip}>{c.name}</span>
                         </span>

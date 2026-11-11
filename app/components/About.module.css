@@ -82,14 +82,14 @@
 }
 
 /* One tile: one element, one inset, one radius. The photo and its caption sit inside the same
-   --space-4 padding; no notches at the corners. */
+   --space-3 padding (Bhasha's card: 12 around the photo, 8 down to the caption); no notches. */
 .face {
   position: absolute;
   inset: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-4);
+  gap: var(--space-2);
+  padding: var(--space-3);
   border-radius: var(--r-md);
   background: var(--cream);
   color: var(--text-on-cream);
@@ -131,14 +131,10 @@
   object-fit: cover;
 }
 
-/* A cut-out on a transparent background (paper sculpture): shown whole, straight on the tile's
-   cream, as in Bhasha's card. */
+/* A cut-out on a transparent background (paper sculpture): fills its frame like the other photos,
+   straight on the tile's cream, as in Bhasha's card (paper.svg). */
 .media.cutout {
   background: none;
-}
-
-.photo.whole {
-  object-fit: contain;
 }
 
 /* Caption chip, role hand-sm (16px: never below body size). */
