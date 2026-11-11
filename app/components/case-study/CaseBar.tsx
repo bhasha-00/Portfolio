@@ -51,9 +51,10 @@ export default function CaseBar({
     const ul = list.current;
     const a = active ? ul?.querySelector<HTMLElement>(`[data-id="${active}"]`) : null;
     if (!ul || !a) return;
-    // Centre it in the strip: measured against the strip itself (offsetLeft would count "← Projects").
-    const r = a.getBoundingClientRect(), u = ul.getBoundingClientRect();
-    const left = ul.scrollLeft + (r.left - u.left) - (u.width - r.width) / 2;
+    // Centre it in the strip. The strip is the tab's offset parent (position: relative), so offsetLeft
+    // is its place in the strip's content: it does not change while the strip is mid-scroll.
+    const max = ul.scrollWidth - ul.clientWidth;
+    const left = Math.min(max, Math.max(0, a.offsetLeft - (ul.clientWidth - a.offsetWidth) / 2));
     ul.scrollTo({ left, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   }, [active]);
 
