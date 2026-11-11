@@ -9,6 +9,10 @@ const END = bbox(flatten(craneEnd)); // the folded base, in the 200-unit view bo
 const K = { paper: styles.paper, shade: styles.shade, lite: styles.lite, edge: styles.edge, crease: styles.crease, shadow: styles.shadow };
 const SKIP_EVENTS = ["pointerdown", "wheel", "keydown", "touchmove"] as const;
 
+// A motion token from tokens.css, for Web Animations (which can't read var()).
+const token = (name: string, fallback: string) =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+
 // On cream, a gold square folds up to the crane base with neck, tail and head (diagram 14). The
 // sheet shrinks away, the folded piece flies to its place in the hero art, and as it touches down
 // the wings open into the sitting crane: one motion. Once per session; any input skips.
@@ -73,7 +77,7 @@ export default function Intro() {
           { transform: `${base} translate(${dx * 0.45}px, ${dy * 0.45 - 70}px) scale(${(1 + s) / 2}) rotate(-6deg)`, offset: 0.45 },
           { transform: `${base} translate(${dx}px, ${dy}px) scale(${s}) rotate(0deg)` },
         ],
-        { duration: 750, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" },
+        { duration: 750, easing: token("--ease-in-out", "cubic-bezier(0.77, 0, 0.175, 1)"), fill: "forwards" },
       );
       // Touch down: in the last stretch the wings open. The sitting crane grows out of the folded
       // piece (see .crane in Hero.module.css) while the folded piece fades into it.
@@ -81,8 +85,8 @@ export default function Intro() {
         window.setTimeout(() => {
           html.dataset.intro = "landing";
           dispatchEvent(new Event("crane:land")); // landing puff (HeroTouchdown)
-          // Strong ease-out (the --ease-out token's curve): the fade starts at once, never ease-in.
-          w.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, easing: "cubic-bezier(0.23, 1, 0.32, 1)", fill: "forwards" });
+          // The --ease-out token: the fade starts at once, never ease-in.
+          w.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, easing: token("--ease-out", "cubic-bezier(0.23, 1, 0.32, 1)"), fill: "forwards" });
         }, 560),
         window.setTimeout(finish, 900),
       );

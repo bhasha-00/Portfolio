@@ -38,7 +38,9 @@
 
 .link:not([aria-current]) {
   opacity: 0.68; /* ~5.6:1 ink on cream: passes AA, still quieter than the active tab */
-  transition: opacity 0.2s var(--ease-out);
+  transition:
+    opacity var(--dur-fast) ease,
+    transform var(--dur-fast) var(--ease-out);
 }
 
 .link[aria-current] {
@@ -46,7 +48,7 @@
   color: var(--cream);
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .link:not([aria-current]):hover {
     opacity: 1;
   }
@@ -54,6 +56,11 @@
 
 .link:not([aria-current]):active {
   opacity: 1;
+}
+
+/* Press feedback on every tab. */
+.link:active {
+  transform: scale(0.97);
 }
 
 .link:focus-visible {

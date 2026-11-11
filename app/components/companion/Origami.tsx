@@ -92,22 +92,22 @@ export default function Origami({ className, children }: { className?: string; c
     frameAt(w, sequences[from], K[from], sequences[from].length - 1, 1);
     s.style.transition = "none";
     s.style.opacity = "1";
-    r.style.transition = "opacity 0.15s ease-out";
+    r.style.transition = "opacity var(--dur-fast) var(--ease-out)";
     r.style.opacity = "0";
     // Lift the paper while it is open, so the flat square floats above the perch, not over it.
     s.getBoundingClientRect();
-    s.style.transition = `transform ${tOut}s cubic-bezier(.4,0,.2,1)`;
+    s.style.transition = `transform ${tOut}s var(--ease-in-out)`;
     s.style.transform = "translateY(-32%)"; // about 64 grid units: the open square clears the foot line
 
     cancel = play(s, w, out, K[from], () => {
-      s.style.transition = `transform ${tUp}s cubic-bezier(.4,0,.2,1)`;
+      s.style.transition = `transform ${tUp}s var(--ease-in-out)`;
       s.style.transform = "";
       cancel = play(s, w, up, K[to], () => {
         if (to === 0) {
           // The folded crane opens into the illustration.
-          r.style.transition = "opacity 0.25s ease-out";
+          r.style.transition = "opacity var(--dur-base) var(--ease-out)";
           r.style.opacity = "1";
-          s.style.transition = "opacity 0.25s ease-out";
+          s.style.transition = "opacity var(--dur-base) var(--ease-out)";
           s.style.opacity = "0";
         }
         timers.push(

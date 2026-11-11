@@ -30,7 +30,7 @@
   background: none;
   cursor: pointer;
   transform: none;
-  transition: transform 0.2s var(--ease-out);
+  transition: transform var(--dur-base) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -81,10 +81,10 @@
   transition: opacity var(--dur-fast) var(--ease-out);
 }
 
-/* Straighten to 0° (undo the card's current angle), lift 8px. */
+/* Hover, focus, press: lift 8px (cards land upright, so there is no angle to undo). */
 .card[aria-pressed="true"],
 .card:focus-visible {
-  transform: rotate(calc(-1 * var(--a, 0deg))) translateY(-8px);
+  transform: translateY(-8px);
 }
 
 .card[aria-pressed="true"] .deep,
@@ -92,9 +92,9 @@
   opacity: 1;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .card:hover {
-    transform: rotate(calc(-1 * var(--a, 0deg))) translateY(-8px);
+    transform: translateY(-8px);
   }
 
   .card:hover .deep {
@@ -128,7 +128,7 @@
   height: 0;
   opacity: 0; /* shown by the crane route once it lands here */
   visibility: hidden;
-  transition: opacity 0.2s var(--ease-out);
+  transition: opacity var(--dur-fast) var(--ease-out);
   will-change: transform;
 }
 

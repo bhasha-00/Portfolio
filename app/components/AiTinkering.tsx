@@ -13,8 +13,7 @@ const MIDDLE = 1; // the crane perches on the middle card
 
 // AI Tinkering. After the last case study, three cards sprawl from a centred stack into one straight
 // row, one by one, left to right, each swinging through its fan angle and landing upright; scrubbed
-// by scroll (transform only). Hover, focus or tap straightens a
-// card to 0°, lifts it 8px and deepens its shadow. Phones: a vertical stack with small alternating
+// by scroll (transform only). Hover, focus or tap lifts a card 8px and deepens its shadow. Phones: a vertical stack with small alternating
 // swings and the same one-by-one reveal. Reduced motion: the cards sit in their final places.
 export default function AiTinkering() {
   const section = useRef<HTMLElement>(null);
@@ -33,7 +32,6 @@ export default function AiTinkering() {
 
     const place = (el: HTMLDivElement, dx: number, dy: number, a: number) => {
       el.style.transform = `translate(${dx}px, ${dy}px) rotate(${a}deg)`;
-      el.style.setProperty("--a", `${a}deg`); // the hover straightens by exactly this much
     };
 
     const update = () => {
@@ -69,7 +67,6 @@ export default function AiTinkering() {
           const t = still ? 1 : easeOut(clamp((innerHeight * 0.98 - r.top) / (innerHeight * 0.5)));
           const a = still ? 0 : c.tilt * Math.sin(Math.PI * t); // swings, then lands upright
           el.style.transform = `translateY(${48 * (1 - t)}px) rotate(${a}deg)`;
-          el.style.setProperty("--a", `${a}deg`);
         });
       }
     };

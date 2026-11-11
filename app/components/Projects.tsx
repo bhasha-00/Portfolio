@@ -258,18 +258,48 @@ export default function Projects() {
       };
     };
 
+    // Covered state, written straight onto each card's layers (not through a variable on the card,
+    // which would restyle its whole subtree every scroll frame), and only when the value changes.
+    const dimText = parseFloat(getComputedStyle(html).getPropertyValue("--dim-text-opacity")) || 0.32;
+    const layers = new Map<HTMLElement, { shade: HTMLElement[]; dim: HTMLElement[]; ink: HTMLElement[]; at: number }>();
+    const layersOf = (c: HTMLElement) => {
+      let l = layers.get(c);
+      if (!l) {
+        const skip = [styles.tab, styles.count, styles.grain, styles.shade, styles.dim];
+        l = {
+          shade: [...c.querySelectorAll<HTMLElement>(`.${styles.shade}`)],
+          dim: [...c.querySelectorAll<HTMLElement>(`.${styles.dim}`)],
+          ink: [
+            ...[...c.children].filter((e): e is HTMLElement => !skip.some((k) => e.classList.contains(k))),
+            ...c.querySelectorAll<HTMLElement>(`.${styles.tab} .${styles.ink}`),
+          ],
+          at: -1,
+        };
+        layers.set(c, l);
+      }
+      return l;
+    };
+    const setCover = (c: HTMLElement, cover: number) => {
+      const l = layersOf(c);
+      if (l.at === cover) return;
+      l.at = cover;
+      l.shade.forEach((e) => (e.style.opacity = String(1 - cover)));
+      l.dim.forEach((e) => (e.style.opacity = String(cover)));
+      l.ink.forEach((e) => (e.style.opacity = String(1 - cover * (1 - dimText))));
+    };
+
     const update = () => {
       raf = 0;
-      // A covered card hides its "01 / 03" label (it sits outside the card, under the next one's).
-      // --cover runs 0 → 1 as the next card travels from the bottom of the screen to this card's
-      // top: the card darkens and its type falls to 32% with it (cs2.svg).
+      // A covered card hides its "01 / 04" counter (it sits outside the card, under the next one's).
+      // The cover runs 0 → 1 as the next card travels from the bottom of the screen to this card's
+      // top: the card darkens and its type falls to --dim-text-opacity with it (cs2.svg).
       const tops = cards.current.map((c) => c?.getBoundingClientRect().top ?? 0);
       cards.current.forEach((c, j) => {
         if (!c) return;
         c.toggleAttribute("data-covered", j < N - 1 && tops[j + 1] <= tops[j] + 2);
         const run = innerHeight - tops[j];
         const cover = j < N - 1 && run > 0 ? Math.min(1, Math.max(0, 1 - (tops[j + 1] - tops[j]) / run)) : 0;
-        c.style.setProperty("--cover", cover.toFixed(3));
+        setCover(c, Math.round(cover * 1000) / 1000);
       });
       const first = slots.current[0]?.getBoundingClientRect();
       const ai = document.getElementById("ai-tinkering")?.getBoundingClientRect();
@@ -306,22 +336,46 @@ export default function Projects() {
   }, [reduced, craneWidth]);
 
   // ---------- "View ↗" bubble: follows a mouse over the media area. Desktop pointers only. ----------
+  // It trails the cursor a little (eased toward it each frame) rather than being pinned to it, so it
+  // moves with some momentum; it appears where the cursor is, never flying in from elsewhere.
   const fine = useRef(false);
+  const trail = useRef({ x: 0, y: 0, tx: 0, ty: 0, on: false, raf: 0 });
   useEffect(() => {
     fine.current = matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const t = trail.current;
+    return () => cancelAnimationFrame(t.raf);
   }, []);
+  const step = () => {
+    const t = trail.current, v = view.current;
+    t.raf = 0;
+    if (!v) return;
+    t.x += (t.tx - t.x) * 0.3;
+    t.y += (t.ty - t.y) * 0.3;
+    if (Math.abs(t.tx - t.x) < 0.5 && Math.abs(t.ty - t.y) < 0.5) (t.x = t.tx), (t.y = t.ty);
+    else t.raf = requestAnimationFrame(step);
+    v.style.translate = `${t.x}px ${t.y}px`;
+  };
   const follow = (e: PointerEvent) => {
-    const v = view.current;
+    const v = view.current, t = trail.current;
     if (!fine.current || e.pointerType !== "mouse" || !v) return;
-    v.style.translate = `${e.clientX}px ${e.clientY}px`;
+    t.tx = e.clientX;
+    t.ty = e.clientY;
+    if (!t.on || reduced) {
+      // Appearing (or reduced motion): start right at the cursor.
+      t.x = t.tx;
+      t.y = t.ty;
+      v.style.translate = `${t.x}px ${t.y}px`;
+    } else if (!t.raf) t.raf = requestAnimationFrame(step);
+    t.on = true;
     v.style.transform = "scale(1)";
     v.style.opacity = "1";
   };
   const unfollow = () => {
-    const v = view.current;
+    const v = view.current, t = trail.current;
     if (!v) return;
+    t.on = false;
     v.style.transform = "";
-    v.style.opacity = ""; // fades and shrinks in place; translate stays put until the next follow
+    v.style.opacity = ""; // fades and shrinks in place; it reappears at the cursor next time
   };
 
   return (
@@ -366,10 +420,12 @@ export default function Projects() {
               className={styles.card}
               aria-labelledby={`project-${j}`}
             >
+              <span className={styles.shade} aria-hidden="true" />
               <span className={styles.grain} aria-hidden="true" />
               <span className={styles.tab} aria-hidden="true">
                 <span className={styles.grain} />
                 <span className={styles.ink}>{pad(j + 1)}</span>
+                <span className={styles.dim} />
               </span>
               <span className={styles.count} aria-hidden="true">
                 {pad(j + 1)} / {pad(N)}
@@ -445,6 +501,8 @@ export default function Projects() {
                   <div className={styles.media} aria-hidden="true" onPointerMove={follow} onPointerLeave={unfollow} />
                 )}
               </div>
+              {/* Last, so it lies over the content when the next card covers this one. */}
+              <span className={styles.dim} aria-hidden="true" />
             </article>
           </li>
         ))}

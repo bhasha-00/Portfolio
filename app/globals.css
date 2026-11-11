@@ -8,7 +8,6 @@
   --nav-top: calc(14px + env(safe-area-inset-top, 0px));
 
   /* Motion */
-  --ease-out: cubic-bezier(.2, .8, .2, 1);
 
   /* Paper grain for the cream surfaces (cards, tabs, nav): the green paper's fibres, near white,
      multiplied onto the cream. "none" until the page has loaded (Backdrop.tsx sets data-paper), so

@@ -155,15 +155,15 @@
   max-width: 100%;
 }
 
-/* Hover, focus, press: straighten to 0° (undo the card's current angle), lift 8px. */
+/* Hover, focus, press: lift 8px (cards land upright, so there is no angle to undo). */
 .card:focus-visible,
 .card:active {
-  transform: rotate(calc(-1 * var(--a, 0deg))) translateY(-8px);
+  transform: translateY(-8px);
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .card:hover {
-    transform: rotate(calc(-1 * var(--a, 0deg))) translateY(-8px);
+    transform: translateY(-8px);
   }
 }
 

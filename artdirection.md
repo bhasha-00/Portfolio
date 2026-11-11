@@ -31,7 +31,7 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
   - Paper grain (same request): the cream surfaces drawn in code (case study cards and tabs, nav) carry the green paper's fibres, taken from the End photo as a near-white tile (public/bg/paper-grain.webp) multiplied onto --cream. Loads after the page. The AI cards get the same grain as a layer clipped to their outline; the About tiles carry it at 0.25 on their cream.
 
 - Roles: `--text-on-red` (cream), `--text-on-cream` (ink), `--text-muted` (~6.3:1 on cream), `--divider` (ink 12%), `--dim-overlay` + `--dim-text-opacity` (covered card), `--cloud-fill`.
-- Radius `--r-sm` 8 / `--r-md` 16 / `--r-pill`; elevation `--shadow-card`. Motion `--dur-fast` 150 / `--dur-base` 250 / `--dur-card` 500, `--ease-out`.
+- Radius `--r-sm` 8 / `--r-md` 16 / `--r-pill`; elevation `--shadow-card`. Motion `--dur-fast` 150 / `--dur-base` 250 / `--dur-card` 500 (all 0 under reduced motion), `--ease-out` (entering, exiting, UI) and `--ease-in-out` (on-screen movement: folds lifting, the intro flight). UI transitions use these; only brand moments (intro, crane landing, flips, folds, the End paper settling) keep their own timing. Hover motion is gated to `(hover: hover) and (pointer: fine)`; pressables scale to 0.97.
 
 ## Type
 - Exactly two families, both via `next/font/google` in `app/layout.tsx`: **Geist** (`--nf-geist` → `--font-sans`) for everything set in type, and **Caveat** (`--nf-hand` → `--font-hand`) as the fallback hand font. No Geist Mono, no monospace.

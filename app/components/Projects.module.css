@@ -63,33 +63,31 @@
 
 /* One shadow. The cards stack in one place, so a covered card's shadow fades out as the next one
    arrives: only the top card's shows, never several on top of each other. */
-.card::before {
-  content: "";
+.shade {
   position: absolute;
   inset: 0;
   z-index: -1;
   border-radius: inherit;
   box-shadow: var(--shadow-card);
-  opacity: calc(1 - var(--cover, 0));
   pointer-events: none;
 }
 
-/* ---------- Covered by the next card (cs2.svg). --cover is 0 → 1, set on scroll by Projects.tsx.
-   The paper takes --dim-overlay and the type falls to --dim-text-opacity. Opacity only. */
-.card::after,
-.tab::after {
-  content: "";
+/* ---------- Covered by the next card (cs2.svg). Projects.tsx sets the opacities on scroll, on
+   these layers directly (no variable on the card, so a scroll frame restyles only what changed):
+   the shade fades out, the paper takes --dim-overlay (.dim, last in the card and the tab, so over
+   the content), and the type falls to --dim-text-opacity. Opacity only. */
+.dim {
   position: absolute;
   inset: 0;
   border-radius: inherit;
   background: var(--dim-overlay);
-  opacity: var(--cover, 0);
+  opacity: 0;
   pointer-events: none;
 }
 
-.card > :not(.tab, .count, .grain),
-.tab .ink {
-  opacity: calc(1 - var(--cover, 0) * (1 - var(--dim-text-opacity)));
+/* The tab's number: dims with the card's type (Projects.tsx). */
+.ink {
+  position: relative;
 }
 
 /* Folder tab, same paper as the card, sitting on its top edge. */
@@ -221,12 +219,18 @@
   text-align: center;
   cursor: pointer;
   user-select: none;
+  transition: transform var(--dur-fast) var(--ease-out);
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 
 .media:focus-visible {
   outline-color: var(--ink);
+}
+
+/* Press feedback on the demo (a button); the shot is not pressable. */
+button.media:active {
+  transform: scale(0.97);
 }
 
 .num {
@@ -304,7 +308,7 @@
   width: 0;
   height: 0;
   opacity: 0; /* shown by Projects.tsx once the crane is here */
-  transition: opacity 0.2s var(--ease-out);
+  transition: opacity var(--dur-fast) var(--ease-out);
   will-change: transform;
 }
 

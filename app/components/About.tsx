@@ -69,7 +69,6 @@ export default function About() {
 
     const place = (el: HTMLDivElement, dx: number, dy: number, a: number) => {
       el.style.transform = `translate(${dx}px, ${dy}px) rotate(${a}deg)`;
-      el.style.setProperty("--a", `${a}deg`); // the hover straightens by exactly this much
     };
 
     const update = () => {

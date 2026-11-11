@@ -113,7 +113,7 @@
   color: var(--ink);
   cursor: pointer;
   box-shadow: 0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent);
-  transition: transform 0.2s var(--ease-out);
+  transition: transform var(--dur-fast) var(--ease-out);
 }
 
 .again:active {

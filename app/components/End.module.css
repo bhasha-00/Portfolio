@@ -38,7 +38,7 @@
   border: 0;
   background: none;
   cursor: pointer;
-  transition: opacity 0.3s var(--ease-out);
+  transition: opacity var(--dur-base) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
 }
 

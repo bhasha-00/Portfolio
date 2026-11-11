@@ -222,13 +222,13 @@
   opacity: 0;
   visibility: hidden; /* out of the tab order while the crane is on the cards */
   transition:
-    opacity 0.3s var(--ease-out),
-    visibility 0s 0.3s;
+    opacity var(--dur-base) var(--ease-out),
+    visibility 0s var(--dur-base);
 }
 
 /* The cast shadow is the crane's silhouette: it fades while the companion is another shape. */
 .craneCast {
-  transition: opacity 0.3s var(--ease-out);
+  transition: opacity var(--dur-base) var(--ease-out);
 }
 
 :global(html[data-shape="rabbit"]) .craneCast,
@@ -239,7 +239,7 @@
 /* While the paper folds it is off the desk: no landing shadow until the new shape sits. */
 .craneAmbient,
 .craneFoot {
-  transition: opacity 0.25s var(--ease-out);
+  transition: opacity var(--dur-base) var(--ease-out);
 }
 
 :global(html[data-folding]) .craneCast,
