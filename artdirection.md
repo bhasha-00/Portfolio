@@ -119,3 +119,9 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 - Photos: extracted from Bhasha's card SVGs as they frame them (paper turned 90°, gourd lamp cropped to its left photo): public/about/photos/*.webp, through next/image. The old `*-v4.webp` exports are unused.
 - Grid: desktop 6 / 3 / 3 of 12 (24px gutters at 1440), tablet 4 / 2 / 2 of 8, phones the wide tile on top and the tall pair (2 + 2) under it. All tiles in a row share one height (the tall tiles' 358 × 521 shape).
 - Motion unchanged: the fan from a stack into the row, the flip every few seconds and on tap, hover/focus lift; reduced motion lands them without the fan and swaps without turning.
+
+## End (2026-11-11)
+- On `.container`. From 768 the paper square is centred on the grid: 4 of 8 columns (tablet), 6 of 12 (desktop, 620 at 1440), never taller than 85svh. Phones: full width, then sign-off, then links.
+- Sign-off on the container's left edge, links ending on its right edge, one row along the bottom from 768. Where the title meets the paper, the text sits on top (cream on green ≈ 4.1:1, large text).
+- Title h2 700 (balanced); line and links body 16/24 (links 600). Spacing tokens; paper shadow `--shadow-card`.
+- "Try a fold?": Bhasha's outline with the question mark moved in next to "fold" (no space), along the line's slant. Cream on the green token 4.63:1.

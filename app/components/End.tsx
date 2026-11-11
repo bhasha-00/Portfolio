@@ -34,7 +34,7 @@ export default function End() {
   }, []);
 
   return (
-    <section ref={section} id="end" className={styles.end} aria-labelledby="end-title">
+    <section ref={section} id="end" className={`container ${styles.end}`} aria-labelledby="end-title">
       <div className={styles.paper}>
         <div className={styles.sheet} data-folding={folding || undefined}>
           {/* Before the first click the sheet is one button: "Try a fold". */}

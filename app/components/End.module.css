@@ -1,25 +1,25 @@
-/* End, from end II.svg (1522 × 768). Desktop: the paper square (651, about 43vw) centred on the
-   screen; the sign-off and the contact pills share one row along the bottom, over the paper.
-   Phones: paper, then sign-off, then pills, stacked. */
+/* End, from end II.svg (1522 × 768), on .container (End.tsx). From 768: the paper square centred on
+   the grid (4 of 8 columns, 6 of 12), the sign-off and the contact links on one row along the
+   bottom, on the container's edges; where they meet, the sign-off sits on top of the paper.
+   Phones: paper, then sign-off, then links, stacked, full width. */
 
 .end {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  padding: 96px var(--page-inset) 64px;
+  gap: var(--space-7);
+  padding: var(--space-9) 0 var(--space-8);
 }
 
 .paper {
-  width: min(100%, 420px);
-  margin: 0 auto;
+  width: 100%;
 }
 
 /* The paper's texture is a photo, on this square only (see artdirection.md). */
 .sheet {
   position: relative;
   aspect-ratio: 1;
-  box-shadow: 0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent); /* nav pill */
+  box-shadow: var(--shadow-card);
 }
 
 .photo,
@@ -52,7 +52,7 @@
 .start:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 6px;
+  inset: var(--space-2);
   border: 2px dashed var(--ink);
   pointer-events: none;
 }
@@ -72,34 +72,37 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-5);
 }
 
 .text {
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
+/* Role: h2, on the red. */
 .title {
   margin: 0;
-  color: var(--cream);
-  font-size: clamp(32px, 3.3vw, 50px);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1;
+  color: var(--text-on-red);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tracking-h2);
+  text-wrap: balance;
 }
 
+/* Role: body. */
 .line {
   margin: 0;
-  color: var(--cream);
-  font-size: clamp(16px, 1.2vw, 18px);
-  line-height: 1.4;
+  color: var(--text-on-red);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
 }
 
 .links {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px 20px;
+  gap: var(--space-4) var(--space-5);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -109,15 +112,15 @@
    The padding is the tap area; LinkedIn is underlined, the email gains one on hover. */
 .pill {
   display: inline-block;
-  padding: 8px 0;
-  color: var(--cream);
-  font-size: clamp(16px, 1.2vw, 18px); /* = .line, so the two share size and baseline */
-  font-weight: 600;
-  line-height: 1.4;
+  padding: var(--space-2) 0;
+  color: var(--text-on-red);
+  font-size: var(--fs-body); /* = .line, so the two share size and baseline */
+  font-weight: var(--fw-label);
+  line-height: var(--lh-body);
   text-decoration: none;
   text-underline-offset: 3px;
   text-decoration-thickness: 1.5px;
-  transition: transform 0.2s var(--ease-out);
+  transition: transform var(--dur-fast) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -164,17 +167,23 @@
 
 @media (min-width: 768px) {
   .end {
+    --span: 4; /* paper columns, of --cols */
     justify-content: flex-end;
     min-height: 100vh;
     min-height: 100svh;
-    padding-block: 64px max(72px, 10.5svh); /* pills end 81px above the bottom of the 768 frame */
+    padding-block: var(--space-8) var(--space-9);
   }
 
+  /* Centred on the grid: --span columns of the container (symmetric, so its edges are column
+     edges); never taller than the screen allows. Under the sign-off where they meet. */
   .paper {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: min(42.8vw, 85svh, 651px);
+    width: min(
+      (100% - (var(--cols) - 1) * var(--gutter)) / var(--cols) * var(--span) + (var(--span) - 1) * var(--gutter),
+      85svh
+    );
     transform: translate(-50%, -50%);
   }
 
@@ -184,11 +193,16 @@
     align-items: flex-end;
   }
 
-  /* From the frame: 53 apart, LinkedIn ending 141 from the right edge of 1522 (gutter + 3.3vw). */
+  /* LinkedIn ends on the container's right edge. */
   .links {
     flex-wrap: nowrap;
-    gap: clamp(32px, 3.5vw, 56px);
-    margin-bottom: -8px; /* cancel the tap padding so the text sits on the subline's baseline */
-    padding-right: 3.3vw;
+    gap: var(--space-7);
+    margin-bottom: calc(-1 * var(--space-2)); /* cancel the tap padding so the text sits on the subline's baseline */
+  }
+}
+
+@media (min-width: 1200px) {
+  .end {
+    --span: 6;
   }
 }
