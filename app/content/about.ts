@@ -45,4 +45,5 @@ export const slots: Slot[] = [
   { shape: "tall", first: 2, swing: 5, tilt: -3 },
 ];
 
-export const aboutLine = "Shaped by industrial design, grounded in the act of building";
+/** The line above the tiles; `hand` is set in the hand font. */
+export const aboutLine = { lead: "Shaped by industrial design, grounded in the", hand: "act of creating" };

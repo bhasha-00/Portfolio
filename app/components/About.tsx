@@ -163,7 +163,9 @@ export default function About() {
         About
       </h2>
       <div className={styles.pin}>
-        <p className={styles.line}>{aboutLine}</p>
+        <p className={styles.line}>
+          {aboutLine.lead} <span className={styles.hand}>{aboutLine.hand}</span>
+        </p>
         <div ref={stage} className={styles.stage}>
           {slots.map((s, i) => {
             const f = faces[i];
@@ -194,7 +196,7 @@ export default function About() {
                       const c = crafts[f[k]];
                       return (
                         <span key={k} className={`${styles.face} ${k === "b" ? styles.back : ""}`} aria-hidden="true">
-                          <span className={styles.media}>
+                          <span className={`${styles.media} ${c.whole ? styles.cutout : ""}`}>
                             <Image src={c.src} alt="" fill sizes={SIZES[c.shape]} quality={80} className={`${styles.photo} ${c.whole ? styles.whole : ""}`} />
                           </span>
                           <span className={styles.chip}>{c.name}</span>

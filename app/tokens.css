@@ -41,6 +41,7 @@
   --fs-hand-sm: 16px;  --lh-hand-sm: 20px;   /* chips */
   --fs-hand-md: 20px;  --lh-hand-md: 24px;   /* eyebrows, role line */
   --fs-hand-lg: 24px;  --lh-hand-lg: 28px;   /* "Try a fold?" */
+  --fs-hand-h2: 36px;                        /* hand words inside an h2 ("act of creating"); h2 line-height */
 
   --fw-body: 400; --fw-label: 600; --fw-h2: 700; --fw-display: 800;
   --tracking-display: -0.03em; --tracking-h2: -0.02em; --tracking-chip: 0.02em;
@@ -75,6 +76,7 @@
     --margin: 40px; --gutter: 24px; --cols: 8; --card-pad: var(--space-6);
     --fs-h3: 28px; --lh-h3: 32px;
     --fs-h2: 32px; --lh-h2: 36px;
+    --fs-hand-h2: 40px;
     --fs-display: 40px; --lh-display: 44px;
     --fs-numeral: 128px;
   }
@@ -85,6 +87,7 @@
   :root {
     --margin: 80px; --cols: 12; --card-pad: var(--space-7);
     --fs-h2: 40px; --lh-h2: 44px;
+    --fs-hand-h2: 48px;
     --fs-display: 48px; --lh-display: 52px;
     --fs-numeral: 192px;
   }

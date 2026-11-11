@@ -26,6 +26,15 @@
   text-wrap: balance;
 }
 
+/* "act of creating" in the hand font, sized up to sit optically level with the h2 around it. */
+.hand {
+  font-family: var(--font-hand);
+  font-size: var(--fs-hand-h2);
+  line-height: var(--lh-h2);
+  font-weight: var(--fw-label);
+  letter-spacing: 0;
+}
+
 .stage {
   position: relative;
   display: grid;
@@ -122,10 +131,14 @@
   object-fit: cover;
 }
 
-/* A cut-out on a transparent background (paper sculpture): shown whole, on the ink. */
+/* A cut-out on a transparent background (paper sculpture): shown whole, straight on the tile's
+   cream, as in Bhasha's card. */
+.media.cutout {
+  background: none;
+}
+
 .photo.whole {
   object-fit: contain;
-  padding: var(--space-3);
 }
 
 /* Caption chip, role hand-sm (16px: never below body size). */
