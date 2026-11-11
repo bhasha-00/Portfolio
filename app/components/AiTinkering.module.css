@@ -77,8 +77,7 @@
   flex: none;
   height: 251px;
   border-radius: var(--r-md) var(--r-md) 0 0;
-  background: var(--ink);
-  overflow: hidden;
+  overflow: hidden; /* no fill: scaled, an ink fill showed as a hairline above the footer */
 }
 
 .mediaImg {

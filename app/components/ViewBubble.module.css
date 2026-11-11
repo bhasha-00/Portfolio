@@ -1,0 +1,25 @@
+/* The "View ↗" bubble (useViewBubble.tsx), shared by the case studies and AI Tinkering. */
+.view {
+  position: fixed;
+  left: -45px;
+  top: -45px;
+  z-index: 65;
+  display: grid;
+  place-items: center;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--cream);
+  font-size: var(--fs-body);
+  font-weight: 500;
+  pointer-events: none;
+  /* Position (translate) follows the cursor instantly; appearing is scale 0.9 → 1 with a fade,
+     never from scale(0). useViewBubble sets translate, transform and opacity. */
+  translate: -200px -200px;
+  transform: scale(0.9);
+  opacity: 0;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+}

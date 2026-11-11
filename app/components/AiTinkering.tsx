@@ -7,6 +7,7 @@ import Origami from "./companion/Origami";
 import PerchPuff from "./companion/PerchPuff";
 import { ROLE, roleOf, useSpread } from "./useSpread";
 import spread from "./Spread.module.css";
+import { useViewBubble } from "./useViewBubble";
 import styles from "./AiTinkering.module.css";
 
 const PERCH = 0; // the crane perches on the card that starts in front
@@ -51,6 +52,7 @@ function Clip({ src, focus, play }: { src: string; focus?: string; play: boolean
 export default function AiTinkering() {
   const { section, stage, slots, front, bring, stageProps, swiped, zOf } = useSpread(tinkers);
   const fly = useRef<HTMLSpanElement>(null);
+  const { bubble, follow, unfollow } = useViewBubble(); // "View ↗" over any card
   const craneWidth = useCallback(() => (fly.current?.firstElementChild as HTMLElement | null)?.offsetWidth ?? 0, []);
 
   // The cards are laid out at the frames' 306px and scaled to the slot's width: --k = width / 306.
@@ -147,6 +149,8 @@ export default function AiTinkering() {
                 }}
                 className={spread.slot}
                 style={{ zIndex: zOf(i) }}
+                onPointerMove={follow}
+                onPointerLeave={unfollow}
               >
                 <div className={spread.pos} data-role={ROLE[role]}>
                   {isFront && c.href ? (
@@ -205,6 +209,7 @@ export default function AiTinkering() {
           })}
         </div>
       </div>
+      {bubble}
     </section>
   );
 }

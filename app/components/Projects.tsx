@@ -8,13 +8,13 @@ import {
   useRef,
   useState,
   type CSSProperties,
-  type PointerEvent,
   type ReactNode,
 } from "react";
 import { projects, type Project } from "../content/projects";
 import { controls, flightFrames, type Pt } from "./craneFlight";
 import PerchPuff from "./companion/PerchPuff";
 import Origami from "./companion/Origami";
+import { useViewBubble } from "./useViewBubble";
 import styles from "./Projects.module.css";
 
 const N = projects.length;
@@ -65,7 +65,6 @@ export default function Projects() {
   const nums = useRef<(HTMLSpanElement | null)[]>([]);
   const bars = useRef<(HTMLSpanElement | null)[]>([]);
   const counts = useRef<number[]>([]);
-  const view = useRef<HTMLDivElement>(null);
   const [reduced, setReduced] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -335,48 +334,8 @@ export default function Projects() {
     };
   }, [reduced, craneWidth]);
 
-  // ---------- "View ↗" bubble: follows a mouse over the media area. Desktop pointers only. ----------
-  // It trails the cursor a little (eased toward it each frame) rather than being pinned to it, so it
-  // moves with some momentum; it appears where the cursor is, never flying in from elsewhere.
-  const fine = useRef(false);
-  const trail = useRef({ x: 0, y: 0, tx: 0, ty: 0, on: false, raf: 0 });
-  useEffect(() => {
-    fine.current = matchMedia("(hover: hover) and (pointer: fine)").matches;
-    const t = trail.current;
-    return () => cancelAnimationFrame(t.raf);
-  }, []);
-  const step = () => {
-    const t = trail.current, v = view.current;
-    t.raf = 0;
-    if (!v) return;
-    t.x += (t.tx - t.x) * 0.3;
-    t.y += (t.ty - t.y) * 0.3;
-    if (Math.abs(t.tx - t.x) < 0.5 && Math.abs(t.ty - t.y) < 0.5) (t.x = t.tx), (t.y = t.ty);
-    else t.raf = requestAnimationFrame(step);
-    v.style.translate = `${t.x}px ${t.y}px`;
-  };
-  const follow = (e: PointerEvent) => {
-    const v = view.current, t = trail.current;
-    if (!fine.current || e.pointerType !== "mouse" || !v) return;
-    t.tx = e.clientX;
-    t.ty = e.clientY;
-    if (!t.on || reduced) {
-      // Appearing (or reduced motion): start right at the cursor.
-      t.x = t.tx;
-      t.y = t.ty;
-      v.style.translate = `${t.x}px ${t.y}px`;
-    } else if (!t.raf) t.raf = requestAnimationFrame(step);
-    t.on = true;
-    v.style.transform = "scale(1)";
-    v.style.opacity = "1";
-  };
-  const unfollow = () => {
-    const v = view.current, t = trail.current;
-    if (!v) return;
-    t.on = false;
-    v.style.transform = "";
-    v.style.opacity = ""; // fades and shrinks in place; it reappears at the cursor next time
-  };
+  // The "View ↗" bubble over the media (useViewBubble).
+  const { bubble, follow, unfollow } = useViewBubble();
 
   return (
     <section ref={work} id="projects" className={`container ${styles.work}`} aria-labelledby="projects-title">
@@ -508,9 +467,7 @@ export default function Projects() {
         ))}
       </ol>
 
-      <div ref={view} className={styles.view} aria-hidden="true">
-        View ↗
-      </div>
+      {bubble}
     </section>
   );
 }
