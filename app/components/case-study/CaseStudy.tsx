@@ -1,7 +1,7 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { caseStudyHref, type Block, type CaseStudy as CS, type Media } from "../../content/caseStudies";
-import { projects } from "../../content/projects";
+import { projects, type Project } from "../../content/projects";
 import { rich } from "../rich";
 import CaseBar from "./CaseBar";
 import Reveal from "./Reveal";
@@ -33,6 +33,28 @@ function Artifact({ media, priority = false }: { media: Media; priority?: boolea
     <figure className={`${styles.media} ${styles.placeholder}`} style={shape} role="img" aria-label={`${media.label} (placeholder)`}>
       <span className={styles.phKind}>{media.kind === "video" ? "Video" : "Image"}</span>
       <span className={styles.phLabel}>{media.label}</span>
+    </figure>
+  );
+}
+
+// The cover: the same shot as the project's card on home, served the same way. Tablet and desktop get
+// the SVG export itself (vector type stays crisp, embedded screenshots scale once from full size);
+// phones get a raster sized by Next, so they never download the full file.
+function Cover({ image }: { image: NonNullable<Project["image"]> }) {
+  const { props } = getImageProps({
+    src: image.src,
+    alt: image.alt,
+    fill: true,
+    quality: 90,
+    sizes: "calc(100vw - 40px)", // phones: the column, inside the 20px margins
+  });
+  return (
+    <figure className={styles.media} style={{ aspectRatio: "2291 / 1558" }}>
+      <picture>
+        {image.svg && <source media="(min-width: 768px)" srcSet={image.svg} type="image/svg+xml" />}
+        {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text -- props from getImageProps */}
+        <img {...props} fetchPriority="high" decoding="async" className={styles.mediaFill} />
+      </picture>
     </figure>
   );
 }
@@ -105,6 +127,7 @@ export default function CaseStudy({ cs }: { cs: CS }) {
   let last = tabs[0]?.id ?? "";
   const spy = cs.sections.map((s) => ({ id: s.id, tab: s.tab ? (last = s.id) : last }));
   spy.push({ id: "more", tab: last }); // Explore more keeps the last tab marked
+  const cover = projects.find((p) => p.name === cs.project)?.image;
   const more = cs.more.map((m) => ({ ...m, p: projects.find((p) => p.name === m.project), href: caseStudyHref(m.project) }));
 
   return (
@@ -126,7 +149,7 @@ export default function CaseStudy({ cs }: { cs: CS }) {
                 </div>
               ))}
             </dl>
-            <Artifact media={cs.hero} priority />
+            {cover ? <Cover image={cover} /> : <Artifact media={cs.hero} priority />}
           </header>
 
           {cs.sections.map((s) => (

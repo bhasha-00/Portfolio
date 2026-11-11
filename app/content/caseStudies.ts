@@ -62,6 +62,7 @@ const lsneo: CaseStudy = {
     { label: "Team", value: "1 Designer, 1PM and 1 stakeholder" },
     { label: "Platform", value: "Web application" },
   ],
+  /** Shown only while the home card has no cover image: the cover is that image (CaseStudy.tsx). */
   hero: { label: "Cataloguing, made clear: cover", kind: "image", ratio: 408 / 277 },
   sections: [
     {
