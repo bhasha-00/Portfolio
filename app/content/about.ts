@@ -51,8 +51,5 @@ export const slots: Slot[] = [
 /** Height of every handwriting box, in its own units (11.7 above the baseline, 3.9 below). */
 export const HAND_H = 15.6;
 
-/** The line above the tiles; `hand` is in Bhasha's handwriting (outline, cut from her export). */
-export const aboutLine = {
-  lead: "Shaped by industrial design, grounded in the",
-  hand: { text: "act of creating", src: "/about/hand/act-of-creating.svg", w: 106.25 },
-};
+/** The line above the tiles, in Geist (h2). */
+export const aboutLine = "Shaped by industrial design, grounded in the act of creating";

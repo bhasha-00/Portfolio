@@ -28,7 +28,6 @@
 
 /* Bhasha's handwriting (About.tsx Hand): her outline as a mask, filled with the text colour. Each
    word's box is 15.6 units tall with the baseline 11.7 down, so one height sets the scale for all. */
-.lineHand,
 .chipHand {
   display: inline-block;
   aspect-ratio: var(--ratio);
@@ -37,12 +36,6 @@
   mask: var(--src) center / contain no-repeat;
 }
 
-/* "act of creating": its x-height level with the h2's (box 1.2 × the h2 size), sitting on the
-   h2's baseline (the 3.9 units below the baseline hang under it). */
-.lineHand {
-  height: calc(var(--fs-h2) * 1.2);
-  vertical-align: calc(var(--fs-h2) * 1.2 * -0.25);
-}
 
 .stage {
   position: relative;

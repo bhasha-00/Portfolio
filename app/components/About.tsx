@@ -176,8 +176,7 @@ export default function About() {
       </h2>
       <div className={styles.pin}>
         <p className={styles.line}>
-          {aboutLine.lead} <span className="sr-only">{aboutLine.hand.text}</span>
-          <Hand src={aboutLine.hand.src} w={aboutLine.hand.w} className={styles.lineHand} />
+          {aboutLine}
         </p>
         <div ref={stage} className={styles.stage}>
           {slots.map((s, i) => {
