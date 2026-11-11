@@ -10,6 +10,7 @@ import {
   type CSSProperties,
 } from "react";
 import { projects, type Project } from "../content/projects";
+import { caseStudyHref } from "../content/caseStudies";
 import { controls, flightFrames, type Pt } from "./craneFlight";
 import PerchPuff from "./companion/PerchPuff";
 import Origami from "./companion/Origami";
@@ -415,10 +416,10 @@ export default function Projects() {
                   </div>
                 </div>
 
-                {p.image && p.href ? (
+                {p.image && caseStudyHref(p.name) ? (
                   // The case study page. The View bubble follows the cursor over it.
                   <Link
-                    href={p.href}
+                    href={caseStudyHref(p.name)!}
                     className={`${styles.media} ${styles.shot}`}
                     aria-label={`Read the case study: ${p.title ?? p.name}`}
                     onPointerMove={follow}

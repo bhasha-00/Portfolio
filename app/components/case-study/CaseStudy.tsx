@@ -1,5 +1,6 @@
 import Image from "next/image";
-import type { Block, CaseStudy as CS, Media } from "../../content/caseStudies";
+import Link from "next/link";
+import { caseStudyHref, type Block, type CaseStudy as CS, type Media } from "../../content/caseStudies";
 import { projects } from "../../content/projects";
 import { rich } from "../rich";
 import CaseBar from "./CaseBar";
@@ -103,7 +104,8 @@ export default function CaseStudy({ cs }: { cs: CS }) {
   // Every section, with the tab it belongs to: one without a tab of its own counts as the last tab before it.
   let last = tabs[0]?.id ?? "";
   const spy = cs.sections.map((s) => ({ id: s.id, tab: s.tab ? (last = s.id) : last }));
-  const more = cs.more.map((m) => ({ ...m, p: projects.find((p) => p.name === m.project) }));
+  spy.push({ id: "more", tab: last }); // Explore more keeps the last tab marked
+  const more = cs.more.map((m) => ({ ...m, p: projects.find((p) => p.name === m.project), href: caseStudyHref(m.project) }));
 
   return (
     <div className={styles.page}>
@@ -139,21 +141,35 @@ export default function CaseStudy({ cs }: { cs: CS }) {
             </section>
           ))}
 
-          <section className={styles.more} aria-labelledby="more-title" data-reveal-item="">
+          <section id="more" className={styles.more} aria-labelledby="more-title" data-reveal-item="">
             <h2 id="more-title" className={styles.moreTitle}>
               Explore more
             </h2>
             <ul className={styles.moreList}>
-              {more.map((m) => (
-                // The other case study pages are not built yet: each card says so instead of linking.
-                <li key={m.project} className={styles.moreCard} aria-disabled="true">
+              {more.map((m) => {
+                const shot = (
                   <span className={styles.moreShot}>
                     {m.p?.image && <Image src={m.p.image.src} alt="" fill sizes="(max-width: 767px) 100vw, 280px" className={styles.mediaFill} />}
                   </span>
-                  <span className={styles.moreText}>{m.title}</span>
-                  <span className={styles.soon}>Coming soon</span>
-                </li>
-              ))}
+                );
+                return (
+                  <li key={m.project} className={styles.moreCard}>
+                    {m.href ? (
+                      <Link href={m.href} className={styles.moreLink}>
+                        {shot}
+                        <span className={styles.moreText}>{m.title}</span>
+                      </Link>
+                    ) : (
+                      // Not built yet: the card says so instead of linking.
+                      <div className={styles.moreLink} aria-disabled="true">
+                        {shot}
+                        <span className={styles.moreText}>{m.title}</span>
+                        <span className={styles.soon}>Coming soon</span>
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </section>
         </article>

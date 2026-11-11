@@ -37,6 +37,8 @@ export type Section = {
 
 export type CaseStudy = {
   slug: string;
+  /** Its card on the home page (project name in content/projects.ts). */
+  project: string;
   product: string;
   year: string;
   title: string;
@@ -50,6 +52,7 @@ export type CaseStudy = {
 
 const lsneo: CaseStudy = {
   slug: "redesigning-cataloguing-from-a-10-minute-guess-to-a-scan-and-confirm",
+  project: "LSNeo Lite",
   product: "LSNeo Lite",
   year: "2026",
   title: "Redesigned cataloguing from a 10 minute guess to a scan and confirm flow; cutting manual entry by 60-70%.",
@@ -259,6 +262,55 @@ const lsneo: CaseStudy = {
   ],
 };
 
-export const caseStudies: CaseStudy[] = [lsneo];
+// NOVA: under NDA, so the page is the TL;DR only (as on Framer).
+const nova: CaseStudy = {
+  slug: "fewer-clicks-faster-decisions-reducing-average-time-on-task-be-restructing-data-hierarchy-and-filters",
+  project: "NOVA",
+  product: "Financial Services",
+  year: "2025",
+  title: "From firefighting to foresight : Making batch load visible before it overloads the system ",
+  meta: [
+    { label: "Role", value: "UX/UI Designer" },
+    { label: "Timeline", value: "2 Months" },
+    { label: "Team", value: "2 Designer" },
+    { label: "Platform", value: "B2B SaaS" },
+  ],
+  hero: { label: "NOVA financial reporting platform: cover", kind: "image", ratio: 408 / 277 },
+  sections: [
+    {
+      id: "tldr",
+      tab: "TL;DR",
+      eyebrow: "TL;DR",
+      title: "Project Under NDA ",
+      blocks: [
+        {
+          type: "p",
+          text: "I redesigned a module of a data-heavy financial platform, covering its dashboards, workflows, and information hierarchy. ",
+        },
+        {
+          type: "p",
+          text: "The highlight is a pipeline view that makes batch load visible before it overloads the system, built for batches of up to 300,000 reports running for > 2 hours on average. Streamlining workflows and improving system visibility in client testing environments.",
+        },
+        {
+          type: "p",
+          text: "This project is protected under a non-disclosure agreement and cannot be shared publicly. To discuss more about the project, process or my role, let's get in touch.",
+        },
+      ],
+    },
+  ],
+  more: [
+    { project: "LSNeo Lite", title: "Redesigned cataloguing from a 10 minute guess to a scan and confirm flow; cutting manual entry by 60-70%." },
+    { project: "Design system", title: "Turned static frames into a tokenized design system; 26 components and 150+ variants" },
+    { project: "Chatbot", title: "Designed a decision-tree chatbot that cut support queries by 40%; making answers predictable and scannable" },
+  ],
+};
+
+export const caseStudies: CaseStudy[] = [lsneo, nova];
 
 export const caseStudyBySlug = (slug: string) => caseStudies.find((c) => c.slug === slug);
+
+/** The page for a home card, if it has one. */
+export const caseStudyHref = (project: string) => {
+  const c = caseStudies.find((x) => x.project === project);
+  return c ? `/case-studies/${c.slug}` : undefined;
+};

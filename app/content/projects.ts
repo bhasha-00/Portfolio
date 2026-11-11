@@ -28,8 +28,6 @@ export type Project = {
   /** Media image, shown in place of a demo. `src`: raster (phones, resized by Next). `svg`: the
       full-resolution SVG export, shown as-is on desktop. Both in public/projects. */
   image?: { src: string; svg?: string; alt: string };
-  /** Case study page: the card's media links to it. */
-  href?: string;
 };
 
 export const projects: Project[] = [
@@ -42,7 +40,6 @@ export const projects: Project[] = [
       "Talked to librarians to find what slowed them down. Merged 7 ways of adding a book into one scan-and-confirm flow, with every state documented for handoff.",
     outcome: "**~60-70%** less manual entry per title",
     image: { src: "/projects/lsneo-cataloguing.webp", svg: "/projects/lsneo-cataloguing.svg", alt: "LSNeo Lite cataloguing screens: the catalogue setup checklist and the new title entry form." },
-    href: "/case-studies/redesigning-cataloguing-from-a-10-minute-guess-to-a-scan-and-confirm",
   },
   {
     name: "Design system",
