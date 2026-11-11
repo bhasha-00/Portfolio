@@ -8,11 +8,13 @@
   padding: var(--space-8) 0 var(--space-9);
 }
 
-/* Phones: the front card 77% of the screen, sides at 80% scale with ~10px clear of it. The card is
-   taller than ai.svg's, so the media keeps about the desktop share of it (the footer text wraps). */
+/* Phones: the front card 77% of the screen, sides at 80% scale with ~10px clear of it. The media is
+   1.2 : 1 everywhere (Frame 1984079185.svg); the card is as tall as the longest footer needs (the
+   one-liners wrap to three lines on phones). */
 .stage {
   --card-w: min(77vw, 320px);
-  --card-ratio: 582 / 708;
+  --media-ratio: 1.2;
+  --card-ratio: 582 / 787;
   --dx: 93.3%;
   --side: 0.8;
 }
@@ -25,7 +27,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  aspect-ratio: 582 / 623;
+  aspect-ratio: var(--card-ratio);
   padding: 0;
   border: 0;
   border-radius: var(--r-md);
@@ -40,10 +42,6 @@
   transition: transform var(--dur-base) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
   user-select: none;
-}
-
-.card[aria-current="true"] {
-  cursor: default;
 }
 
 /* Paper grain on the cream, as on the case study cards (globals.css). */
@@ -62,8 +60,8 @@
 
 .media {
   position: relative;
-  flex: 1;
-  min-height: 0;
+  flex: none;
+  aspect-ratio: var(--media-ratio);
   border-radius: var(--r-md) var(--r-md) 0 0;
   background: var(--ink);
   overflow: hidden;
@@ -75,6 +73,7 @@
 
 /* Footer: the name pill, then the one-liner (ai.svg: 12 around, 12 between). */
 .foot {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -191,8 +190,8 @@
   /* ai.svg: front card 41.7% of the row, side cards at 75.6% of it, their centres 82.2% of a card
      width out, so the row spans the container. Short screens: the card keeps clear of the nav. */
   .stage {
-    --card-w: min(41.7cqw, (100svh - 176px) * 582 / 623);
-    --card-ratio: 582 / 623; /* the card's shape in ai.svg */
+    --card-w: min(41.7cqw, (100svh - 176px) * 582 / 635);
+    --card-ratio: 582 / 635; /* ai.svg's card, a touch taller so every one-liner fits under 1.2 : 1 media */
     --dx: 82.2%;
     --side: 0.756;
   }
