@@ -340,8 +340,14 @@
   font-size: var(--fs-body);
   font-weight: 500;
   pointer-events: none;
-  transform: translate(-200px, -200px) scale(0);
-  transition: transform 0.14s ease-out;
+  /* Position (translate) follows the cursor instantly; appearing is scale 0.9 → 1 with a fade,
+     never from scale(0). Projects.tsx sets translate, transform and opacity. */
+  translate: -200px -200px;
+  transform: scale(0.9);
+  opacity: 0;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
 }
 
 @media (min-width: 768px) {

@@ -147,7 +147,7 @@
 }
 
 /* ---------- Desktop: the pinned fan ---------- */
-@media (min-width: 768px) {
+@media (min-width: 1200px) { /* below 1200 the cards stack: at 768 a row made them 208px wide, their text about 8px */
   .ai {
     height: 230vh; /* one screen pinned + the scroll that drives the fan */
     padding: 0;

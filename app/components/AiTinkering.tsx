@@ -27,7 +27,8 @@ export default function AiTinkering() {
 
   useEffect(() => {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)");
-    const wide = matchMedia("(min-width: 768px)");
+    // The row only from desktop: below it the cards stack, so the text drawn in their art stays legible.
+    const wide = matchMedia("(min-width: 1200px)");
     let raf = 0;
 
     const place = (el: HTMLDivElement, dx: number, dy: number, a: number) => {

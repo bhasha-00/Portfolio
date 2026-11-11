@@ -311,11 +311,17 @@ export default function Projects() {
     fine.current = matchMedia("(hover: hover) and (pointer: fine)").matches;
   }, []);
   const follow = (e: PointerEvent) => {
-    if (fine.current && e.pointerType === "mouse" && view.current)
-      view.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px) scale(1)`;
+    const v = view.current;
+    if (!fine.current || e.pointerType !== "mouse" || !v) return;
+    v.style.translate = `${e.clientX}px ${e.clientY}px`;
+    v.style.transform = "scale(1)";
+    v.style.opacity = "1";
   };
   const unfollow = () => {
-    if (view.current) view.current.style.transform = "";
+    const v = view.current;
+    if (!v) return;
+    v.style.transform = "";
+    v.style.opacity = ""; // fades and shrinks in place; translate stays put until the next follow
   };
 
   return (
