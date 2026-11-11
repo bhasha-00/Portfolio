@@ -38,7 +38,7 @@ function Shot({ image }: { image: NonNullable<Project["image"]> }) {
     alt: image.alt,
     fill: true,
     quality: 90,
-    sizes: "calc(100vw - 2 * 6vw - 40px)", // phone: the card's inner width
+    sizes: "calc(100vw - 88px)", // phone: the card's inner width (20px margins, 24px card padding)
   });
   return (
     <picture>
@@ -319,7 +319,7 @@ export default function Projects() {
   };
 
   return (
-    <section ref={work} id="projects" className={styles.work} aria-labelledby="projects-title">
+    <section ref={work} id="projects" className={`container ${styles.work}`} aria-labelledby="projects-title">
       <h2 id="projects-title" className="sr-only">
         Projects
       </h2>
@@ -360,7 +360,9 @@ export default function Projects() {
               className={styles.card}
               aria-labelledby={`project-${j}`}
             >
+              <span className={styles.grain} aria-hidden="true" />
               <span className={styles.tab} aria-hidden="true">
+                <span className={styles.grain} />
                 <span className={styles.ink}>{pad(j + 1)}</span>
               </span>
               <span className={styles.count} aria-hidden="true">

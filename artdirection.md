@@ -69,6 +69,9 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 - Persistent "Open to work / Resume" pill.
 
 ## Case study cards (Projects)
+- Layout (2026-11-11): the section is a `.container`; each card runs the full container (on the page grid), padding `--card-pad` on all four sides, radius `--r-sm` (open top-left under the tab), `--shadow-card`. All four cards share one height (the tallest). Inside, a grid of `--cols`: phones stacked; 768 text 3 / media 5 of 8; 1200+ text 5 / media 7 of 12. Card content sits on this inner grid, `--card-pad` in from the page columns.
+- Type: eyebrow hand-md (outlined handwriting); title h2 700, balanced, reserving two lines from 768; labels small 600; body body in `--text-muted`; key figures 700 in ink (no indigo). Dividers `--divider`. Tab "01" and counter "01 / 04": caption, Geist 500, tabular-nums; the counter sits in its own card's tab row, right edge.
+- Covered card (cs2.svg): `--dim-overlay` over the paper, content at `--dim-text-opacity`. Paper grain on its own layer at 0.25.
 - Cream card with a folder-style tab ("Project 01"). Three columns: Project, Role, Outcome.
 - Each card has a small interactive demo that shows its own result when scrolled into view and replays on tap:
   - Dashboard redesign: counter 6 → 3 clicks.

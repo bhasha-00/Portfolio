@@ -3,18 +3,16 @@
    sits on a fixed perch at the cards' bottom-right corner; the cards scroll underneath it.
    Only transform and opacity animate (the crane flight and demo bars, from Projects.tsx). */
 
+/* The section is a .container (Projects.tsx): cards run the full container, edge to edge. */
 .work {
-  --pad-top: 112px; /* nav + room for the crane perched on the card's top edge */
-  --pad-bottom: 28px;
+  --pad-top: calc(var(--space-9) + var(--space-4)); /* nav + room for the crane perched on the card's top edge */
+  --pad-bottom: var(--space-6);
   --avail: calc(100svh - var(--pad-top) - var(--pad-bottom));
   --card-h: var(--avail); /* mobile: the card fills the screen */
   position: relative;
-  padding: 0 var(--page-inset);
 }
 
 .stack {
-  max-width: 1100px;
-  margin: 0 auto;
   padding: 0;
   list-style: none;
 }
@@ -36,52 +34,62 @@
 
 /* ---------- Card ---------- */
 .card {
-  --line: color-mix(in srgb, var(--gold) 40%, var(--cream));
   position: relative;
   display: flex;
   flex-direction: column;
   height: var(--card-h);
   min-height: fit-content;
   margin: auto 0;
-  padding: 22px 20px 20px;
-  border-radius: 0 8px 8px 8px;
-  background: var(--paper-grain), var(--cream); /* paper, see globals.css */
-  background-size: var(--paper-size);
-  background-blend-mode: multiply;
-  color: var(--ink);
-  isolation: isolate; /* keeps the shadow layer below with its own card */
+  padding: var(--card-pad);
+  border-radius: 0 var(--r-sm) var(--r-sm) var(--r-sm);
+  background: var(--cream);
+  color: var(--text-on-cream);
+  isolation: isolate; /* keeps the shadow and grain layers below with their own card */
 }
 
-/* One shadow, the nav pill's. The cards stack in one place, so a covered card's shadow fades out
-   as the next one arrives: only the top card's shows, never several on top of each other. */
+/* Paper grain (the green paper's fibres, see globals.css), multiplied onto the cream at 0.25.
+   Its own layer, so the grain can be faint without fading the card. */
+.grain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--paper-grain);
+  background-size: var(--paper-size);
+  mix-blend-mode: multiply;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* One shadow. The cards stack in one place, so a covered card's shadow fades out as the next one
+   arrives: only the top card's shows, never several on top of each other. */
 .card::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  box-shadow: 0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent);
+  box-shadow: var(--shadow-card);
   opacity: calc(1 - var(--cover, 0));
   pointer-events: none;
 }
 
 /* ---------- Covered by the next card (cs2.svg). --cover is 0 → 1, set on scroll by Projects.tsx.
-   The paper darkens a touch (#F0EDDE → #E8E4D2 in the mock: about 4.5% ink) and the type falls to
-   32%. Opacity only. */
+   The paper takes --dim-overlay and the type falls to --dim-text-opacity. Opacity only. */
 .card::after,
 .tab::after {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: var(--ink);
-  opacity: calc(var(--cover, 0) * 0.045);
+  background: var(--dim-overlay);
+  opacity: var(--cover, 0);
   pointer-events: none;
 }
 
-.card > :not(.tab, .count),
+.card > :not(.tab, .count, .grain),
 .tab .ink {
-  opacity: calc(1 - var(--cover, 0) * 0.68);
+  opacity: calc(1 - var(--cover, 0) * (1 - var(--dim-text-opacity)));
 }
 
 /* Folder tab, same paper as the card, sitting on its top edge. */
@@ -92,102 +100,110 @@
   display: flex;
   align-items: center;
   width: 120px;
-  height: 32px;
-  padding: 0 16px;
-  border-radius: 8px 8px 0 0;
-  background: var(--paper-grain), var(--cream); /* same sheet as the card */
-  background-size: var(--paper-size);
-  background-blend-mode: multiply;
-  font: 500 12px/1 var(--font-sans);
-  letter-spacing: 0.06em;
+  height: var(--space-6);
+  padding: 0 var(--space-4);
+  border-radius: var(--r-sm) var(--r-sm) 0 0;
+  background: var(--cream); /* same sheet as the card */
+  isolation: isolate;
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-chip);
 }
 
-/* "01 / 03", faint, above the card's top-right corner. */
+/* Counter "01 / 04": in its own card's tab row, right-aligned to the card edge, on the red. */
 .count {
   position: absolute;
-  right: 4px;
-  bottom: calc(100% + 10px);
-  color: var(--cream);
-  font: 500 12px/1 var(--font-sans);
-  letter-spacing: 0.08em;
+  right: 0;
+  bottom: calc(100% - 1px);
+  display: flex;
+  align-items: center;
+  height: var(--space-6);
+  color: var(--text-on-red);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-chip);
   opacity: 0.88; /* faint, but still 4.5:1 on red */
-  transition: opacity 0.2s var(--ease-out);
+  transition: opacity var(--dur-fast) var(--ease-out);
 }
 
 .card[data-covered] .count {
   opacity: 0;
 }
 
-/* Type, from the card reference: title semibold at about 2.3× the body; labels body-sized and
-   medium in ink; body regular in a soft grey-ink, with highlights semibold. */
+/* Type roles: title h2; column labels small 600; body body; key figures 700. */
 .title {
-  font-size: clamp(22px, 2.6vw, 38px);
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  line-height: 1.2;
+  font-size: var(--fs-h2);
+  line-height: var(--lh-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tracking-h2);
+  text-wrap: balance;
   width: 100%; /* titles run the full width of the card */
 }
 
-/* Handwritten label above the title (cs.svg): Figma Hand outlines at about 0.55× the title size.
-   Until a label's export exists, its text sits in the same spot, small and quiet. */
+/* Handwritten eyebrow above the title (cs.svg), role hand-md: Figma Hand outlines sized to the
+   role; until a label's export exists, its text in the hand font. */
 .label2 {
   display: flex;
   align-items: center;
-  height: clamp(14px, 1.45vw, 21px);
-  margin-bottom: 8px;
-  font-size: clamp(13px, 1.1vw, 15px);
-  font-weight: 500;
-  line-height: 1;
-  color: color-mix(in srgb, var(--ink) 78%, var(--cream));
+  height: var(--lh-hand-md);
+  margin-bottom: var(--space-2);
+  font-family: var(--font-hand);
+  font-size: var(--fs-hand-md);
+  line-height: var(--lh-hand-md);
+  color: var(--text-muted);
 }
 
 .hand {
   display: block;
   width: auto;
-  height: 100%;
+  height: var(--fs-hand-md);
 }
 
-/* Text column, then media (stacked on mobile, side by side on desktop). */
+/* Text column, then media (stacked on phones, side by side from 768: see the end of this file). */
 .body {
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 18px;
+  gap: var(--space-5);
   min-height: 0;
-  margin-top: 18px;
+  margin-top: var(--space-5);
 }
 
 .col + .col {
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1.5px solid var(--line);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--divider);
 }
 
 .label {
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 0;
-  line-height: 1.35;
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+  font-weight: var(--fw-label);
 }
 
 .text {
-  margin-top: 8px;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.4;
-  color: color-mix(in srgb, var(--ink) 78%, var(--cream)); /* reference body grey #4E4E4E */
+  margin-top: var(--space-1);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-weight: var(--fw-body);
+  color: var(--text-muted);
 }
 
 .text strong {
-  font-weight: 600; /* key figures: bold only, same colour as the body text */
+  font-weight: var(--fw-h2); /* key figures (metrics): 700, in ink */
+  color: var(--text-on-cream);
 }
 
 .note {
-  margin-top: 6px;
-  font-size: 13px;
+  margin-top: var(--space-2);
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
   font-style: italic;
-  line-height: 1.4;
-  color: color-mix(in srgb, var(--ink) 72%, var(--cream));
+  color: var(--text-muted);
 }
 
 /* ---------- Media: holds the metric demo for now ---------- */
@@ -199,7 +215,7 @@
   width: 100%;
   min-height: 140px;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--r-sm);
   background: color-mix(in srgb, var(--ink) 9%, var(--cream));
   color: var(--ink);
   font: inherit;
@@ -217,19 +233,19 @@
 .num {
   display: block;
   color: var(--red);
-  font-size: clamp(48px, 7vw, 110px);
-  font-weight: 800;
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
+  font-weight: var(--fw-h2); /* metrics: 700 */
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.04em;
-  line-height: 1;
+  letter-spacing: var(--tracking-display);
 }
 
 .bar {
   display: block;
   width: min(200px, 60vw);
-  height: 10px;
-  margin-top: 10px;
-  border-radius: 9px;
+  height: var(--space-2);
+  margin-top: var(--space-3);
+  border-radius: var(--r-pill);
   background: color-mix(in srgb, var(--ink) 10%, transparent);
   overflow: hidden;
 }
@@ -245,8 +261,10 @@
 
 .hint {
   display: block;
-  margin-top: 10px;
-  font: 500 11px/1 var(--font-sans);
+  margin-top: var(--space-3);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   opacity: 0.75;
@@ -273,7 +291,7 @@
 .perch {
   --cw: clamp(56px, 7.5vw, 110px); /* reference: about 10% of the card width */
   position: absolute;
-  right: calc(80px + var(--cw) * 0.69); /* crane's right edge meets the label */
+  right: calc(var(--space-8) + var(--space-4) + var(--cw) * 0.69); /* crane's right edge meets the counter */
   /* the card's top edge: top padding plus half the slack around a shorter card */
   top: calc(var(--pad-top) + (var(--avail) - var(--card-h)) / 2);
   width: 0;
@@ -320,7 +338,7 @@
   border-radius: 50%;
   background: var(--ink);
   color: var(--cream);
-  font-size: 16px;
+  font-size: var(--fs-body);
   font-weight: 500;
   pointer-events: none;
   transform: translate(-200px, -200px) scale(0);
@@ -329,36 +347,22 @@
 
 @media (min-width: 768px) {
   .work {
-    --pad-top: 104px;
-    --pad-bottom: 32px;
+    --pad-top: calc(var(--space-9) + var(--space-2));
     /* reference card is about 1.8:1; never taller than the screen allows */
-    --card-h: min(var(--avail), calc(min(1100px, 100vw - 2 * var(--page-inset)) / 1.75));
-  }
-
-  .card {
-    padding: 30px 40px 40px;
-    border-radius: 0 8px 8px 8px;
+    --card-h: min(var(--avail), calc(min(100vw - 2 * var(--margin), var(--container-max)) / 1.75));
   }
 
   .tab {
     width: 160px;
   }
 
+  /* The title block always reserves two lines, so every card's body starts at the same height. */
+  .title {
+    min-height: calc(2 * var(--lh-h2));
+  }
+
   .body {
-    display: grid;
-    grid-template-columns: minmax(0, 0.62fr) minmax(0, 1fr);
-    gap: 48px;
-    margin-top: 32px;
-  }
-
-  .col + .col {
-    margin-top: 18px;
-    padding-top: 18px;
-  }
-
-  .label,
-  .text {
-    font-size: 17px;
+    margin-top: var(--space-6);
   }
 
   .media {
@@ -372,6 +376,34 @@
     align-self: start;
     height: auto;
     aspect-ratio: 2000 / 1360;
+  }
+}
+
+/* Side by side on a grid inside the card (--cols, --gutter): tablet text 3 / media 5 of 8 columns,
+   desktop text 5 / media 7 of 12. Stacking on tablets made cards taller than the screen. */
+@media (min-width: 768px) {
+  .body {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    column-gap: var(--gutter);
+  }
+
+  .body > :first-child {
+    grid-column: 1 / span 3;
+  }
+
+  .body > :last-child {
+    grid-column: 4 / -1;
+  }
+}
+
+@media (min-width: 1200px) {
+  .body > :first-child {
+    grid-column: 1 / span 5;
+  }
+
+  .body > :last-child {
+    grid-column: 6 / -1;
   }
 }
 
