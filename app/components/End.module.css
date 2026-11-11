@@ -108,43 +108,90 @@
   list-style: none;
 }
 
-/* Plain cream text links, semibold, on the subline's baseline (Bhasha's update to end II.svg).
-   The padding is the tap area; LinkedIn is underlined, the email gains one on hover. */
+/* Each contact: the link, then its icon (email: a copy button; LinkedIn: an arrow inside the link). */
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* Plain cream text links, semibold, no underline, on the subline's baseline (Bhasha's update to
+   end II.svg). The padding is the tap area. */
 .pill {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   padding: var(--space-2) 0;
   color: var(--text-on-red);
   font-size: var(--fs-body); /* = .line, so the two share size and baseline */
   font-weight: var(--fw-label);
   line-height: var(--lh-body);
   text-decoration: none;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1.5px;
   transition: transform var(--dur-fast) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
 }
 
-.underline {
-  text-decoration: underline;
+/* Lucide icons at the body size, stroked in the text colour. */
+.icon {
+  flex: none;
+  width: 1em;
+  height: 1em;
+  transition: transform var(--dur-fast) var(--ease-out);
 }
 
-@media (hover: hover) {
-  .pill:hover {
-    text-decoration: underline;
-  }
+/* Copy: an icon button right of the address, its tap area the same as the links'. */
+.copy {
+  display: inline-grid;
+  place-items: center;
+  padding: var(--space-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--text-on-red);
+  font-size: var(--fs-body);
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
 }
 
-.pill:active {
+/* "Copied", above the copy button for a moment (role caption). Opacity only. */
+.copied {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  color: var(--text-on-red);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.copied[data-on] {
+  opacity: 1;
+}
+
+.pill:active,
+.copy:active {
   transform: scale(0.97);
 }
 
-@media (hover: hover) {
-  .pill:hover {
+@media (hover: hover) and (pointer: fine) {
+  .pill:hover,
+  .copy:hover {
     transform: translateY(-2px);
+  }
+
+  .pill:hover .icon {
+    transform: translateX(2px); /* the arrow leans the way it goes */
   }
 }
 
-.pill:focus-visible {
+.pill:focus-visible,
+.copy:focus-visible {
   outline: 2px solid var(--cream);
   outline-offset: 3px;
 }

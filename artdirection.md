@@ -123,5 +123,5 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 ## End (2026-11-11)
 - On `.container`. From 768 the paper square is centred on the grid: 4 of 8 columns (tablet), 6 of 12 (desktop, 620 at 1440), never taller than 85svh. Phones: full width, then sign-off, then links.
 - Sign-off on the container's left edge, links ending on its right edge, one row along the bottom from 768. Where the title meets the paper, the text sits on top (cream on green ≈ 4.1:1, large text).
-- Title h2 700 (balanced); line and links body 16/24 (links 600). Spacing tokens; paper shadow `--shadow-card`.
+- Title h2 700 (balanced); line and links body 16/24 (links 600, no underline). Email has a copy button on its right (Lucide copy, 16px; "Copied" caption shows above it for 1.6s); LinkedIn has an arrow inside the link (Lucide arrow-right) that nudges 2px on hover. Hover lift 2px, press 0.97, gated to (hover: hover) and (pointer: fine). Spacing tokens; paper shadow `--shadow-card`.
 - "Try a fold?": Bhasha's outline with the question mark moved in next to "fold" (no space), along the line's slant. Cream on the green token 4.63:1.

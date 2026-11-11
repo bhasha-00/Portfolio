@@ -6,6 +6,25 @@ import { email, endLine, endTitle, linkedin } from "../content/end";
 import CrabFold from "./end/CrabFold";
 import styles from "./End.module.css";
 
+// Lucide "copy" and "arrow-right" (ISC), inline, drawn in the text colour.
+function CopyIcon() {
+  return (
+    <svg className={styles.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+    </svg>
+  );
+}
+
+function ArrowIcon() {
+  return (
+    <svg className={styles.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    </svg>
+  );
+}
+
 // The end, from end II.svg: a square of real green paper in the middle ("Try a fold ?" in the
 // designer's hand), the sign-off bottom-left over it, contact pills bottom-right. The paper settles
 // in (lift and fade, transform and opacity only) when the section comes into view; the text never
@@ -15,6 +34,21 @@ export default function End() {
   const section = useRef<HTMLElement>(null);
   const [folding, setFolding] = useState(false);
   const [round, setRound] = useState(0); // a fresh sheet each time
+  const [copied, setCopied] = useState(false);
+  const copiedTimer = useRef(0);
+
+  // Copy the address (for people without a mail app set up); "Copied" shows for a moment.
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(email);
+    } catch {
+      return; // no clipboard access: the address is still on screen and a mailto link
+    }
+    setCopied(true);
+    clearTimeout(copiedTimer.current);
+    copiedTimer.current = window.setTimeout(() => setCopied(false), 1600);
+  };
+  useEffect(() => () => clearTimeout(copiedTimer.current), []);
 
   useEffect(() => {
     const sec = section.current;
@@ -70,14 +104,21 @@ export default function End() {
           <p className={styles.line}>{endLine}</p>
         </div>
         <ul className={styles.links}>
-          <li>
+          <li className={styles.item}>
             <a className={styles.pill} href={`mailto:${email}`}>
               {email}
             </a>
+            <button type="button" className={styles.copy} onClick={copy} aria-label="Copy email address">
+              <CopyIcon />
+            </button>
+            <span className={styles.copied} data-on={copied || undefined} role="status" aria-live="polite">
+              {copied ? "Copied" : ""}
+            </span>
           </li>
-          <li>
-            <a className={`${styles.pill} ${styles.underline}`} href={linkedin} target="_blank" rel="noopener noreferrer">
+          <li className={styles.item}>
+            <a className={styles.pill} href={linkedin} target="_blank" rel="noopener noreferrer">
               LinkedIn
+              <ArrowIcon />
             </a>
           </li>
         </ul>
