@@ -1,5 +1,5 @@
 // AI Tinkering cards. Each card is HTML (AiTinkering.tsx) laid out as Frames 1984079200–202 (306 x 410):
-// the media panel, rendered from the frame at 4x (public/ai/*.webp), then a cream footer with the
+// the media panel as framed there, never upscaled (public/ai/*.webp), then a cream footer with the
 // name pill and the one-liner. The pill (icon + the name in hand lettering) is cut from the
 // card art in ai.svg as designed: public/ai/pill-N.svg; `name` gives the same words as text.
 
@@ -31,7 +31,7 @@ export const tinkers: Tinker[] = [
     name: "Pixel peeper",
     line: "A Chrome extension that acts like an 'Inspect Element' for design language.",
     pill: { src: "/ai/pill-2.svg", w: 181 },
-    media: { src: "/ai/pixel-peeper-card.webp", w: 1224, h: 1004 }, // Frame 1984079200.svg
+    media: { src: "/ai/pixel-peeper-v3.webp", w: 1224, h: 1004 }, // Frame 1984079200.svg, re-shot from the live site at 3x
     href: "https://pixel-peeper-site.vercel.app/",
     swing: -3,
     tilt: 3,
@@ -40,7 +40,7 @@ export const tinkers: Tinker[] = [
     name: "Exploded Hierarchy",
     line: "A Figma plugin that turns a flat design into layers, so you can judge what the eye reads first.",
     pill: { src: "/ai/pill-1.svg", w: 201 },
-    media: { src: "/ai/exploded-hierarchy-card.webp", w: 1224, h: 1004 }, // Frame 1984079201.svg
+    media: { src: "/ai/exploded-hierarchy-v3.webp", w: 721, h: 591 }, // Frame 1984079201.svg, at its source resolution
     soon: true,
     swing: -11,
     tilt: -4,
