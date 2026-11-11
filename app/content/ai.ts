@@ -8,7 +8,7 @@ export type Tinker = {
   /** Name pill art (icon + hand lettering) and its width in px; every pill is 48px tall. */
   pill: { src: string; w: number };
   /** Media panel image; without one the panel is plain ink (placeholder). */
-  media?: { src: string; w: number; h: number; /** object-position for the crop; centred if not given. */ focus?: string };
+  media?: { src: string; w: number; h: number; /** object-position for the crop; centred if not given. */ focus?: string; /** Looping clip (MP4, muted) over the still; plays only while the card is in front. */ clip?: string };
   /** The fan: the angle a card swings through on its way out of the stack, in degrees. */
   swing: number;
   /** The same swing in the phone layout. */

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PILL_H, tinkers } from "../content/ai";
 import Origami from "./companion/Origami";
 import PerchPuff from "./companion/PerchPuff";
@@ -11,12 +11,67 @@ import styles from "./AiTinkering.module.css";
 
 const PERCH = 0; // the crane perches on the card that starts in front
 
+// A card's clip, over its still. Only the front card's clip plays; a side card's is paused and
+// faded out, so the still shows. The file is fetched once the section is near (never with the
+// hero), and the clip fades in (opacity) only once it is actually playing, so there is no blank
+// frame. Reduced motion: never plays.
+function Clip({ src, focus, play }: { src: string; focus?: string; play: boolean }) {
+  const v = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const el = v.current;
+    if (!el) return;
+    if (play) {
+      el.play().catch(() => {}); // a blocked autoplay leaves the still showing
+    } else {
+      el.pause();
+      delete el.dataset.on;
+    }
+  }, [play]);
+  return (
+    <video
+      ref={v}
+      className={styles.clip}
+      src={src}
+      muted
+      loop
+      playsInline
+      preload="none"
+      aria-hidden="true"
+      tabIndex={-1}
+      style={focus ? { objectPosition: focus } : undefined}
+      onPlaying={(e) => (e.currentTarget.dataset.on = "")}
+    />
+  );
+}
+
 // AI Tinkering: the three-card spread (useSpread) as in ai.svg. Clicking, tapping or swiping to a side
 // card brings it to the front; the front card does nothing yet (it will open the tool).
 export default function AiTinkering() {
   const { section, stage, slots, front, bring, stageProps, swiped, zOf } = useSpread(tinkers);
   const fly = useRef<HTMLSpanElement>(null);
   const craneWidth = useCallback(() => (fly.current?.firstElementChild as HTMLElement | null)?.offsetWidth ?? 0, []);
+
+  // Clips load once the section is a screen away, and play only while it is on screen.
+  const [near, setNear] = useState(false);
+  const [onScreen, setOnScreen] = useState(false);
+  const [still, setStill] = useState(true);
+  useEffect(() => {
+    const sec = section.current;
+    if (!sec) return;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setStill(reduce.matches);
+    sync();
+    reduce.addEventListener("change", sync);
+    const early = new IntersectionObserver(([e]) => e.isIntersecting && setNear(true), { rootMargin: "100% 0px" });
+    const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting));
+    early.observe(sec);
+    io.observe(sec);
+    return () => {
+      reduce.removeEventListener("change", sync);
+      early.disconnect();
+      io.disconnect();
+    };
+  }, [section]);
 
   return (
     <section ref={section} id="ai-tinkering" className={`${spread.clip} ${styles.ai}`} aria-labelledby="ai-tinkering-title">
@@ -59,6 +114,9 @@ export default function AiTinkering() {
                           className={styles.mediaImg}
                           style={c.media.focus ? { objectPosition: c.media.focus } : undefined}
                         />
+                      )}
+                      {c.media?.clip && near && (
+                        <Clip src={c.media.clip} focus={c.media.focus} play={isFront && onScreen && !still} />
                       )}
                     </span>
                     <span className={styles.foot}>
