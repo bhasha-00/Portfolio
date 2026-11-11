@@ -10,6 +10,7 @@ import spread from "./Spread.module.css";
 import styles from "./AiTinkering.module.css";
 
 const PERCH = 0; // the crane perches on the card that starts in front
+const FRAME_W = 306; // the cards' width in Frames 1984079200–202, px
 
 // A card's clip, over its still. Only the front card's clip plays; a side card's is paused and
 // faded out, so the still shows. The file is fetched once the section is near (never with the
@@ -52,6 +53,16 @@ export default function AiTinkering() {
   const fly = useRef<HTMLSpanElement>(null);
   const craneWidth = useCallback(() => (fly.current?.firstElementChild as HTMLElement | null)?.offsetWidth ?? 0, []);
 
+  // The cards are laid out at the frames' 306px and scaled to the slot's width: --k = width / 306.
+  useEffect(() => {
+    const st = stage.current;
+    const slot = slots.current[0];
+    if (!st || !slot) return;
+    const ro = new ResizeObserver(() => st.style.setProperty("--k", String(slot.offsetWidth / FRAME_W)));
+    ro.observe(slot);
+    return () => ro.disconnect();
+  }, [stage, slots]);
+
   // "Coming soon" on the front card (Exploded Hierarchy); cleared when the ring turns.
   const [soon, setSoon] = useState(false);
   useEffect(() => setSoon(false), [front]);
@@ -88,8 +99,9 @@ export default function AiTinkering() {
           {tinkers.map((c, i) => {
             const role = roleOf(i, front);
             const isFront = role === 0;
+            // The card as designed (306 x 410), scaled to the card's width as one piece (--k).
             const inner = (
-              <>
+              <span className={styles.face}>
                 <span className={styles.deep} aria-hidden="true" />
                 <span className={styles.media}>
                   {c.media && (
@@ -97,8 +109,8 @@ export default function AiTinkering() {
                       src={c.media.src}
                       alt=""
                       fill
-                      sizes="(max-width: 767px) 80vw, 560px"
-                      quality={80}
+                      sizes="(max-width: 767px) 80vw, 400px"
+                      quality={90}
                       className={styles.mediaImg}
                       style={c.media.focus ? { objectPosition: c.media.focus } : undefined}
                     />
@@ -125,7 +137,7 @@ export default function AiTinkering() {
                   />
                   <span className={styles.line}>{c.line}</span>
                 </span>
-              </>
+              </span>
             );
             return (
               <div

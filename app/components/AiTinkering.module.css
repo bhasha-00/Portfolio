@@ -1,42 +1,37 @@
 /* AI Tinkering (AiTinkering.tsx): the three-card spread of ai.svg (Spread.module.css has the
-   mechanics; this file sets its numbers and draws the cards). Phones: the front card about 300px
-   wide, the side ones peeking in at the screen edges (the iPhone frame). From 768: the front card
-   41.7% of the container, the side ones tucked behind it, pinned while the fan plays. */
+   mechanics; this file sets its numbers and draws the cards, as Frames 1984079200–202). Phones: the
+   front card about 300px wide, the side ones peeking in at the screen edges (the iPhone frame). From
+   768: the side ones tucked behind the front card, pinned while the fan plays. */
 
 .ai {
   position: relative;
   padding: var(--space-8) 0 var(--space-9);
 }
 
-/* Phones: the front card 77% of the screen, sides at 80% scale with ~10px clear of it. The media is
-   1.2 : 1 everywhere (Frame 1984079185.svg); the card is as tall as the longest footer needs (the
-   one-liners wrap to three lines on phones). */
+/* Phones: the front card 77% of the screen, sides at 80% scale with ~10px clear of it. */
 .stage {
   --card-w: min(77vw, 320px);
-  --media-ratio: 1.2;
-  --card-ratio: 582 / 787;
+  --card-ratio: 306 / 410; /* Frames 1984079200–202 */
+  --k: 0.98; /* --card-w / 306px, set exactly by AiTinkering.tsx; this is the first paint */
   --dx: 93.3%;
   --side: 0.8;
 }
 
-/* The card: media panel on ink over a cream footer, --shadow-card all round (so the front card's
-   shadow falls on the side cards along both its edges and below it). */
+/* The card (a button, or a link when its tool is out): the box that takes clicks, lifts and shows
+   the focus ring. What it shows is .face. */
 .card {
   position: relative;
-  isolation: isolate;
-  display: flex;
-  flex-direction: column;
+  display: block;
   width: 100%;
   aspect-ratio: var(--card-ratio);
   padding: 0;
   border: 0;
   border-radius: var(--r-md);
-  background: var(--cream);
+  background: none;
   color: var(--text-on-cream);
-  box-shadow: var(--shadow-card);
   font: inherit;
   text-align: left;
-  text-decoration: none; /* the front card is a link when its tool is out */
+  text-decoration: none;
   cursor: pointer;
   transform: none;
   transition: transform var(--dur-base) var(--ease-out);
@@ -44,8 +39,27 @@
   user-select: none;
 }
 
+/* The card as designed, at the frames' size (306 x 410), scaled as one piece to the card's width, so
+   the media, pill and type keep the frames' proportions at every size. --shadow-card all round: the
+   front card's shadow falls on the side cards along both its edges and below it. */
+.face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  width: 306px;
+  height: 410px;
+  border-radius: var(--r-md);
+  background: var(--cream);
+  box-shadow: var(--shadow-card);
+  transform: scale(var(--k));
+  transform-origin: 0 0;
+}
+
 /* Paper grain on the cream, as on the case study cards (globals.css). */
-.card::before {
+.face::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -61,7 +75,7 @@
 .media {
   position: relative;
   flex: none;
-  aspect-ratio: var(--media-ratio);
+  height: 251px;
   border-radius: var(--r-md) var(--r-md) 0 0;
   background: var(--ink);
   overflow: hidden;
@@ -71,14 +85,14 @@
   object-fit: cover;
 }
 
-/* Footer: the name pill, then the one-liner (ai.svg: 12 around, 12 between). */
+/* Footer (the frames): the pill 12 in from the edges, the one-liner 16 under it and 20 in. */
 .foot {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-3) var(--space-5);
+  gap: var(--space-4);
+  padding: var(--space-3);
 }
 
 .pill {
@@ -89,9 +103,10 @@
 }
 
 .line {
+  padding-inline: var(--space-2);
   color: var(--text-muted);
-  font-size: var(--fs-small);
-  line-height: var(--lh-small);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
 }
 
 /* Hover / focus / tap: the card lifts and its shadow deepens a little (a soft layer fading in
@@ -187,11 +202,12 @@
     padding: var(--space-8) 0 var(--space-5); /* nav above */
   }
 
-  /* ai.svg: front card 41.7% of the row, side cards at 75.6% of it, their centres 82.2% of a card
-     width out, so the row spans the container. Short screens: the card keeps clear of the nav. */
+  /* ai.svg's spread: side cards at 75.6% of the front one, their centres 82.2% of a card width out.
+     The front card 40% of the container on tablets, 30% on desktop (as About's); short screens: it
+     keeps clear of the nav. */
   .stage {
-    --card-w: min(41.7cqw, (100svh - 176px) * 582 / 635);
-    --card-ratio: 582 / 635; /* ai.svg's card, a touch taller so every one-liner fits under 1.2 : 1 media */
+    --card-w: min(40cqw, (100svh - 176px) * 306 / 410);
+    --k: 0.9;
     --dx: 82.2%;
     --side: 0.756;
   }
@@ -226,4 +242,11 @@
 
 .soon[data-on] {
   opacity: 1;
+}
+
+@media (min-width: 1200px) {
+  .stage {
+    --card-w: min(30cqw, (100svh - 176px) * 306 / 410);
+    --k: 1.25;
+  }
 }

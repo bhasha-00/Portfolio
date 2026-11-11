@@ -1,5 +1,6 @@
-// AI Tinkering cards. Each card is HTML (AiTinkering.tsx): a media panel on ink, then a cream footer
-// with the name pill and the one-liner. The pill (icon + the name in hand lettering) is cut from the
+// AI Tinkering cards. Each card is HTML (AiTinkering.tsx) laid out as Frames 1984079200–202 (306 x 410):
+// the media panel, rendered from the frame at 4x (public/ai/*.webp), then a cream footer with the
+// name pill and the one-liner. The pill (icon + the name in hand lettering) is cut from the
 // card art in ai.svg as designed: public/ai/pill-N.svg; `name` gives the same words as text.
 
 export type Tinker = {
@@ -30,8 +31,7 @@ export const tinkers: Tinker[] = [
     name: "Pixel peeper",
     line: "A Chrome extension that acts like an 'Inspect Element' for design language.",
     pill: { src: "/ai/pill-2.svg", w: 181 },
-    // Group 1984079186.svg, with its Download button covered (it read as clutter in a thumbnail).
-    media: { src: "/ai/pixel-peeper.webp", w: 1280, h: 664, focus: "34% 0%" },
+    media: { src: "/ai/pixel-peeper-card.webp", w: 1224, h: 1004 }, // Frame 1984079200.svg
     href: "https://pixel-peeper-site.vercel.app/",
     swing: -3,
     tilt: 3,
@@ -40,7 +40,7 @@ export const tinkers: Tinker[] = [
     name: "Exploded Hierarchy",
     line: "A Figma plugin that turns a flat design into layers, so you can judge what the eye reads first.",
     pill: { src: "/ai/pill-1.svg", w: 201 },
-    media: { src: "/ai/exploded-hierarchy.webp", w: 650, h: 660, focus: "50% 77%" }, // Frame 1984079185.svg
+    media: { src: "/ai/exploded-hierarchy-card.webp", w: 1224, h: 1004 }, // Frame 1984079201.svg
     soon: true,
     swing: -11,
     tilt: -4,
@@ -49,7 +49,7 @@ export const tinkers: Tinker[] = [
     name: "Slither",
     line: "A pocket-sized throwback to the Nokia snake days.",
     pill: { src: "/ai/pill-3.svg", w: 119 },
-    media: { src: "/ai/slither.webp", w: 1323, h: 971 }, // the placeholder from ai.svg
+    media: { src: "/ai/slither-card.webp", w: 1224, h: 1004 }, // Frame 1984079202.svg
     href: "https://slither0098.vercel.app/",
     swing: 5,
     tilt: -2,
