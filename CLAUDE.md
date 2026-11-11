@@ -62,4 +62,5 @@ Next.js (App Router) + TypeScript + CSS (variables or CSS modules). Deploy on Ve
 - **Files:** fold engine `app/components/intro/fold.ts`, crane steps `intro/crane.ts`, loader `intro/Intro.tsx`; hero `app/components/Hero.tsx`; first-paint gate `public/intro-gate.js`; favicon `app/icon.svg`.
 - **Lighthouse mobile (prod, intro playing):** performance 94–95, accessibility/best practices/SEO 100.
 - **Hosting:** GitHub `bhasha-00/Portfolio`, imported into Vercel 2026-11-11 (main = production, every branch gets a preview).
-- **Open:** real-phone check of the step-6-tokens preview, reduced-motion test on a device, merge steps 1–2, book cover in the collage (third-party IP), faint Gemini sparkle on the crane wing tip, unused `ux_product_designer_workspace.svg` in the root.
+- **Merged:** steps 1–6 fast-forwarded into `main` 2026-11-11; production is live at portfolio-two-sigma-k3ccwevrek.vercel.app.
+- **Open:** real-phone check of production, reduced-motion test on a device, book cover in the collage (third-party IP), faint Gemini sparkle on the crane wing tip, unused `ux_product_designer_workspace.svg` in the root.
