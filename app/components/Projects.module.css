@@ -140,7 +140,7 @@
   line-height: var(--lh-h2);
   font-weight: var(--fw-h2);
   letter-spacing: var(--tracking-h2);
-  text-wrap: balance;
+  text-wrap: pretty; /* fills each line (no balancing), only avoids a lone last word */
   width: 100%; /* titles run the full width of the card */
 }
 
@@ -194,8 +194,7 @@
 }
 
 .text strong {
-  font-weight: var(--fw-h2); /* key figures (metrics): 700, in ink */
-  color: var(--text-on-cream);
+  font-weight: var(--fw-h2); /* key figures (metrics): 700, same colour as the body text */
 }
 
 .note {
@@ -348,17 +347,12 @@
 @media (min-width: 768px) {
   .work {
     --pad-top: calc(var(--space-9) + var(--space-2));
-    /* reference card is about 1.8:1; never taller than the screen allows */
-    --card-h: min(var(--avail), calc(min(100vw - 2 * var(--margin), var(--container-max)) / 1.75));
+    /* Sized by content: Projects.tsx gives every card the tallest card's natural height. */
+    --card-h: auto;
   }
 
   .tab {
     width: 160px;
-  }
-
-  /* The title block always reserves two lines, so every card's body starts at the same height. */
-  .title {
-    min-height: calc(2 * var(--lh-h2));
   }
 
   .body {
@@ -370,7 +364,8 @@
     min-height: 0;
   }
 
-  /* Desktop: the full shot at its own proportions (2000 × 1360), never cropped. */
+  /* Tablet: the full shot at its own proportions (2000 × 1360), uncropped, at the top of its column
+     (stretching it to the narrow, tall text column would crop away half the shot). */
   .media.shot {
     flex: none;
     align-self: start;
@@ -398,6 +393,12 @@
 }
 
 @media (min-width: 1200px) {
+  /* Desktop: the shot's proportions set its natural height; in a card with room to spare it
+     stretches to fill the row (a small crop from the right, via object-position). */
+  .media.shot {
+    align-self: stretch;
+  }
+
   .body > :first-child {
     grid-column: 1 / span 5;
   }
