@@ -9,7 +9,7 @@
   --avail: calc(100svh - var(--pad-top) - var(--pad-bottom));
   --card-h: var(--avail); /* mobile: the card fills the screen */
   position: relative;
-  padding: 0 var(--gutter);
+  padding: 0 var(--page-inset);
 }
 
 .stack {
@@ -332,7 +332,7 @@
     --pad-top: 104px;
     --pad-bottom: 32px;
     /* reference card is about 1.8:1; never taller than the screen allows */
-    --card-h: min(var(--avail), calc(min(1100px, 100vw - 2 * var(--gutter)) / 1.75));
+    --card-h: min(var(--avail), calc(min(1100px, 100vw - 2 * var(--page-inset)) / 1.75));
   }
 
   .card {

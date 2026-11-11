@@ -10,7 +10,7 @@ Feel: a precise, warm paper object. Bold red, hand-sketched, with one origami co
 - **Check:** screenshots at 390px and 1440px vs the prototype, Lighthouse mobile run, a 10-second recruiter scan.
 
 ## Tokens
-`app/tokens.css` is the only place raw values live (imported once in `app/layout.tsx`). Everything else uses `var(--token)`. `npm run check:tokens` fails on raw colours, raw font sizes, `clamp()` font sizes, extra families, gradients/filters and off-scale spacing.
+`app/tokens.css` is the only place raw values live (imported once in `app/layout.tsx`). Everything else uses `var(--token)`. `npm run check:tokens` fails on raw colours, raw font sizes, `clamp()` font sizes, extra families, gradients/filters and off-scale spacing. Approved exceptions carry `tokens-allow: <reason>` on the same line (grep for the full list). So far: the hero crane's four blur shadows (brand moment, 2026-11-10).
 
 Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 ```css
@@ -48,6 +48,7 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 | caption | 12/16 | | | counters, chips |
 | hand-sm / md / lg | 16/20 · 20/24 · 24/28 | | | chips · eyebrows, role line · "Try a fold?" |
 
+- numeral (decorative "80/20" behind the hero only): `--fs-numeral` 96 / 128 / 192, line-height 1, 14% opacity.
 - Counters: Geist 500, `font-variant-numeric: tabular-nums`. Metrics: weight 700.
 - Headings use `text-wrap: balance`.
 - Nav: Geist 500, normal case.
@@ -60,7 +61,7 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 
 ## Home (hero)
 - Cream pill nav, top centre: Home, Projects, AI Tinkering, About.
-- Headline large, top-left: **"Translating business goals and user needs into interfaces that perform."**
+- Headline large, top-left: **"Translating business goals and user needs into interfaces that perform."** Display role. Phones: wraps balanced. From 768: three set lines. From 1280: headline cols 1–8, intro cols 9–12 (below 1280 they stack; 8 columns are too narrow for the first line at 56px until about 1250).
 - Top-right column: name (Geist 800), "Product Designer", then one short summary sentence. No icons.
 - Hand-sketched figure (girl, top-down, seated with laptop, papers, tube, bowl), centred low. Ink line plus flat blue/orange accents. Until the real art exists, use the SVG placeholder from the prototype.
 - Large tinted numeral ("01") at about 14% opacity behind, right side.

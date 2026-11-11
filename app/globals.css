@@ -4,7 +4,7 @@
   /* Fonts: --font-sans / --font-hand live in tokens.css (next/font sets --nf-geist, --nf-hand) */
 
   /* Layout, from reference/lofi-v4.html */
-  --gutter: 6vw;
+  --page-inset: 6vw; /* legacy side inset for sections not yet on .container (tokens --gutter is the grid gutter) */
   --nav-top: calc(14px + env(safe-area-inset-top, 0px));
 
   /* Motion */

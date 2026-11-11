@@ -273,7 +273,9 @@
   }
 }
 
-@media (min-width: 1200px) {
+/* Side by side from 1280, not 1200: "Translating business goals" at display 56 is 706px, and
+   8 columns only reach that from about 1250 (at 1200 it ran 31px into the intro column). */
+@media (min-width: 1280px) {
   .top {
     align-items: start;
   }

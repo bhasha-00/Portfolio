@@ -4,7 +4,7 @@
 
 .ai {
   position: relative;
-  padding: 72px var(--gutter) 96px;
+  padding: 72px var(--page-inset) 96px;
 }
 
 .stage {
