@@ -19,9 +19,9 @@ export default function Hero() {
           <h1 id="home-title" className={styles.name}>
             Bhasha Maheshwari
           </h1>
-          {/* In Bhasha's hand (Figma Hand), as outlines from home.svg; "er" uses its own e and r. */}
+          {/* In Bhasha's hand (Figma Hand), as an outline from her export (2026-11-11). */}
           <p className={styles.role}>
-            <img src="/hero/product-designer.svg" alt="Product designer" width={162} height={20} className={styles.hand} />
+            <img src="/hero/product-designer.svg" alt="Product designer" width={150} height={20} className={styles.hand} />
           </p>
           <p className={styles.summary}>
             2+ years across B2B SaaS. Strong focus on complex systems, scale
