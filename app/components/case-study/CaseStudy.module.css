@@ -1,0 +1,359 @@
+/* Case study page (CaseStudy.tsx). The case study cards' surface: cream with the paper grain, ink type,
+   muted body text, eyebrows hand-lettered in red (5.3:1 on cream). One reading column: all 4 columns
+   on phones, all 8 on tablets, columns 3–10 of 12 on desktop. */
+
+.page {
+  min-height: 100vh;
+  background: var(--paper-grain), var(--cream);
+  background-size: var(--paper-size);
+  background-blend-mode: multiply;
+  color: var(--text-on-cream);
+}
+
+/* Section jumps stop below the bar. */
+:global(html):has(.page) {
+  scroll-padding-top: var(--nav-offset);
+}
+
+.main {
+  padding: calc(var(--nav-offset) + var(--space-5)) 0 var(--space-9);
+}
+
+.col {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+/* ---------- Header ---------- */
+.kicker,
+.eyebrow {
+  margin: 0 0 var(--space-2);
+  color: var(--red);
+  font-family: var(--font-hand);
+  font-size: var(--fs-hand-md);
+  line-height: var(--lh-hand-md);
+}
+
+.h1 {
+  margin: 0;
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tracking-h2);
+  text-wrap: balance;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5) var(--gutter);
+  margin: var(--space-7) 0;
+}
+
+.meta > div {
+  min-width: 0;
+}
+
+.metaLabel {
+  margin-bottom: var(--space-1);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-weight: var(--fw-label);
+}
+
+.metaValue {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+/* ---------- Sections ---------- */
+.section {
+  margin-top: var(--space-8);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--divider);
+}
+
+.section > * + * {
+  margin-top: var(--space-5);
+}
+
+.section > .eyebrow + .h2 {
+  margin-top: 0;
+}
+
+.h2 {
+  margin: 0;
+  font-size: var(--fs-h2);
+  line-height: var(--lh-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tracking-h2);
+  text-wrap: balance;
+}
+
+.h3 {
+  margin-bottom: 0;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-lead);
+  font-weight: var(--fw-label);
+}
+
+/* Small label above an artifact ("Walkthrough", "Prototype"). */
+.label {
+  margin-bottom: calc(var(--space-3) - var(--space-5));
+  color: var(--text-muted);
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+  font-weight: var(--fw-label);
+}
+
+.p {
+  margin-bottom: 0;
+  color: var(--text-muted);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.p strong,
+.table strong {
+  color: var(--text-on-cream);
+  font-weight: var(--fw-label);
+}
+
+.callout {
+  padding: var(--space-5);
+  border-radius: var(--r-md);
+  background: var(--dim-overlay);
+}
+
+.callout .p {
+  margin-top: var(--space-2);
+}
+
+.calloutTitle {
+  margin: 0;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-lead);
+  font-weight: var(--fw-label);
+}
+
+/* 300-400 / 5-10 mins / ~1 hour: one row of three, ruled like a table (as on Framer). */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 0;
+  border: 1px solid var(--divider);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+
+.stat {
+  min-width: 0;
+}
+
+.stat + .stat {
+  border-left: 1px solid var(--divider);
+}
+
+.statValue {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--divider);
+  background: var(--dim-overlay);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-weight: var(--fw-label);
+}
+
+.statLabel {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  color: var(--text-muted);
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+}
+
+/* ---------- Artifacts ---------- */
+.media {
+  position: relative;
+  width: 100%;
+  margin-bottom: 0;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--dim-overlay);
+}
+
+.header .media {
+  margin-top: 0;
+}
+
+.mediaFill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Until the file is in: the artifact's shape, its kind and what it shows. */
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border: 1px dashed var(--divider);
+  text-align: center;
+}
+
+.phKind {
+  color: var(--text-muted);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tracking-chip);
+  text-transform: uppercase;
+}
+
+.phLabel {
+  color: var(--text-muted);
+  font-family: var(--font-hand);
+  font-size: var(--fs-hand-md);
+  line-height: var(--lh-hand-md);
+}
+
+/* ---------- Impact table ---------- */
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--divider);
+  border-radius: var(--r-sm);
+}
+
+.table {
+  width: 100%;
+  min-width: 520px; /* phones scroll it sideways rather than squeeze three columns */
+  border-collapse: collapse;
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--divider);
+  vertical-align: top;
+  color: var(--text-muted);
+  font-weight: var(--fw-body);
+}
+
+.table tr:last-child > * {
+  border-bottom: 0;
+}
+
+.table th + th,
+.table th + td,
+.table td + td {
+  border-left: 1px solid var(--divider);
+}
+
+.table thead th {
+  background: var(--dim-overlay);
+  color: var(--text-on-cream);
+  font-weight: var(--fw-label);
+}
+
+/* ---------- Explore more ---------- */
+.more {
+  margin-top: var(--space-8);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--divider);
+}
+
+.moreTitle {
+  margin: 0 0 var(--space-5);
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tracking-h2);
+}
+
+.moreList {
+  display: grid;
+  gap: var(--gutter);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.moreCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.moreShot {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--dim-overlay);
+}
+
+.moreText {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-weight: 500;
+}
+
+.soon {
+  align-self: flex-start;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--r-pill);
+  background: var(--back);
+  color: var(--text-muted);
+  font-family: var(--font-hand);
+  font-size: var(--fs-hand-sm);
+  line-height: var(--lh-hand-sm);
+}
+
+/* ---------- The fade-up (Reveal.tsx): only what starts below the screen ---------- */
+.page [data-reveal-item="wait"],
+.page [data-reveal-item="in"] {
+  transition:
+    opacity var(--dur-card) var(--ease-out),
+    transform var(--dur-card) var(--ease-out);
+}
+
+.page [data-reveal-item="wait"] {
+  opacity: 0;
+  transform: translateY(var(--space-5));
+}
+
+/* ---------- Tablet and up ---------- */
+@media (min-width: 768px) {
+  .meta {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .moreList {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .table {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  .statLabel {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+}
+
+@media (min-width: 1200px) {
+  .col {
+    grid-column: 3 / 11;
+  }
+}

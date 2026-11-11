@@ -1,20 +1,20 @@
 "use client";
 
 import Image, { getImageProps } from "next/image";
+import Link from "next/link";
 import {
-  Fragment,
   useCallback,
   useEffect,
   useRef,
   useState,
   type CSSProperties,
-  type ReactNode,
 } from "react";
 import { projects, type Project } from "../content/projects";
 import { controls, flightFrames, type Pt } from "./craneFlight";
 import PerchPuff from "./companion/PerchPuff";
 import Origami from "./companion/Origami";
 import { useViewBubble } from "./useViewBubble";
+import { rich } from "./rich";
 import styles from "./Projects.module.css";
 
 const N = projects.length;
@@ -24,10 +24,6 @@ const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v
 /** The crane flies down when card 01's top crosses this fraction of the viewport. */
 const TRIGGER = 0.7;
 const CRANE_ASPECT = 236 / 320;
-
-// "**bold**" → <strong>bold</strong>
-const rich = (s: string): ReactNode =>
-  s.split(/\*\*(.+?)\*\*/g).map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : <Fragment key={i}>{part}</Fragment>));
 
 // Case study shot. Desktop: the SVG export itself, so the browser draws vector type crisp and scales
 // the embedded screenshots once, straight from their full-size sources. Phones (and no SVG): a
@@ -419,7 +415,18 @@ export default function Projects() {
                   </div>
                 </div>
 
-                {p.image ? (
+                {p.image && p.href ? (
+                  // The case study page. The View bubble follows the cursor over it.
+                  <Link
+                    href={p.href}
+                    className={`${styles.media} ${styles.shot}`}
+                    aria-label={`Read the case study: ${p.title ?? p.name}`}
+                    onPointerMove={follow}
+                    onPointerLeave={unfollow}
+                  >
+                    <Shot image={p.image} />
+                  </Link>
+                ) : p.image ? (
                   <div className={`${styles.media} ${styles.shot}`} onPointerMove={follow} onPointerLeave={unfollow}>
                     <Shot image={p.image} />
                   </div>

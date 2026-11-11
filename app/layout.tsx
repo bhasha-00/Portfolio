@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Caveat } from "next/font/google";
-import Nav from "./components/Nav";
-import Backdrop from "./components/Backdrop";
-import Intro from "./components/intro/Intro";
+import PaperOn from "./components/PaperOn";
 import dynamic from "next/dynamic";
 
 // Dev-only grid overlay (press G). The import sits in a branch the production build removes,
@@ -50,10 +48,9 @@ export default function RootLayout({
         <script src="/intro-gate.js" />
       </head>
       <body>
-        <Backdrop />
-        <Intro />
-        <Nav />
-        <main>{children}</main>
+        <PaperOn />
+        {/* Each page brings its own chrome: home its backdrop, intro and nav; a case study its bar. */}
+        {children}
         {/* Press G: column grid + 4px baseline. Development only, never in the production bundle. */}
         <GridOverlay />
       </body>

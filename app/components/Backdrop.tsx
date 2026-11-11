@@ -19,14 +19,6 @@ const BURST =
 export default function Backdrop() {
   const burst = useRef<SVGSVGElement>(null);
 
-  // The paper grain on cream surfaces switches on once the page has loaded (globals.css).
-  useEffect(() => {
-    const on = () => document.documentElement.setAttribute("data-paper", "");
-    if (document.readyState === "complete") on();
-    else addEventListener("load", on, { once: true });
-    return () => removeEventListener("load", on);
-  }, []);
-
   useEffect(() => {
     const el = burst.current;
     if (!el) return;
