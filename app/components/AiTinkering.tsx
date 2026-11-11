@@ -1,74 +1,85 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
-import { tinkers } from "../content/ai";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
+import { PILL_H, tinkers } from "../content/ai";
 import Origami from "./companion/Origami";
 import PerchPuff from "./companion/PerchPuff";
 import styles from "./AiTinkering.module.css";
 
 const clamp = (v: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
 const easeOut = (t: number) => 1 - (1 - t) ** 3; // one strong ease-out; never ease-in
-const MIDDLE = 1; // the crane perches on the middle card
+const N = tinkers.length; // 3: one in front, one each side
+const PERCH = 0; // the crane perches on the card that starts in front
+const SWIPE = 40; // px of horizontal travel that counts as a swipe
 
-// AI Tinkering. After the last case study, three cards sprawl from a centred stack into one straight
-// row, one by one, left to right, each swinging through its fan angle and landing upright; scrubbed
-// by scroll (transform only). Hover, focus or tap lifts a card 8px and deepens its shadow. Phones: a vertical stack with small alternating
-// swings and the same one-by-one reveal. Reduced motion: the cards sit in their final places.
+/** Where card i sits when card `front` is in front: 0 front, 1 left, 2 right (a ring). */
+const roleOf = (i: number, front: number) => (i - front + N) % N;
+const ROLE = ["front", "left", "right"] as const;
+
+// AI Tinkering. Three cards in a spread (ai.svg): one in front, the other two smaller, tucked behind
+// it on either side. Clicking or tapping a side card turns the ring, bringing it to the front (transform
+// only, CSS on .pos); on phones a swipe does the same, and the arrow keys do it from the keyboard.
+// On the way in, the cards fan out of a centred stack into the spread, one by one, left to right,
+// each swinging through its fan angle and landing upright: scrubbed by scroll from 768 (pinned),
+// on phones as the row comes into view. Reduced motion: the cards sit in place and swap instantly.
 export default function AiTinkering() {
   const section = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const slots = useRef<(HTMLDivElement | null)[]>([]);
   const fly = useRef<HTMLSpanElement>(null);
-  const [pressed, setPressed] = useState(-1);
+  const swipe = useRef<{ x: number; y: number; done: boolean } | null>(null);
+  const [front, setFront] = useState(0);
+  const [prev, setPrev] = useState(0); // the card that was in front before the last turn
+  const frontRef = useRef(front);
+  frontRef.current = front;
 
   const craneWidth = useCallback(() => (fly.current?.firstElementChild as HTMLElement | null)?.offsetWidth ?? 0, []);
 
+  const bring = useCallback((i: number) => {
+    if (i === frontRef.current) return;
+    setPrev(frontRef.current);
+    setFront(i);
+  }, []);
+
   useEffect(() => {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)");
-    // The row only from desktop: below it the cards stack, so the text drawn in their art stays legible.
-    const wide = matchMedia("(min-width: 1200px)");
+    const wide = matchMedia("(min-width: 768px)");
     let raf = 0;
-
-    const place = (el: HTMLDivElement, dx: number, dy: number, a: number) => {
-      el.style.transform = `translate(${dx}px, ${dy}px) rotate(${a}deg)`;
-    };
 
     const update = () => {
       raf = 0;
       const sec = section.current, st = stage.current;
       if (!sec || !st) return;
       const still = reduce.matches;
+      const dx = parseFloat(getComputedStyle(st).getPropertyValue("--dx")) / 100 || 0;
 
+      // Progress: from 768 scrubbed through the pinned stretch; on phones as the row comes into view.
+      let p: number;
       if (wide.matches) {
-        // Fan: progress runs from "section top at 60% of the screen" through the pinned stretch.
         const r = sec.getBoundingClientRect();
         const lead = innerHeight * 0.6, run = sec.offsetHeight - innerHeight;
-        const p = still ? 1 : clamp((lead - r.top) / (lead + run * 0.75));
-        const W = st.offsetWidth, H = st.offsetHeight;
-        tinkers.forEach((c, i) => {
-          const el = slots.current[i];
-          if (!el) return;
-          // One by one, left to right: each card has its own slice of the scroll.
-          const t = easeOut(clamp((p - i * 0.2) / 0.5));
-          // From the centred stack (slightly offset, so the stack reads as a stack) to its grid
-          // column: the offset from the stage's centre to the slot's resting centre (layout, no transform).
-          const sx = W / 2 - (el.offsetLeft + el.offsetWidth / 2) + (i - 1) * 6;
-          const sy = H / 2 - (el.offsetTop + el.offsetHeight / 2) + (i - 1) * 4;
-          // The fan: it swings through its angle mid-flight and lands upright.
-          place(el, sx * (1 - t), sy * (1 - t), still ? 0 : c.swing * Math.sin(Math.PI * t));
-        });
+        p = clamp((lead - r.top) / (lead + run * 0.75));
       } else {
-        // Phones: each card slides up and tilts as it comes into view.
-        tinkers.forEach((c, i) => {
-          const el = slots.current[i];
-          if (!el) return;
-          const r = el.getBoundingClientRect();
-          const t = still ? 1 : easeOut(clamp((innerHeight * 0.98 - r.top) / (innerHeight * 0.5)));
-          const a = still ? 0 : c.tilt * Math.sin(Math.PI * t); // swings, then lands upright
-          el.style.transform = `translateY(${48 * (1 - t)}px) rotate(${a}deg)`;
-        });
+        p = clamp((innerHeight * 0.98 - st.getBoundingClientRect().top) / (innerHeight * 0.6));
       }
+      if (still) p = 1;
+
+      tinkers.forEach((c, i) => {
+        const el = slots.current[i];
+        if (!el) return;
+        const role = roleOf(i, frontRef.current);
+        // One by one, left to right: left, front, right each get their own slice of the scroll.
+        const k = role === 1 ? 0 : role === 0 ? 1 : 2;
+        const t = easeOut(clamp((p - k * 0.2) / 0.5));
+        // The stack: each card pulled back towards the centre (undoing its side offset on .pos),
+        // slightly fanned so it reads as a stack. The phones' row also rises 48px into place.
+        const side = role === 1 ? -1 : role === 2 ? 1 : 0;
+        const sx = -side * dx * el.offsetWidth + (k - 1) * 6;
+        const sy = wide.matches ? (k - 1) * 4 : 48;
+        const a = still ? 0 : (wide.matches ? c.swing : c.tilt) * Math.sin(Math.PI * t);
+        el.style.transform = `translate(${sx * (1 - t)}px, ${sy * (1 - t)}px) rotate(${a}deg)`;
+      });
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
@@ -87,60 +98,117 @@ export default function AiTinkering() {
     };
   }, []);
 
+  // Swipe (phones, or a mouse drag): left brings the right card to the front, right the left one.
+  const onPointerDown = (e: PointerEvent) => {
+    swipe.current = { x: e.clientX, y: e.clientY, done: false };
+  };
+  const onPointerUp = (e: PointerEvent) => {
+    const s = swipe.current;
+    if (!s) return;
+    const dx = e.clientX - s.x, dy = e.clientY - s.y;
+    if (Math.abs(dx) > SWIPE && Math.abs(dx) > Math.abs(dy)) {
+      s.done = true; // the click that follows a drag is not a tap
+      bring((front + (dx < 0 ? 2 : 1)) % N);
+    }
+  };
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    e.preventDefault();
+    const next = (front + (e.key === "ArrowLeft" ? 1 : 2)) % N;
+    bring(next);
+    // Keep focus on the card that came to the front.
+    slots.current[next]?.querySelector("button")?.focus({ preventScroll: true });
+  };
+
   return (
-    <section ref={section} id="ai-tinkering" className={`container ${styles.ai}`} aria-labelledby="ai-tinkering-title">
+    <section ref={section} id="ai-tinkering" className={styles.ai} aria-labelledby="ai-tinkering-title">
       <h2 id="ai-tinkering-title" className="sr-only">
         AI Tinkering
       </h2>
-      <div className={styles.pin}>
-        <div ref={stage} className={styles.stage}>
-          {tinkers.map((c, i) => (
-            <div
-              key={c.name}
-              ref={(el) => {
-                slots.current[i] = el;
-              }}
-              className={styles.slot}
-              style={{ "--ratio": `${c.w} / ${c.h}`, zIndex: i + 1 } as CSSProperties}
-            >
-              <button
-                type="button"
-                className={styles.card}
-                aria-pressed={pressed === i}
-                onClick={() => setPressed((p) => (p === i ? -1 : i))}
-                onBlur={() => setPressed((p) => (p === i ? -1 : p))}
+      {/* Full width, so the side cards peek in to the screen edge and are clipped there. */}
+      <div className={`container ${styles.pin}`}>
+        <div
+          ref={stage}
+          className={styles.stage}
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
+          onPointerCancel={() => (swipe.current = null)}
+          onKeyDown={onKeyDown}
+        >
+          {tinkers.map((c, i) => {
+            const role = roleOf(i, front);
+            const isFront = role === 0;
+            // Front on top; the card leaving the front next; the one crossing behind lowest.
+            const z = isFront ? 3 : i === prev ? 2 : 1;
+            return (
+              <div
+                key={c.name}
+                ref={(el) => {
+                  slots.current[i] = el;
+                }}
+                className={styles.slot}
+                style={{ zIndex: z }}
               >
-                <span className={styles.shade} aria-hidden="true" />
-                <span className={styles.deep} aria-hidden="true" />
-                <Image src={c.art} alt="" width={Math.round(c.w)} height={Math.round(c.h)} className={styles.art} unoptimized />
-                {/* The case study cards' paper grain, clipped to this card's outline. */}
-                <span className={styles.grain} style={{ "--art": `url("${c.art}")` } as CSSProperties} aria-hidden="true" />
-                <span className="sr-only">
-                  {c.name}: {c.line}
-                </span>
-              </button>
-
-              {i === MIDDLE && (
-                // The crane's last perch: on this card's top edge, near its right corner.
-                <span className={styles.perch} data-perch="ai" aria-hidden="true">
-                  <PerchPuff at="ai" size={craneWidth} />
-                  <span ref={fly} className={styles.fly} data-fly="">
-                    <Origami className={styles.craneArt}>
+                <div className={styles.pos} data-role={ROLE[role]}>
+                  <button
+                    type="button"
+                    className={styles.card}
+                    aria-current={isFront || undefined}
+                    aria-label={isFront ? undefined : `Bring ${c.name} to the front`}
+                    onClick={() => {
+                      if (swipe.current?.done) return;
+                      if (!isFront) bring(i);
+                    }}
+                  >
+                    <span className={styles.deep} aria-hidden="true" />
+                    <span className={styles.media}>
+                      {c.media && (
+                        <Image
+                          src={c.media.src}
+                          alt=""
+                          fill
+                          sizes="(max-width: 767px) 80vw, 560px"
+                          quality={80}
+                          className={styles.mediaImg}
+                        />
+                      )}
+                    </span>
+                    <span className={styles.foot}>
                       <Image
-                        src="/assets/crane-sm.webp"
-                        alt=""
-                        width={320}
-                        height={236}
-                        quality={90}
-                        sizes="(max-width: 767px) 12vw, 80px"
-                        className={styles.craneImg}
+                        src={c.pill.src}
+                        alt={c.name}
+                        width={c.pill.w}
+                        height={PILL_H}
+                        className={styles.pill}
+                        unoptimized
                       />
-                    </Origami>
-                  </span>
-                </span>
-              )}
-            </div>
-          ))}
+                      <span className={styles.line}>{c.line}</span>
+                    </span>
+                  </button>
+
+                  {i === PERCH && (
+                    // The crane's last perch: on this card's top edge, near its right corner.
+                    <span className={styles.perch} data-perch="ai" aria-hidden="true">
+                      <PerchPuff at="ai" size={craneWidth} />
+                      <span ref={fly} className={styles.fly} data-fly="">
+                        <Origami className={styles.craneArt}>
+                          <Image
+                            src="/assets/crane-sm.webp"
+                            alt=""
+                            width={320}
+                            height={236}
+                            quality={90}
+                            sizes="(max-width: 767px) 12vw, 80px"
+                            className={styles.craneImg}
+                          />
+                        </Origami>
+                      </span>
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

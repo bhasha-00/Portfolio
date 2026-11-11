@@ -1,95 +1,158 @@
-/* AI Tinkering, on .container (AiTinkering.tsx). From 768: one pinned row of three equal columns
-   with the grid gutter (on 12 columns that is exactly 1–4, 5–8, 9–12); the cards fan out from a
-   centred stack into it, scrubbed by scroll (transform only, from AiTinkering.tsx).
-   Phones: a vertical stack, full container width. */
+/* AI Tinkering (AiTinkering.tsx): the section is full width and clips the side cards at the screen
+   edge (no sideways scroll on phones); .pin is the .container. Three cards in a spread (ai.svg): all three are
+   stacked on the stage's centre at the front card's size; .pos moves the side ones out and scales
+   them down (--dx of the card's width, --side), so bringing a card to the front is one transform
+   transition. Phones: the front card about 300px wide, the side ones peeking in at the screen edges
+   (the two iPhone frames). From 768: the front card 41.7% of the container, the side ones tucked
+   behind it, pinned while the fan plays. The fan itself is on .slot (transform, from the script). */
 
 .ai {
   position: relative;
+  overflow-x: clip;
   padding: var(--space-8) 0 var(--space-9);
 }
 
+.pin {
+  container-type: inline-size;
+}
+
 .stage {
+  /* Phones: the front card 77% of the screen, sides at 80% scale with ~10px clear of it. */
+  --card-w: min(77vw, 320px);
+  --dx: 93.3%;
+  --side: 0.8;
   position: relative;
-  display: grid;
-  gap: var(--space-7);
+  height: calc(var(--card-w) * 623 / 582); /* the card's shape in ai.svg */
+  touch-action: pan-y; /* vertical scroll stays native; horizontal travel is a swipe */
 }
 
 .slot {
-  position: relative;
-  aspect-ratio: var(--ratio);
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--card-w);
+  margin-left: calc(var(--card-w) / -2);
   will-change: transform;
 }
 
-/* The card: the art cut from ai.svg, with --shadow-card on a box behind it. */
+/* The card's place in the spread. A turn of the ring is on-screen movement: --ease-in-out. */
+.pos {
+  position: relative;
+  transform: none;
+  transition: transform var(--dur-card) var(--ease-in-out);
+}
+
+.pos[data-role="left"] {
+  transform: translateX(calc(var(--dx) * -1)) scale(var(--side));
+}
+
+.pos[data-role="right"] {
+  transform: translateX(var(--dx)) scale(var(--side));
+}
+
+/* The card: media panel on ink over a cream footer, --shadow-card all round (so the front card's
+   shadow falls on the side cards along both its edges and below it). */
 .card {
   position: relative;
-  display: block;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  aspect-ratio: 582 / 623;
   padding: 0;
   border: 0;
-  background: none;
+  border-radius: var(--r-md);
+  background: var(--cream);
+  color: var(--text-on-cream);
+  box-shadow: var(--shadow-card);
+  font: inherit;
+  text-align: left;
   cursor: pointer;
   transform: none;
   transition: transform var(--dur-base) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
-.art {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: auto;
+.card[aria-current="true"] {
+  cursor: default;
 }
 
-/* Shadow boxes behind the art, on the card's outline inside the art file (4px clear at the sides,
-   8px at the bottom; corners 24 top, 16 bottom, as % of the box). One box shadow covers both
-   panels, including the 8px gap between them. */
-.shade,
-.deep {
-  position: absolute;
-  top: 0;
-  left: 0.9%;
-  right: 0.9%;
-  bottom: 1.66%;
-  border-radius: 5.45% 5.45% 3.64% 3.64% / 5.07% 5.07% 3.38% 3.38%;
-  pointer-events: none;
-}
-
-.shade {
-  box-shadow: var(--shadow-card);
-}
-
-/* The paper grain from the case study cards (globals.css), multiplied onto the art and clipped to
-   its outline: it shows on the cream and the name pill; on the black panel it is invisible. */
-.grain {
+/* Paper grain on the cream, as on the case study cards (globals.css). */
+.card::before {
+  content: "";
   position: absolute;
   inset: 0;
+  z-index: -1;
+  border-radius: inherit;
   background: var(--paper-grain);
   background-size: var(--paper-size);
   mix-blend-mode: multiply;
-  opacity: 0.25; /* same grain strength as the case study cards */
-  -webkit-mask: var(--art) center / 100% 100% no-repeat;
-  mask: var(--art) center / 100% 100% no-repeat;
+  opacity: 0.25;
   pointer-events: none;
+}
+
+.media {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border-radius: var(--r-md) var(--r-md) 0 0;
+  background: var(--ink);
+  overflow: hidden;
+}
+
+.mediaImg {
+  object-fit: cover;
+}
+
+/* Footer: the name pill, then the one-liner (ai.svg: 12 around, 12 between). */
+.foot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-3) var(--space-5);
+}
+
+.pill {
+  display: block;
+  width: auto;
+  height: 48px; /* PILL_H */
+  max-width: 100%;
+}
+
+.line {
+  color: var(--text-muted);
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
 }
 
 /* Hover / focus / tap: the card lifts and its shadow deepens a little (a soft layer fading in
    behind it). Kept close to the resting shadow, so it reads as lift, not as a dark patch. */
 .deep {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  border-radius: inherit;
   box-shadow: 0 12px 28px color-mix(in srgb, var(--ink) 16%, transparent);
   opacity: 0;
   transition: opacity var(--dur-fast) var(--ease-out);
+  pointer-events: none;
 }
 
-/* Hover, focus, press: lift 8px (cards land upright, so there is no angle to undo). */
-.card[aria-pressed="true"],
 .card:focus-visible {
   transform: translateY(-8px);
+  outline: 2px solid var(--cream);
+  outline-offset: 6px;
 }
 
-.card[aria-pressed="true"] .deep,
-.card:focus-visible .deep {
+.card:focus-visible .deep,
+.card:active .deep {
   opacity: 1;
+}
+
+.card:active {
+  transform: translateY(-8px);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -102,18 +165,12 @@
   }
 }
 
-.card:focus-visible {
-  outline: 2px solid var(--cream);
-  outline-offset: 6px;
-  border-radius: 20px;
-}
-
-/* ---------- The crane's perch on the middle card (a point at its foot) ---------- */
+/* ---------- The crane's perch on the card that starts in front (a point at its foot) ---------- */
 .perch {
   --cw: clamp(48px, 5.5vw, 84px);
   position: absolute;
-  left: 74%;
-  top: 0.5%;
+  left: 78%;
+  top: 0;
   z-index: 5;
   width: 0;
   height: 0;
@@ -146,8 +203,8 @@
   height: auto;
 }
 
-/* ---------- Desktop: the pinned fan ---------- */
-@media (min-width: 1200px) { /* below 1200 the cards stack: at 768 a row made them 208px wide, their text about 8px */
+/* ---------- From 768: the spread, pinned while the fan plays ---------- */
+@media (min-width: 768px) {
   .ai {
     height: 230vh; /* one screen pinned + the scroll that drives the fan */
     padding: 0;
@@ -159,13 +216,15 @@
     display: grid;
     align-items: center;
     height: 100vh;
-    padding: var(--space-8) 0 var(--space-5); /* nav above; the row spans the container */
-    overflow: visible;
+    height: 100svh;
+    padding: var(--space-8) 0 var(--space-5); /* nav above */
   }
 
+  /* ai.svg: front card 41.7% of the row, side cards at 75.6% of it, their centres 82.2% of a card
+     width out, so the row spans the container. Short screens: the card keeps clear of the nav. */
   .stage {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: var(--gutter);
-    align-items: center;
+    --card-w: min(41.7cqw, (100svh - 176px) * 582 / 623);
+    --dx: 82.2%;
+    --side: 0.756;
   }
 }
