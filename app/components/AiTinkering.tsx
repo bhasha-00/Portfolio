@@ -57,6 +57,7 @@ export default function AiTinkering() {
                           sizes="(max-width: 767px) 80vw, 560px"
                           quality={80}
                           className={styles.mediaImg}
+                          style={c.media.focus ? { objectPosition: c.media.focus } : undefined}
                         />
                       )}
                     </span>

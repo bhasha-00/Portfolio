@@ -8,7 +8,7 @@ export type Tinker = {
   /** Name pill art (icon + hand lettering) and its width in px; every pill is 48px tall. */
   pill: { src: string; w: number };
   /** Media panel image; without one the panel is plain ink (placeholder). */
-  media?: { src: string; w: number; h: number };
+  media?: { src: string; w: number; h: number; /** object-position for the crop; centred if not given. */ focus?: string };
   /** The fan: the angle a card swings through on its way out of the stack, in degrees. */
   swing: number;
   /** The same swing in the phone layout. */
@@ -27,6 +27,7 @@ export const tinkers: Tinker[] = [
     name: "Exploded Hierarchy",
     line: "A Figma plugin that turns a flat design into layers, so you can judge what the eye reads first.",
     pill: { src: "/ai/pill-1.svg", w: 201 },
+    media: { src: "/ai/exploded-hierarchy.webp", w: 650, h: 660, focus: "50% 30%" },
     swing: -3,
     tilt: 3,
   },
@@ -34,6 +35,7 @@ export const tinkers: Tinker[] = [
     name: "Pixel peeper",
     line: "A Chrome extension that acts like an 'Inspect Element' for design language.",
     pill: { src: "/ai/pill-2.svg", w: 181 },
+    media: { src: "/ai/pixel-peeper.webp", w: 1280, h: 664, focus: "90% 50%" },
     swing: -11,
     tilt: -4,
   },
@@ -41,7 +43,7 @@ export const tinkers: Tinker[] = [
     name: "Slither",
     line: "A pocket-sized throwback to the Nokia snake days.",
     pill: { src: "/ai/pill-3.svg", w: 119 },
-    media: { src: "/ai/slither.webp", w: 1323, h: 971 },
+    media: { src: "/ai/slither-game.webp", w: 776, h: 820, focus: "50% 40%" },
     swing: 5,
     tilt: -2,
   },
