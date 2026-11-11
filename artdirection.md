@@ -28,7 +28,7 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 - **Texture: none.** Flat colour. (Revisit only if the hero feels heavy once built.)
   - Exception (2026-11-10, at Bhasha's request): the green paper square in the End section is a photo of real paper, texture and its own green included. That square only.
   - Exception (2026-11-11, at Bhasha's request, from bg.svg): the page background is a fixed layer (Backdrop.tsx) of red, a muted CSS dot grid (cream dots 1.3px every 22px at 22%, layer at 52%, from Bhasha's type + texture test), and bg.svg's burst shape in cream at 12%. Content scrolls over it; the burst starts low and rises to the centre over the first screen.
-  - Paper grain (same request): the cream surfaces drawn in code (case study cards and tabs, nav) carry the green paper's fibres, taken from the End photo as a near-white tile (public/bg/paper-grain.webp) multiplied onto --cream. Loads after the page. The AI cards get the same grain as a layer clipped to their outline; the About cards are photo exports and keep their own surface.
+  - Paper grain (same request): the cream surfaces drawn in code (case study cards and tabs, nav) carry the green paper's fibres, taken from the End photo as a near-white tile (public/bg/paper-grain.webp) multiplied onto --cream. Loads after the page. The AI cards get the same grain as a layer clipped to their outline; the About tiles carry it at 0.25 on their cream.
 
 - Roles: `--text-on-red` (cream), `--text-on-cream` (ink), `--text-muted` (~6.3:1 on cream), `--divider` (ink 12%), `--dim-overlay` + `--dim-text-opacity` (covered card), `--cloud-fill`.
 - Radius `--r-sm` 8 / `--r-md` 16 / `--r-pill`; elevation `--shadow-card`. Motion `--dur-fast` 150 / `--dur-base` 250 / `--dur-card` 500, `--ease-out`.
@@ -111,3 +111,10 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 ## AI Tinkering (built, step 4)
 - Cards are the art cut from `ai.svg` (public/ai/card-N.svg), text drawn as shapes, so no extra font loads. Inside these cards only, the art keeps its own colours: the one-liner in grey #4E4E4E straight on the cream (re-exported 2026-11-11; it used to be indigo on a lavender pill) and the name pill in #FEFBEB. Not tokens; do not reuse elsewhere.
 - Layout (2026-11-11): the section is a `.container`; from 768 one straight row of upright cards on three equal columns with the grid gutter (on 12 columns exactly 1–4, 5–8, 9–12; 24px gutters at 1440); phones stack them full width, 48px apart. Shadow: `--shadow-card` on a box behind each card (also fills the 8px gap between its panels); paper grain at 0.25. Motion: from a centred stack, one by one, scrubbed by scroll; each swings through -11 / -3 / +5 degrees mid-flight and lands at 0. Hover / focus / tap: lift 8px, deeper shadow, 200ms. Phones: vertical stack, same swing.
+
+## About (2026-11-11)
+- Heading: the line, h2 700, left-aligned to the container (`text-wrap: balance`).
+- Tiles: each one element (About.tsx face): cream with grain at 0.25, `--r-md`, `--shadow-card`, `overflow: hidden`, `--space-4` padding on all sides; no notches. The photo on `--ink` with `--r-sm`, filling the space above a caption chip (Caveat, hand-sm 16/20, on `--back`, pill). Paper sculpture is a cut-out on transparency, shown whole on the ink.
+- Photos: extracted from Bhasha's card SVGs as they frame them (paper turned 90°, gourd lamp cropped to its left photo): public/about/photos/*.webp, through next/image. The old `*-v4.webp` exports are unused.
+- Grid: desktop 6 / 3 / 3 of 12 (24px gutters at 1440), tablet 4 / 2 / 2 of 8, phones the wide tile on top and the tall pair (2 + 2) under it. All tiles in a row share one height (the tall tiles' 358 × 521 shape).
+- Motion unchanged: the fan from a stack into the row, the flip every few seconds and on tap, hover/focus lift; reduced motion lands them without the fan and swaps without turning.

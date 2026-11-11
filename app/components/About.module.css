@@ -1,47 +1,52 @@
-/* About: the line centred on top, then three cards (one wide, two tall) that sprawl from a stack
-   into a row, as AI Tinkering, and flip over from time to time to show another piece. Slots are
-   placed by centre (--dx/--dy desktop, --px/--py phones) and moved by scroll scrubbing from
-   About.tsx; the flip is a rotateY on .flipper. Transform only throughout. */
+/* About: the line on top, left-aligned to the container, then three tiles (one wide, two tall) on
+   the grid: desktop 6 / 3 / 3 of 12 columns, tablet 4 / 2 / 2 of 8, phones the wide tile on top and
+   the tall pair (2 + 2 of 4) under it. From 768 the tiles sprawl from a centred stack into the row,
+   scrubbed by scroll (as AI Tinkering), and flip over from time to time to show another piece; the
+   flip is a rotateY on .flipper. Transform only throughout. */
 
 .about {
   position: relative;
-  padding: 110px var(--page-inset) 72px;
+  padding: var(--space-9) 0 var(--space-8);
 }
 
 .pin {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 40px;
+  gap: var(--space-7);
 }
 
+/* Role: h2, on the red. */
 .line {
-  width: min(920px, 100%);
   margin: 0;
-  color: var(--cream);
-  font-size: clamp(22px, 2.4vw, 36px);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.3;
-  text-align: center;
+  color: var(--text-on-red);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tracking-h2);
   text-wrap: balance;
 }
 
-/* Phones: 360 × 500 units; the wide card on top, the tall pair under it. */
 .stage {
   position: relative;
-  width: min(100%, 460px);
-  aspect-ratio: 360 / 500;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: var(--gutter);
 }
 
 .slot {
-  position: absolute;
-  left: var(--px);
-  top: var(--py);
-  width: var(--pw);
-  aspect-ratio: var(--pratio);
-  transform: translate(-50%, -50%);
+  position: relative;
   will-change: transform;
+}
+
+/* Phones: the wide tile across all 4 columns, the tall pair 2 + 2 under it. */
+.wide {
+  grid-column: 1 / -1;
+  aspect-ratio: 360 / 302;
+}
+
+.tall {
+  grid-column: span 2;
+  aspect-ratio: 358 / 521;
 }
 
 .card {
@@ -55,11 +60,11 @@
   cursor: pointer;
   perspective: 1400px;
   transform: none;
-  transition: transform 0.2s var(--ease-out);
+  transition: transform var(--dur-base) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
 }
 
-/* The turn: a half-turn per flip, accumulating, so it always turns the same way. */
+/* The turn: a half-turn per flip, accumulating, so it always turns the same way (brand moment). */
 .flipper {
   position: absolute;
   inset: 0;
@@ -67,24 +72,74 @@
   transition: transform 0.9s cubic-bezier(0.3, 0.7, 0.2, 1);
 }
 
+/* One tile: one element, one inset, one radius. The photo and its caption sit inside the same
+   --space-4 padding; no notches at the corners. */
 .face {
   position: absolute;
   inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--r-md);
+  background: var(--cream);
+  color: var(--text-on-cream);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  isolation: isolate;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+}
+
+/* Paper grain on the cream, as on the case study cards. */
+.face::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--paper-grain);
+  background-size: var(--paper-size);
+  mix-blend-mode: multiply;
+  opacity: 0.25;
+  pointer-events: none;
 }
 
 .back {
   transform: rotateY(180deg);
 }
 
-/* The card as exported (frame, rounded photo, caption). Cards of a shape share one size. */
-.art {
-  display: block;
-  width: 100%;
-  height: 100%;
+/* The photo, on ink, filling the space above the caption. */
+.media {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border-radius: var(--r-sm);
+  background: var(--ink);
+  overflow: hidden;
+}
+
+.photo {
+  object-fit: cover;
+}
+
+/* A cut-out on a transparent background (paper sculpture): shown whole, on the ink. */
+.photo.whole {
   object-fit: contain;
-  filter: drop-shadow(0 6px 20px color-mix(in srgb, var(--ink) 20%, transparent)); /* nav pill */
+  padding: var(--space-3);
+}
+
+/* Caption chip, role hand-sm (16px: never below body size). */
+.chip {
+  align-self: flex-start;
+  max-width: 100%;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--r-pill);
+  background: var(--back);
+  font-family: var(--font-hand);
+  font-size: var(--fs-hand-sm);
+  line-height: var(--lh-hand-sm);
+  letter-spacing: var(--tracking-chip);
+  text-align: left;
 }
 
 /* Hover, focus, press: straighten to 0° (undo the card's current angle), lift 8px. */
@@ -102,7 +157,7 @@
 .card:focus-visible {
   outline: 2px solid var(--cream);
   outline-offset: 6px;
-  border-radius: 18px;
+  border-radius: var(--r-md);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -111,7 +166,7 @@
   }
 }
 
-/* ---------- Desktop: the pinned fan; 1000 × 420 units ---------- */
+/* ---------- From 768: the pinned fan, one row ---------- */
 @media (min-width: 768px) {
   .about {
     height: 230vh; /* one screen pinned + the scroll that drives the fan */
@@ -124,19 +179,27 @@
     justify-content: center;
     height: 100vh;
     height: 100svh;
-    padding: 96px var(--page-inset) 32px;
-    gap: clamp(24px, 5vh, 64px);
+    padding: var(--space-9) 0 var(--space-6);
   }
 
-  .stage {
-    width: min(100%, 1240px, (100svh - 300px) * 1000 / 420);
-    aspect-ratio: 1000 / 420;
+  /* Tablet: 4 / 2 / 2 of 8. The wide tile takes the row height the tall pair sets. */
+  .wide {
+    grid-column: span 4;
+    aspect-ratio: auto;
   }
 
-  .slot {
-    left: var(--dx);
-    top: var(--dy);
-    width: var(--dw);
-    aspect-ratio: var(--dratio);
+  .tall {
+    grid-column: span 2;
+  }
+}
+
+/* Desktop: 6 / 3 / 3 of 12. */
+@media (min-width: 1200px) {
+  .wide {
+    grid-column: span 6;
+  }
+
+  .tall {
+    grid-column: span 3;
   }
 }

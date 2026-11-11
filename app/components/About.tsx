@@ -1,14 +1,19 @@
 "use client";
 
-import Image from "next/image";
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
-import { aboutLine, crafts, DESK, PHONE, slots } from "../content/about";
+import Image, { getImageProps } from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { aboutLine, crafts, slots, type Shape } from "../content/about";
 import styles from "./About.module.css";
 
 const clamp = (v: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
 const easeOut = (t: number) => 1 - (1 - t) ** 3; // one strong ease-out; never ease-in
-const pct = (v: number) => `${(v * 100).toFixed(3)}%`;
 const EVERY = 3200; // ms between automatic flips (one slot at a time, round robin)
+
+// Rendered photo widths, per tile shape (phones / tablet / desktop), for next/image.
+const SIZES: Record<Shape, string> = {
+  wide: "(max-width: 767px) 100vw, 50vw",
+  tall: "(max-width: 767px) 50vw, 25vw",
+};
 
 // Each slot has two faces; `turns` counts half-turns, so the face showing is a on even, b on odd.
 type Faces = { a: number; b: number; turns: number };
@@ -51,7 +56,7 @@ export default function About() {
     let raf = 0;
 
     const place = (el: HTMLDivElement, dx: number, dy: number, a: number) => {
-      el.style.transform = `translate(-50%, -50%) translate(${dx}px, ${dy}px) rotate(${a}deg)`;
+      el.style.transform = `translate(${dx}px, ${dy}px) rotate(${a}deg)`;
       el.style.setProperty("--a", `${a}deg`); // the hover straightens by exactly this much
     };
 
@@ -72,14 +77,16 @@ export default function About() {
           if (!el) return;
           const t = easeOut(clamp((p - i * 0.2) / 0.5));
           if (t < 1) done = false;
-          const sx = (0.5 - s.desk.x / DESK.w) * W + (i - 1) * 6, sy = (0.5 - s.desk.y / DESK.h) * H + (i - 1) * 4;
+          // From the centred stack to its grid cell: stage centre minus the slot's resting centre.
+          const sx = W / 2 - (el.offsetLeft + el.offsetWidth / 2) + (i - 1) * 6;
+          const sy = H / 2 - (el.offsetTop + el.offsetHeight / 2) + (i - 1) * 4;
           place(el, sx * (1 - t), sy * (1 - t), still ? 0 : s.swing * Math.sin(Math.PI * t));
         });
       } else {
         slots.forEach((s, i) => {
           const el = slotEls.current[i];
           if (!el) return;
-          const top = st.getBoundingClientRect().top + ((s.phone.y - s.phone.h / 2) / PHONE.h) * st.offsetHeight;
+          const top = st.getBoundingClientRect().top + el.offsetTop; // its resting top (no transform)
           const t = still ? 1 : easeOut(clamp((innerHeight * 0.98 - top) / (innerHeight * 0.5)));
           if (t < 1) done = false;
           place(el, 0, 48 * (1 - t), still ? 0 : s.tilt * Math.sin(Math.PI * t));
@@ -121,9 +128,14 @@ export default function About() {
         const first = new Set(slots.map((s) => s.first));
         const order = [...crafts.keys()].sort((x, y) => Number(first.has(y)) - Number(first.has(x)));
         order.forEach((k) => {
+          // The same optimised file the tile will ask for (srcset + sizes), so a flip finds it cached.
+          const c = crafts[k];
+          const { props } = getImageProps({ src: c.src, alt: "", width: c.w, height: c.h, sizes: SIZES[c.shape] });
           const im = new window.Image();
           im.fetchPriority = first.has(k) ? "high" : "low";
-          im.src = crafts[k].src;
+          if (props.sizes) im.sizes = props.sizes;
+          if (props.srcSet) im.srcset = props.srcSet;
+          im.src = props.src;
         });
       },
       { rootMargin: "200% 0px" },
@@ -146,7 +158,7 @@ export default function About() {
   }, [flip]);
 
   return (
-    <section ref={section} id="about" className={styles.about} aria-labelledby="about-title">
+    <section ref={section} id="about" className={`container ${styles.about}`} aria-labelledby="about-title">
       <h2 id="about-title" className="sr-only">
         About
       </h2>
@@ -162,20 +174,8 @@ export default function About() {
                 ref={(el) => {
                   slotEls.current[i] = el;
                 }}
-                className={styles.slot}
-                style={
-                  {
-                    "--dx": pct(s.desk.x / DESK.w),
-                    "--dy": pct(s.desk.y / DESK.h),
-                    "--dw": pct(s.desk.w / DESK.w),
-                    "--px": pct(s.phone.x / PHONE.w),
-                    "--py": pct(s.phone.y / PHONE.h),
-                    "--pw": pct(s.phone.w / PHONE.w),
-                    "--dratio": `${s.desk.w} / ${s.desk.h}`,
-                    "--pratio": `${s.phone.w} / ${s.phone.h}`,
-                    zIndex: slots.length - i,
-                  } as CSSProperties
-                }
+                className={`${styles.slot} ${styles[s.shape]}`}
+                style={{ zIndex: slots.length - i }}
                 onPointerEnter={() => (hovered.current[i] = true)}
                 onPointerLeave={() => (hovered.current[i] = false)}
               >
@@ -189,18 +189,18 @@ export default function About() {
                   }}
                 >
                   <span className={styles.flipper} style={{ transform: `rotateY(${f.turns * 180}deg)` }}>
-                    {(["a", "b"] as const).map((k) => (
-                      <span key={k} className={`${styles.face} ${k === "b" ? styles.back : ""}`} aria-hidden="true">
-                        <Image
-                          src={crafts[f[k]].src}
-                          alt=""
-                          width={crafts[f[k]].w}
-                          height={crafts[f[k]].h}
-                          className={styles.art}
-                          unoptimized
-                        />
-                      </span>
-                    ))}
+                    {/* Each face is one tile: the photo on ink, then its caption chip. */}
+                    {(["a", "b"] as const).map((k) => {
+                      const c = crafts[f[k]];
+                      return (
+                        <span key={k} className={`${styles.face} ${k === "b" ? styles.back : ""}`} aria-hidden="true">
+                          <span className={styles.media}>
+                            <Image src={c.src} alt="" fill sizes={SIZES[c.shape]} quality={80} className={`${styles.photo} ${c.whole ? styles.whole : ""}`} />
+                          </span>
+                          <span className={styles.chip}>{c.name}</span>
+                        </span>
+                      );
+                    })}
                   </span>
                 </button>
               </div>
