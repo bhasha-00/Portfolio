@@ -3,6 +3,12 @@ import { Geist, Caveat } from "next/font/google";
 import Nav from "./components/Nav";
 import Backdrop from "./components/Backdrop";
 import Intro from "./components/intro/Intro";
+import dynamic from "next/dynamic";
+
+// Dev-only grid overlay (press G). The import sits in a branch the production build removes,
+// so none of its code ships.
+const GridOverlay =
+  process.env.NODE_ENV === "development" ? dynamic(() => import("./components/GridOverlay")) : () => null;
 import "./tokens.css";
 import "./globals.css";
 
@@ -48,6 +54,8 @@ export default function RootLayout({
         <Intro />
         <Nav />
         <main>{children}</main>
+        {/* Press G: column grid + 4px baseline. Development only, never in the production bundle. */}
+        <GridOverlay />
       </body>
     </html>
   );

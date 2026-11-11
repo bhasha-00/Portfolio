@@ -1,0 +1,56 @@
+/* Dev-only grid overlay (GridOverlay.tsx): press G. Never shipped (layout.tsx renders it in development only). */
+.layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Columns: the real .container + .grid, so they follow --cols, --margin and --gutter exactly. */
+.columns {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.columns > div {
+  height: 100%;
+}
+
+.col {
+  height: 100%;
+  background: color-mix(in srgb, var(--gold) 22%, transparent);
+  outline: 1px solid color-mix(in srgb, var(--gold) 60%, transparent);
+}
+
+/* 12 columns in the DOM; show only --cols of them. */
+.col:nth-child(n + 5) {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .col:nth-child(n + 5) {
+    display: block;
+  }
+  .col:nth-child(n + 9) {
+    display: none;
+  }
+}
+
+@media (min-width: 1200px) {
+  .col:nth-child(n + 9) {
+    display: block;
+  }
+}
+
+/* 4px baseline from the top of the document; every 6th line (24px) a little stronger. */
+.baseline {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(to bottom, color-mix(in srgb, var(--back) 30%, transparent) 0 1px, transparent 1px 24px), /* tokens-allow: dev-only baseline overlay */
+    repeating-linear-gradient(to bottom, color-mix(in srgb, var(--back) 12%, transparent) 0 1px, transparent 1px 4px); /* tokens-allow: dev-only baseline overlay */
+}

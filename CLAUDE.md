@@ -17,6 +17,7 @@ Next.js (App Router) + TypeScript + CSS (variables or CSS modules). Deploy on Ve
 - Two families: Geist (`--nf-geist`) and Caveat (`--nf-hand`), loaded with `next/font`. No Geist Mono.
 - Type roles: display, h2, h3, lead, body, small, caption, hand-sm/md/lg (`--fs-*` / `--lh-*`). Spacing: `--space-1..9` (4 8 12 16 24 32 48 64 96). Grid: `.container` + `.grid`, 4/8/12 columns.
 - Run `npm run check:tokens` before every commit; it must print "Tokens clean."
+- Grid check (dev only): press G for the columns and a 4px baseline; `__gridAudit()` in the console lists elements whose left edge is off a column edge or whose top is off the baseline.
 - No texture, no gradients, no glassmorphism.
 - No WebGL or video on first paint. Hero must be usable in about 1s.
 - Animate transform and opacity only. Respect `prefers-reduced-motion`.
