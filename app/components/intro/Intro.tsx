@@ -36,7 +36,9 @@ export default function Intro() {
 
     // Cancel everything in flight (also React's dev double-mount cleanup: does not mark it seen).
     const cancel = () => {
+      if (over) return;
       over = true;
+      gate.disconnect();
       stop();
       flight?.cancel();
       timers.forEach(clearTimeout);
@@ -51,6 +53,10 @@ export default function Intro() {
       } catch {}
     };
     SKIP_EVENTS.forEach((ev) => addEventListener(ev, finish, { passive: true }));
+    // The gate script (public/intro-gate.js) can end the intro on its own, on the first input:
+    // stop playing the moment it does.
+    const gate = new MutationObserver(() => html.dataset.intro === "done" && cancel());
+    gate.observe(html, { attributes: true, attributeFilter: ["data-intro"] });
 
     const fly = () => {
       const target = document.querySelector<HTMLElement>("[data-intro-target]");
@@ -122,7 +128,7 @@ export default function Intro() {
           </g>
         </svg>
       </div>
-      <p className={styles.hint}>Tap to skip</p>
+      <p className={styles.hint}>Tap, click or press a key to skip</p>
     </div>
   );
 }

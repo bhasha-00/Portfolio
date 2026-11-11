@@ -1,2 +1,4 @@
 // Runs before first paint: play the intro only on a first visit this session, never with reduced motion.
-try{var d=document.documentElement;d.dataset.intro=(sessionStorage.getItem('seen')||matchMedia('(prefers-reduced-motion: reduce)').matches)?'done':'play'}catch(e){}
+// It also takes the first tap, key, wheel or touch scroll itself, so the intro skips even before the
+// page's script has loaded (Intro.tsx stops when it sees data-intro become "done").
+try{var d=document.documentElement,ev=['pointerdown','wheel','keydown','touchmove'];d.dataset.intro=(sessionStorage.getItem('seen')||matchMedia('(prefers-reduced-motion: reduce)').matches)?'done':'play';if(d.dataset.intro==='play'){var skip=function(){ev.forEach(function(n){removeEventListener(n,skip,true)});if(d.dataset.intro==='done')return;d.dataset.intro='done';try{sessionStorage.setItem('seen','1')}catch(e){}};ev.forEach(function(n){addEventListener(n,skip,{capture:true,passive:true})})}}catch(e){}

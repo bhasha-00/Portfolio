@@ -158,18 +158,26 @@ export function play(svg: SVGSVGElement, world: SVGGElement, steps: Step[], k: C
     start = now;
   };
 
+  // Steps flow into each other: a step hands over once it is 90% through, where the ease-in-out has
+  // already covered over 99% of the movement, so a flap never sits dead still before the next one
+  // starts. The last step plays to its end.
+  const HANDOVER = 0.9;
   const frame = (now: number) => {
     if (!live) next(now);
     const s = steps[i];
     const t = Math.min(1, (now - start) / 1000 / s.d);
-    live!.update(ease(t));
+    const last = i === steps.length - 1;
+    const handover = !last && t >= HANDOVER;
+    live!.update(handover ? 1 : ease(t));
     if (ghost) {
+      // Crossfade for a shape change: a slight blur on the outgoing frame blends the two into one.
       const f = Math.min(1, (now - start) / 120);
       ghost.style.opacity = String(1 - f);
+      ghost.style.filter = `blur(${(2 * f).toFixed(2)}px)`;
       world.style.opacity = String(f);
       if (f >= 1) { ghost.remove(); ghost = null; }
     }
-    if (t >= 1) {
+    if (t >= 1 || handover) {
       next(now);
       if (i >= steps.length) return;
     }

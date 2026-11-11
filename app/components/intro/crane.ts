@@ -3,7 +3,7 @@ import { reflect, type Pt, type Step } from "./fold";
 // Crane, following the classic sequence: square → triangle → small triangle → square base →
 // kite → petal fold (long diamond) → narrowed → neck and tail up → head tucked (diagram 14). 200 × 200 view box.
 
-const SPEED = 0.85; // < 1 is faster
+const SPEED = 0.7; // < 1 is faster (0.85 until 2026-11-11: trimmed so the hero shows sooner)
 
 // Square, set as a diamond.
 const T: Pt = [100, 20], R: Pt = [180, 100], B: Pt = [100, 180], L: Pt = [20, 100], C: Pt = [100, 100];

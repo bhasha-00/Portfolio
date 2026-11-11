@@ -81,7 +81,7 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 - Map real case studies from the Framer portfolio. Keep the demos as the pattern. Case study pages stay on Framer for now; cards link out.
 
 ## Origami and motion
-- **Intro (about 3s, skippable, once per session):** on cream, a gold square folds into a crane following the real crane sequence (triangle, small triangle, square base, kite, petal fold, narrowed, neck/tail/head). Each fold is a flap turning on its crease; faces catch light mid-turn and cast a soft shadow. No numbers, arrows or text. Then the cream sheet shrinks away in a circle and the paper crane flies onto the origami crane in the hero art and becomes it (crossfade to the photo's crane layer).
+- **Intro (about 2.3s, skippable from first paint, once per session):** on cream, a gold square folds into a crane following the real crane sequence (triangle, small triangle, square base, kite, petal fold, narrowed, neck/tail/head). Each fold is a flap turning on its crease; faces catch light mid-turn and cast a soft shadow. No numbers, arrows or text. Then the cream sheet shrinks away in a circle and the paper crane flies onto the origami crane in the hero art and becomes it (crossfade to the photo's crane layer).
 - **Companion shapes:** each shape (parrot, fox) follows its own real folding sequence when the companion changes into it.
 - **Skip:** any tap, scroll, key press or wheel finishes it immediately. Set `sessionStorage.seen`; repeat visits skip the intro.
 - **Companion:** the parrot sits on the active section. When the active case study changes it folds itself flat, then folds up as the next shape (parrot, crane, fox, original critter). About 1.6s total.
