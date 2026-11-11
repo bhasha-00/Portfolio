@@ -1,0 +1,45 @@
+/* The three-card spread (useSpread.ts), shared by AI Tinkering and About. All three cards are stacked
+   on the stage's centre at the front card's size; .pos moves the side ones out and scales them down,
+   so bringing a card to the front is one transform transition. Each section sets the numbers on its
+   own stage class: --card-w (front card width), --card-ratio (w / h), --dx (side card centre, as a
+   share of --card-w, read by the script too) and --side (side card scale). The fan is on .slot. */
+
+/* Full width, so on phones the side cards peek in to the screen edge and are clipped there. */
+.clip {
+  overflow-x: clip;
+}
+
+/* The container the card widths are measured against (cqw). */
+.frame {
+  container-type: inline-size;
+}
+
+.stage {
+  position: relative;
+  height: calc(var(--card-w) / (var(--card-ratio)));
+  touch-action: pan-y; /* vertical scroll stays native; horizontal travel is a swipe */
+}
+
+.slot {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--card-w);
+  margin-left: calc(var(--card-w) / -2);
+  will-change: transform;
+}
+
+/* The card's place in the spread. A turn of the ring is on-screen movement: --ease-in-out. */
+.pos {
+  position: relative;
+  transform: none;
+  transition: transform var(--dur-card) var(--ease-in-out);
+}
+
+.pos[data-role="left"] {
+  transform: translateX(calc(var(--dx) * -1)) scale(var(--side));
+}
+
+.pos[data-role="right"] {
+  transform: translateX(var(--dx)) scale(var(--side));
+}

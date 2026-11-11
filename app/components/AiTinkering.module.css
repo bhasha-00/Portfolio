@@ -1,53 +1,19 @@
-/* AI Tinkering (AiTinkering.tsx): the section is full width and clips the side cards at the screen
-   edge (no sideways scroll on phones); .pin is the .container. Three cards in a spread (ai.svg): all three are
-   stacked on the stage's centre at the front card's size; .pos moves the side ones out and scales
-   them down (--dx of the card's width, --side), so bringing a card to the front is one transform
-   transition. Phones: the front card about 300px wide, the side ones peeking in at the screen edges
-   (the two iPhone frames). From 768: the front card 41.7% of the container, the side ones tucked
-   behind it, pinned while the fan plays. The fan itself is on .slot (transform, from the script). */
+/* AI Tinkering (AiTinkering.tsx): the three-card spread of ai.svg (Spread.module.css has the
+   mechanics; this file sets its numbers and draws the cards). Phones: the front card about 300px
+   wide, the side ones peeking in at the screen edges (the iPhone frame). From 768: the front card
+   41.7% of the container, the side ones tucked behind it, pinned while the fan plays. */
 
 .ai {
   position: relative;
-  overflow-x: clip;
   padding: var(--space-8) 0 var(--space-9);
 }
 
-.pin {
-  container-type: inline-size;
-}
-
+/* Phones: the front card 77% of the screen, sides at 80% scale with ~10px clear of it. */
 .stage {
-  /* Phones: the front card 77% of the screen, sides at 80% scale with ~10px clear of it. */
   --card-w: min(77vw, 320px);
+  --card-ratio: 582 / 623; /* the card's shape in ai.svg */
   --dx: 93.3%;
   --side: 0.8;
-  position: relative;
-  height: calc(var(--card-w) * 623 / 582); /* the card's shape in ai.svg */
-  touch-action: pan-y; /* vertical scroll stays native; horizontal travel is a swipe */
-}
-
-.slot {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: var(--card-w);
-  margin-left: calc(var(--card-w) / -2);
-  will-change: transform;
-}
-
-/* The card's place in the spread. A turn of the ring is on-screen movement: --ease-in-out. */
-.pos {
-  position: relative;
-  transform: none;
-  transition: transform var(--dur-card) var(--ease-in-out);
-}
-
-.pos[data-role="left"] {
-  transform: translateX(calc(var(--dx) * -1)) scale(var(--side));
-}
-
-.pos[data-role="right"] {
-  transform: translateX(var(--dx)) scale(var(--side));
 }
 
 /* The card: media panel on ink over a cream footer, --shadow-card all round (so the front card's

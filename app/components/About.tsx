@@ -2,7 +2,9 @@
 
 import Image, { getImageProps } from "next/image";
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
-import { aboutLine, crafts, HAND_H, slots, type Shape } from "../content/about";
+import { aboutLine, crafts, HAND_H, slots } from "../content/about";
+import { ROLE, roleOf, useSpread } from "./useSpread";
+import spread from "./Spread.module.css";
 import styles from "./About.module.css";
 
 // A word in Bhasha's handwriting: her outline as a mask, filled with the text colour (a token), so
@@ -17,43 +19,33 @@ function Hand({ src, w, className }: { src: string; w: number; className: string
   );
 }
 
-const clamp = (v: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
-const easeOut = (t: number) => 1 - (1 - t) ** 3; // one strong ease-out; never ease-in
-const EVERY = 3200; // ms between automatic flips (one slot at a time, round robin)
-
-// Rendered photo widths, per tile shape (phones / tablet / desktop), for next/image.
-const SIZES: Record<Shape, string> = {
-  wide: "(max-width: 767px) 100vw, 50vw",
-  tall: "(max-width: 767px) 50vw, 25vw",
-};
+const EVERY = 3200; // ms between automatic flips (one side card at a time, in turn)
+const SIZES = "(max-width: 767px) 80vw, 440px"; // rendered photo width, for next/image
 
 // Each slot has two faces; `turns` counts half-turns, so the face showing is a on even, b on odd.
 type Faces = { a: number; b: number; turns: number };
 const showing = (f: Faces) => (f.turns % 2 ? f.b : f.a);
 
-// About. Three cards (one wide, two tall, as in the reference row) sprawl from a centred stack into
-// a straight row, one by one, scrubbed by scroll, exactly as AI Tinkering. Then, every few seconds,
-// one card flips over (rotateY, transform only) to reveal another piece of the same shape, at the
-// same size (the exports are matched, so there is no gap); a tap or click flips it straight away. Hover, focus or tap lifts the card 8px. Phones: the wide card on
-// top, the tall pair under it, each swinging in as it comes into view. Reduced motion: no fan and
-// no automatic flips; a tap swaps the card without turning it.
+// About: the three-card spread (useSpread) as in About.svg, under the line. Clicking, tapping or
+// swiping to a side card brings it to the front; clicking the front card flips it over (rotateY,
+// transform only) to another piece. Every few seconds one of the side cards flips by itself. Reduced
+// motion: no fan and no automatic flips; a tap swaps the card without turning it.
 export default function About() {
-  const section = useRef<HTMLElement>(null);
-  const stage = useRef<HTMLDivElement>(null);
-  const slotEls = useRef<(HTMLDivElement | null)[]>([]);
+  const { section, stage, slots: slotEls, front, bring, settled, stageProps, swiped, zOf } = useSpread(slots);
   const hovered = useRef<boolean[]>(slots.map(() => false));
   const touched = useRef<number[]>(slots.map(() => 0)); // last manual flip, per slot
-  const settled = useRef(false); // the fan has finished: automatic flips may start
   const inView = useRef(false);
+  const frontRef = useRef(front);
+  frontRef.current = front;
   const [faces, setFaces] = useState<Faces[]>(() => slots.map((s) => ({ a: s.first, b: s.first, turns: 0 })));
 
-  // Turn slot i over, revealing the next card of its shape that no other slot is showing.
+  // Turn slot i over, revealing the next piece that no other slot is showing.
   const flip = useCallback((i: number) => {
     setFaces((prev) => {
       const f = prev[i];
       const others = prev.filter((_, j) => j !== i).map(showing);
-      const pool = crafts.map((_, k) => k).filter((k) => crafts[k].shape === slots[i].shape);
-      const at = pool.indexOf(showing(f));
+      const at = showing(f);
+      const pool = crafts.map((_, k) => k);
       const next = [...pool.slice(at + 1), ...pool.slice(0, at)].find((k) => !others.includes(k));
       if (next === undefined) return prev;
       const turned = f.turns % 2 ? { ...f, a: next } : { ...f, b: next }; // load the hidden face
@@ -61,72 +53,10 @@ export default function About() {
     });
   }, []);
 
-  // The fan, scrubbed by scroll (as AiTinkering).
-  useEffect(() => {
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)");
-    const wide = matchMedia("(min-width: 768px)");
-    let raf = 0;
-
-    const place = (el: HTMLDivElement, dx: number, dy: number, a: number) => {
-      el.style.transform = `translate(${dx}px, ${dy}px) rotate(${a}deg)`;
-    };
-
-    const update = () => {
-      raf = 0;
-      const sec = section.current, st = stage.current;
-      if (!sec || !st) return;
-      const still = reduce.matches;
-      let done = true;
-
-      if (wide.matches) {
-        const r = sec.getBoundingClientRect();
-        const lead = innerHeight * 0.6, run = sec.offsetHeight - innerHeight;
-        const p = still ? 1 : clamp((lead - r.top) / (lead + run * 0.75));
-        const W = st.offsetWidth, H = st.offsetHeight;
-        slots.forEach((s, i) => {
-          const el = slotEls.current[i];
-          if (!el) return;
-          const t = easeOut(clamp((p - i * 0.2) / 0.5));
-          if (t < 1) done = false;
-          // From the centred stack to its grid cell: stage centre minus the slot's resting centre.
-          const sx = W / 2 - (el.offsetLeft + el.offsetWidth / 2) + (i - 1) * 6;
-          const sy = H / 2 - (el.offsetTop + el.offsetHeight / 2) + (i - 1) * 4;
-          place(el, sx * (1 - t), sy * (1 - t), still ? 0 : s.swing * Math.sin(Math.PI * t));
-        });
-      } else {
-        slots.forEach((s, i) => {
-          const el = slotEls.current[i];
-          if (!el) return;
-          const top = st.getBoundingClientRect().top + el.offsetTop; // its resting top (no transform)
-          const t = still ? 1 : easeOut(clamp((innerHeight * 0.98 - top) / (innerHeight * 0.5)));
-          if (t < 1) done = false;
-          place(el, 0, 48 * (1 - t), still ? 0 : s.tilt * Math.sin(Math.PI * t));
-        });
-      }
-      settled.current = done;
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    update();
-    addEventListener("scroll", onScroll, { passive: true });
-    addEventListener("resize", onScroll);
-    reduce.addEventListener("change", onScroll);
-    wide.addEventListener("change", onScroll);
-    return () => {
-      removeEventListener("scroll", onScroll);
-      removeEventListener("resize", onScroll);
-      reduce.removeEventListener("change", onScroll);
-      wide.removeEventListener("change", onScroll);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
-
-  // Automatic flips: one slot at a time, only while the row is on screen and settled. A slot being
-  // hovered, or flipped by hand in the last few seconds, is skipped.
-  // All six cards load (full 3x files) once the section is two screens away: the three a first
-  // visit sees first, then the rest, so the row is crisp on arrival and a flip never shows a blank
-  // face. Nothing loads with the hero.
+  // Automatic flips: one side card at a time, only while the spread is on screen and settled. A card
+  // being hovered, or flipped by hand in the last few seconds, is skipped.
+  // All five photos load once the section is two screens away: the three a first visit sees first,
+  // then the rest, so the spread is crisp on arrival and a flip never shows a blank face.
   useEffect(() => {
     const sec = section.current;
     if (!sec) return;
@@ -139,9 +69,9 @@ export default function About() {
         const first = new Set(slots.map((s) => s.first));
         const order = [...crafts.keys()].sort((x, y) => Number(first.has(y)) - Number(first.has(x)));
         order.forEach((k) => {
-          // The same optimised file the tile will ask for (srcset + sizes), so a flip finds it cached.
+          // The same optimised file the card will ask for (srcset + sizes), so a flip finds it cached.
           const c = crafts[k];
-          const { props } = getImageProps({ src: c.src, alt: "", width: c.w, height: c.h, sizes: SIZES[c.shape] });
+          const { props } = getImageProps({ src: c.src, alt: "", width: c.w, height: c.h, sizes: SIZES });
           const im = new window.Image();
           im.fetchPriority = first.has(k) ? "high" : "low";
           if (props.sizes) im.sizes = props.sizes;
@@ -156,8 +86,10 @@ export default function About() {
     let next = 0;
     const timer = setInterval(() => {
       if (!inView.current || !settled.current || reduce.matches || document.hidden) return;
-      const i = next;
-      next = (next + 1) % slots.length;
+      // The next side card in turn (the front card only flips when clicked).
+      let i = next;
+      if (roleOf(i, frontRef.current) === 0) i = (i + 1) % slots.length;
+      next = (i + 1) % slots.length;
       if (hovered.current[i] || Date.now() - touched.current[i] < EVERY * 2) return;
       flip(i);
     }, EVERY);
@@ -166,58 +98,69 @@ export default function About() {
       early.disconnect();
       clearInterval(timer);
     };
-  }, [flip]);
+  }, [flip, section, settled]);
 
   return (
-    <section ref={section} id="about" className={`container ${styles.about}`} aria-labelledby="about-title">
+    <section ref={section} id="about" className={`${spread.clip} ${styles.about}`} aria-labelledby="about-title">
       <h2 id="about-title" className="sr-only">
         About
       </h2>
-      <div className={styles.pin}>
-        <p className={styles.line}>
-          {aboutLine}
-        </p>
-        <div ref={stage} className={styles.stage}>
+      <div className={`container ${spread.frame} ${styles.pin}`}>
+        <p className={styles.line}>{aboutLine}</p>
+        <div ref={stage} className={`${spread.stage} ${styles.stage}`} {...stageProps}>
           {slots.map((s, i) => {
             const f = faces[i];
             const now = crafts[showing(f)];
+            const isFront = roleOf(i, front) === 0;
             return (
               <div
                 key={i}
                 ref={(el) => {
                   slotEls.current[i] = el;
                 }}
-                className={`${styles.slot} ${styles[s.shape]}`}
-                style={{ zIndex: slots.length - i }}
+                className={spread.slot}
+                style={{ zIndex: zOf(i) }}
                 onPointerEnter={() => (hovered.current[i] = true)}
                 onPointerLeave={() => (hovered.current[i] = false)}
               >
-                <button
-                  type="button"
-                  className={styles.card}
-                  aria-label={`${now.name}. Flip to see another piece`}
-                  onClick={() => {
-                    touched.current[i] = Date.now();
-                    flip(i);
-                  }}
-                >
-                  <span className={styles.flipper} style={{ transform: `rotateY(${f.turns * 180}deg)` }}>
-                    {/* Each face is one tile: the photo on ink, then its caption chip. */}
-                    {(["a", "b"] as const).map((k) => {
-                      const c = crafts[f[k]];
-                      return (
-                        <span key={k} className={`${styles.face} ${k === "b" ? styles.back : ""}`} aria-hidden="true">
-                          <span className={`${styles.media} ${c.cutout ? styles.cutout : ""}`}>
-                            <Image src={c.src} alt="" fill sizes={SIZES[c.shape]} quality={80} className={styles.photo} />
+                <div className={spread.pos} data-role={ROLE[roleOf(i, front)]}>
+                  <button
+                    type="button"
+                    className={styles.card}
+                    aria-label={isFront ? `${now.name}. Flip to see another piece` : `Bring ${now.name} to the front`}
+                    onClick={() => {
+                      if (swiped()) return;
+                      if (!isFront) return bring(i);
+                      touched.current[i] = Date.now();
+                      flip(i);
+                    }}
+                  >
+                    <span className={styles.flipper} style={{ transform: `rotateY(${f.turns * 180}deg)` }}>
+                      {/* Each face is one card: the photo, then its caption chip. */}
+                      {(["a", "b"] as const).map((k) => {
+                        const c = crafts[f[k]];
+                        return (
+                          <span key={k} className={`${styles.face} ${k === "b" ? styles.back : ""}`} aria-hidden="true">
+                            <span className={`${styles.media} ${c.cutout ? styles.cutout : ""}`}>
+                              <Image
+                                src={c.src}
+                                alt=""
+                                fill
+                                sizes={SIZES}
+                                quality={80}
+                                className={styles.photo}
+                                style={c.focus ? { objectPosition: c.focus } : undefined}
+                              />
+                            </span>
+                            <span className={styles.chip}>
+                              <Hand src={c.hand.src} w={c.hand.w} className={styles.chipHand} />
+                            </span>
                           </span>
-                          <span className={styles.chip}>
-                            <Hand src={c.hand.src} w={c.hand.w} className={styles.chipHand} />
-                          </span>
-                        </span>
-                      );
-                    })}
-                  </span>
-                </button>
+                        );
+                      })}
+                    </span>
+                  </button>
+                </div>
               </div>
             );
           })}

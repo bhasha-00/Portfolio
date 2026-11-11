@@ -1,12 +1,20 @@
-/* About: the line on top, left-aligned to the container, then three tiles (one wide, two tall) on
-   the grid: desktop 6 / 3 / 3 of 12 columns, tablet 4 / 2 / 2 of 8, phones the wide tile on top and
-   the tall pair (2 + 2 of 4) under it. From 768 the tiles sprawl from a centred stack into the row,
-   scrubbed by scroll (as AI Tinkering), and flip over from time to time to show another piece; the
-   flip is a rotateY on .flipper. Transform only throughout. */
+/* About (About.tsx): the line on top, left-aligned to the container, then the three-card spread of
+   About.svg (Spread.module.css has the mechanics; this file sets its numbers and draws the cards).
+   All cards are tall. Phones: the front card about 300px wide, the side ones peeking in at the screen
+   edges (the iPhone frame). From 768: pinned while the fan plays. Cards flip over from time to time
+   to show another piece; the flip is a rotateY on .flipper. Transform only throughout. */
 
 .about {
   position: relative;
   padding: var(--space-9) 0 var(--space-8);
+}
+
+/* Phones: the front card 77% of the screen, sides at 82.5% scale with ~13px clear of it. */
+.stage {
+  --card-w: min(77vw, 320px);
+  --card-ratio: 434 / 623; /* the front card in About.svg */
+  --dx: 95.5%;
+  --side: 0.825;
 }
 
 .pin {
@@ -37,34 +45,11 @@
 }
 
 
-.stage {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-  gap: var(--gutter);
-}
-
-.slot {
-  position: relative;
-  will-change: transform;
-}
-
-/* Phones: the wide tile across all 4 columns, the tall pair 2 + 2 under it. */
-.wide {
-  grid-column: 1 / -1;
-  aspect-ratio: 360 / 302;
-}
-
-.tall {
-  grid-column: span 2;
-  aspect-ratio: 358 / 521;
-}
-
 .card {
   position: relative;
   display: block;
   width: 100%;
-  height: 100%;
+  aspect-ratio: var(--card-ratio);
   padding: 0;
   border: 0;
   background: none;
@@ -133,10 +118,14 @@
   object-fit: cover;
 }
 
-/* A cut-out on a transparent background (paper sculpture): fills its frame like the other photos,
-   straight on the tile's cream, as in Bhasha's card (paper.svg). */
+/* A cut-out on a transparent background (paper sculpture): shown whole, straight on the card's
+   cream, as in Bhasha's card (paper.svg); the tall card leaves cream above and below it. */
 .media.cutout {
   background: none;
+}
+
+.media.cutout .photo {
+  object-fit: contain;
 }
 
 /* Caption chip, role hand-sm: the word in Bhasha's hand, its box the role's line height (20px). */
@@ -195,24 +184,11 @@
     padding: var(--space-9) 0 var(--space-6);
   }
 
-  /* Tablet: 4 / 2 / 2 of 8. The wide tile takes the row height the tall pair sets. */
-  .wide {
-    grid-column: span 4;
-    aspect-ratio: auto;
-  }
-
-  .tall {
-    grid-column: span 2;
-  }
-}
-
-/* Desktop: 6 / 3 / 3 of 12. */
-@media (min-width: 1200px) {
-  .wide {
-    grid-column: span 6;
-  }
-
-  .tall {
-    grid-column: span 3;
+  /* About.svg: front card 31.1% of the container, side cards at 75% of it, their centres 76% of a
+     card width out. Short screens: the card keeps clear of the nav and the line above it. */
+  .stage {
+    --card-w: min(31.1cqw, (100svh - 260px) * 434 / 623);
+    --dx: 76%;
+    --side: 0.75;
   }
 }
