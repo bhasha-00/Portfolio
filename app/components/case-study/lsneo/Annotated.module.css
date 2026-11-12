@@ -7,6 +7,17 @@
   margin: 0;
 }
 
+/* The frame every artifact shares: her frame colours, 16px corners. Content-box, so the artifact keeps
+   its exact proportions inside the 1px outline. */
+.frame {
+  box-sizing: content-box;
+  width: calc(100% - 2px);
+  border: 1px solid var(--art-frame-line);
+  border-radius: var(--r-md);
+  background: var(--art-frame);
+  overflow: hidden;
+}
+
 .layer {
   position: absolute;
   inset: 0;
@@ -67,8 +78,7 @@
   fill: var(--art-blue);
 }
 
-/* The outline her other frames carry; on the cream page the versions' pale ring needs it to show. */
-.outline {
-  fill: none;
-  stroke: var(--art-frame-line);
+/* Her two-panel GIF (SixChanges): clipped to its panels' rounded corners, like Versions. */
+.twin {
+  clip-path: url(#lsneo-twin);
 }

@@ -57,63 +57,66 @@ export default function Synthesis() {
   const track = useRef<HTMLDivElement>(null);
   const pin = useRef<HTMLDivElement>(null);
   const a = useRef<HTMLDivElement>(null);
-  const aView = useRef<HTMLDivElement>(null);
   const b = useRef<HTMLDivElement>(null);
   const bBody = useRef<HTMLDivElement>(null);
+  const spacer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)");
-    let raf = 0;
-    const clear = () => {
-      for (const el of [track.current, pin.current, a.current, b.current, bBody.current]) el?.removeAttribute("style");
+    const t = track.current, p0 = pin.current, sp = spacer.current;
+    if (!t || !p0 || !sp || !a.current || !b.current || !bBody.current) return;
+    const A = a.current, B = b.current, BB = bBody.current;
+    let raf = 0, travelB = 0;
+
+    // Layout, only when sizes change (never on scroll): where the frame pins (centred below the bar)
+    // and how far the findings glide on a short frame. The scroll length itself is CSS (svh).
+    const measure = () => {
+      const nav = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-offset")) || 0;
+      const vh = document.documentElement.clientHeight;
+      p0.style.top = `${Math.round(Math.max(nav + 8, nav + (vh - nav - p0.offsetHeight) / 2))}px`;
+      const pad = parseFloat(getComputedStyle(B).paddingBottom) || 0;
+      travelB = Math.max(0, Math.round(BB.offsetTop + BB.offsetHeight + pad - B.clientHeight));
+      t.style.setProperty("--b-travel", `${travelB}px`);
+      update();
     };
+
+    // Scroll: reads two positions, writes only transform and opacity.
     const update = () => {
       raf = 0;
-      const t = track.current, p0 = pin.current;
-      if (!t || !p0 || !a.current || !aView.current || !b.current || !bBody.current) return;
-      if (reduce.matches) return clear();
-      // The frame pins centred in the screen below the bar.
-      const nav = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-offset")) || 0;
-      const top = Math.max(nav + 8, nav + (innerHeight - nav - p0.offsetHeight) / 2);
-      p0.style.top = `${top}px`;
-      // Lengths in px of scroll: the hand-over, then the findings (gliding on phones where they are
-      // taller than the frame).
-      const pad = parseFloat(getComputedStyle(b.current).paddingBottom) || 0;
-      const travelB = Math.max(0, bBody.current.offsetTop + bBody.current.offsetHeight + pad - b.current.clientHeight);
-      const lead = innerHeight * 0.25; // the table, as she framed it, before anything moves
-      const swap = innerHeight * 0.5;
-      const hold = Math.max(travelB, innerHeight * 0.3);
-      const height = Math.round(p0.offsetHeight + lead + swap + hold);
-      if (Math.abs(t.offsetHeight - height) > 1) t.style.height = `${height}px`;
-      const d = Math.min(lead + swap + hold, Math.max(0, top - t.getBoundingClientRect().top));
-
-      // The table lifts away, then the findings rise into the same frame; they barely overlap, so the
-      // two never read on top of each other.
+      if (reduce.matches) return;
+      const run = sp.offsetHeight;
+      const d = Math.min(run, Math.max(0, p0.getBoundingClientRect().top - t.getBoundingClientRect().top));
+      const base = run - travelB;
+      const lead = base * 0.2, swap = base * 0.45; // the table as framed, then the hand-over
       const q = clamp((d - lead) / swap);
       const out = ease(clamp(q / 0.6));
       const inn = ease(clamp((q - 0.45) / 0.55));
-      a.current.style.opacity = String(1 - out);
-      a.current.style.transform = `translateY(${-24 * out}px)`;
-      a.current.style.visibility = out < 1 ? "visible" : "hidden";
-      b.current.style.opacity = String(inn);
-      b.current.style.transform = `translateY(${24 * (1 - inn)}px)`;
-      b.current.style.visibility = inn > 0 ? "visible" : "hidden";
-      bBody.current.style.transform = `translateY(${-Math.min(travelB, Math.max(0, d - lead - swap))}px)`;
+      A.style.opacity = String(1 - out);
+      A.style.transform = `translate3d(0, ${-24 * out}px, 0)`;
+      A.style.visibility = out < 1 ? "visible" : "hidden";
+      B.style.opacity = String(inn);
+      B.style.transform = `translate3d(0, ${24 * (1 - inn)}px, 0)`;
+      B.style.visibility = inn > 0 ? "visible" : "hidden";
+      BB.style.transform = `translate3d(0, ${-Math.min(travelB, Math.max(0, d - lead - swap))}px, 0)`;
+    };
+
+    const clear = () => {
+      for (const el of [t, p0, A, B, BB]) el.removeAttribute("style");
     };
     const on = () => {
       if (!raf) raf = requestAnimationFrame(update);
     };
-    update();
-    // Fonts and widths change the sizes: measure again whenever the frame or the findings resize.
-    const ro = new ResizeObserver(on);
-    for (const el of [aView.current, bBody.current]) if (el) ro.observe(el);
+    const onReduce = () => (reduce.matches ? clear() : measure());
+    const ro = new ResizeObserver(() => !reduce.matches && measure());
+    ro.observe(p0);
+    ro.observe(BB);
+    if (reduce.matches) clear();
+    else measure();
     addEventListener("scroll", on, { passive: true });
-    addEventListener("resize", on);
-    reduce.addEventListener("change", on);
+    reduce.addEventListener("change", onReduce);
     return () => {
       removeEventListener("scroll", on);
-      removeEventListener("resize", on);
-      reduce.removeEventListener("change", on);
+      reduce.removeEventListener("change", onReduce);
       ro.disconnect();
       cancelAnimationFrame(raf);
     };
@@ -129,7 +132,7 @@ export default function Synthesis() {
               <path d="M30 10 C 0 40, 20 70, 220 72 C 420 74, 640 40, 790 60 C 830 66, 850 76, 860 88" />
               <path d="M850 82 L 861 90 L 864 77" />
             </svg>
-            <div ref={aView} className={styles.view}>
+            <div className={styles.view}>
               <div className={styles.sheet}>
                 <table className={styles.table}>
                   <caption className={styles.srOnly}>Synthesis: what the recording showed, what the revised design does, the gap, and the direction to explore, per area.</caption>
@@ -167,6 +170,7 @@ export default function Synthesis() {
           </div>
         </div>
       </div>
+      <div ref={spacer} className={styles.spacer} aria-hidden="true" />
     </div>
   );
 }

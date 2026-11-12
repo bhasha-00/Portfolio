@@ -4,11 +4,10 @@ import { caseStudyHref, type ArtifactName, type Block, type CaseStudy as CS, typ
 import { projects, type Project } from "../../content/projects";
 import { rich } from "../rich";
 import CaseBar from "./CaseBar";
-import Reveal from "./Reveal";
 import Context from "./lsneo/Context";
 import Synthesis from "./lsneo/Synthesis";
 import Tldr from "./lsneo/Tldr";
-import { Duplicate, Flow, SearchByTitle, Versions, Walkthrough } from "./lsneo/artifacts";
+import { Duplicate, Flow, HandoffIsbn, Onboarding, SearchByTitle, SixChanges, Versions, Walkthrough } from "./lsneo/artifacts";
 import styles from "./CaseStudy.module.css";
 
 // A case study page: the sticky bar (back to Projects + one tab per section), the header (product,
@@ -73,8 +72,11 @@ const artifacts: Record<ArtifactName, () => React.ReactNode> = {
   synthesis: Synthesis,
   flow: Flow,
   versions: Versions,
+  "six-changes": SixChanges,
+  onboarding: Onboarding,
   "search-by-title": SearchByTitle,
   duplicate: Duplicate,
+  "handoff-isbn": HandoffIsbn,
 };
 
 function BlockView({ block }: { block: Block }) {
@@ -155,10 +157,9 @@ export default function CaseStudy({ cs }: { cs: CS }) {
   return (
     <div className={styles.page}>
       <CaseBar tabs={tabs} spy={spy} />
-      <Reveal />
       <main className={`container grid ${styles.main}`}>
         <article className={styles.col}>
-          <header className={styles.header} data-reveal-item="">
+          <header className={styles.header}>
             <p className={styles.kicker}>
               {cs.product} <span aria-hidden="true">•</span> {cs.year}
             </p>
@@ -175,7 +176,7 @@ export default function CaseStudy({ cs }: { cs: CS }) {
           </header>
 
           {cs.sections.map((s) => (
-            <section key={s.id} id={s.id} className={styles.section} aria-labelledby={`${s.id}-title`} data-reveal-item="">
+            <section key={s.id} id={s.id} className={styles.section} aria-labelledby={`${s.id}-title`}>
               <p className={styles.eyebrow}>{s.eyebrow}</p>
               <h2 id={`${s.id}-title`} className={styles.h2}>
                 {s.title}
@@ -186,7 +187,7 @@ export default function CaseStudy({ cs }: { cs: CS }) {
             </section>
           ))}
 
-          <section id="more" className={styles.more} aria-labelledby="more-title" data-reveal-item="">
+          <section id="more" className={styles.more} aria-labelledby="more-title">
             <h2 id="more-title" className={styles.moreTitle}>
               Explore more
             </h2>

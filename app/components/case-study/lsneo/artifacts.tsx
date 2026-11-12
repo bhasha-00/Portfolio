@@ -6,34 +6,74 @@ import { Annotated, Lines, Note, annotated as s } from "./Annotated";
 
 const DIR = "/case-studies/lsneo-lite";
 
-/** Research › What I saw: her walkthrough GIF of the existing New Title screen (1errorwalkthrough.gif,
- *  1600 x 900, 388 frames), stored as lossless animated WebP with every frame kept. The text inside is
- *  part of the recording. Reduced motion gets its first frame, still. */
-export function Walkthrough() {
+type AnimProps = { name: string; w: number; h: number; alt: string; frame?: boolean; className?: string };
+
+/** One of her GIFs, stored as lossless animated WebP (every frame kept, see the build script). Reduced
+ *  motion gets the first frame, still. */
+function Anim({ name, w, h, alt, frame = true, className }: AnimProps) {
   return (
-    <figure className={s.fig} style={{ aspectRatio: "1600 / 900" }}>
+    <figure className={frame ? `${s.fig} ${s.frame}` : s.fig} style={{ aspectRatio: `${w} / ${h}` }}>
       <picture>
-        <source media="(prefers-reduced-motion: reduce)" srcSet={`${DIR}/walkthrough-still-v1.webp`} />
+        <source media="(prefers-reduced-motion: reduce)" srcSet={`${DIR}/${name}-still.webp`} />
         {/* eslint-disable-next-line @next/next/no-img-element -- an animation, served exactly as stored */}
-        <img
-          className={s.layer}
-          src={`${DIR}/walkthrough-v1.webp`}
-          width={1600}
-          height={900}
-          loading="lazy"
-          decoding="async"
-          alt="Walkthrough of the existing Direct Cataloguing screen in LS Neo, with the friction points marked one by one."
-        />
+        <img className={`${s.layer} ${className ?? ""}`} src={`${DIR}/${name}.webp`} width={w} height={h} loading="lazy" decoding="async" alt={alt} />
       </picture>
     </figure>
   );
 }
 
+/** Research › What I saw: her walkthrough of the existing New Title screen (error_walkthrough_v4.gif). */
+export const Walkthrough = () => (
+  <Anim name="walkthrough-v2" w={1588} h={796} alt="Walkthrough of the existing Direct Cataloguing screen in LS Neo, with the friction points marked one by one." />
+);
+
+/** Final design › Walkthrough: the 6 changes, before and after (before_after_v5.gif). Her two panels sit
+ *  on the page as in Versions; the clip keeps the GIF's white corners off the cream. */
+export const SixChanges = () => (
+  <>
+    <Anim
+      name="six-changes-v1"
+      w={1800}
+      h={662}
+      frame={false}
+      className={s.twin}
+      alt="The existing New Title screen beside the redesigned one, with the six changes that answer each friction point."
+    />
+    <svg width="0" height="0" aria-hidden="true" style={{ position: "absolute" }}>
+      <clipPath id="lsneo-twin" clipPathUnits="objectBoundingBox">
+        <rect x={0} y={0} width={884 / 1800} height={1} rx={72 / 1800} ry={72 / 662} />
+        <rect x={916 / 1800} y={0} width={884 / 1800} height={1} rx={72 / 1800} ry={72 / 662} />
+      </clipPath>
+    </svg>
+  </>
+);
+
+/** Handoff: the ISBN field with its server choice, state by state (isbn_states.gif). */
+export const HandoffIsbn = () => (
+  <Anim name="handoff-isbn-v1" w={1128} h={251} alt="The ISBN field with a server choice, shown in each of its states." />
+);
+
+/** Edge cases › Onboarding for new users (1onboarding.png, 4068 x 2596 inside her frame). */
+export const Onboarding = () => (
+  <figure className={`${s.fig} ${s.frame}`} style={{ aspectRatio: "4068 / 2596" }}>
+    {/* eslint-disable-next-line @next/next/no-img-element -- served exactly as stored */}
+    <img
+      className={s.layer}
+      src={`${DIR}/onboarding-v2.webp`}
+      width={4068}
+      height={2596}
+      loading="lazy"
+      decoding="async"
+      alt="Onboarding for new users: set up the catalogue first, then add titles."
+    />
+  </figure>
+);
+
 /** Edge cases › Duplicate ISBN: the guided choice. 1duplicate.svg */
 export function Duplicate() {
   return (
     <Annotated
-      src={`${DIR}/duplicate-v1.svg`}
+      src={`${DIR}/duplicate-v2.svg`}
       w={1922}
       h={901}
       alt="The New Title screen with a duplicate ISBN: matching titles listed on the right, and the next step held until one is chosen."
@@ -65,14 +105,13 @@ function Verdict({ at, head, headX, lines }: { at: string; head: string; headX: 
 export function Versions() {
   return (
     <Annotated
-      src={`${DIR}/versions-v1.svg`}
+      src={`${DIR}/versions-v2.svg`}
+      frame={false}
       w={1808}
       h={665}
       alt="Two explorations of LS Neo lite: V1, a full-page title table, and V2, a New Title form that put approval and ordering inside each title."
       over={
         <>
-          <rect className={s.outline} x={0.5} y={0.5} width={887} height={664} rx={71.5} />
-          <rect className={s.outline} x={920.5} y={0.5} width={887} height={664} rx={71.5} />
           <Verdict
             at="translate(496.363 333) rotate(11.7515)"
             head="Why v1 didn't survive :"
@@ -95,7 +134,7 @@ export function Versions() {
 export function SearchByTitle() {
   return (
     <Annotated
-      src={`${DIR}/search-by-title-v1.svg`}
+      src={`${DIR}/search-by-title-v2.svg`}
       w={1030}
       h={661}
       alt="Searching by title when a book has no ISBN: typing India lists matching titles with author, ISBN, year and edition."
@@ -140,8 +179,6 @@ function FlowDiagram() {
   const rows = [482, 602, 722]; // tops of the three branches; centres at +38
   return (
     <>
-      {/* her frame */}
-      <rect x={0.5} y={0.5} width={1273} height={607} rx={15.5} fill="#FBF9F3" stroke="#E4D9C2" />
       <g transform={DIAGRAM}>
         {/* Existing */}
         <rect x={40} y={40} width={1480} height={320} rx={16} fill="#FFFFFF" stroke="#D5D6EA" strokeWidth={2} />
@@ -209,7 +246,7 @@ function FlowDiagram() {
 export function Flow() {
   return (
     <Annotated
-      src={`${DIR}/flow-v1.svg`}
+      src={`${DIR}/flow-v2.svg`}
       w={1274}
       h={608}
       alt="Existing and new information architecture, with Bhasha's paper sketch of the flow."

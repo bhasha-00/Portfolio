@@ -1,14 +1,20 @@
 /* What I understood (Synthesis.tsx): a pinned frame that hands the table over to the findings, in her
    colours (--art-*, sampled from 1synthesis a.svg and b.svg). */
 
-/* The scroll that drives it: the frame's own height plus the travel. */
+/* The scroll that drives it: the pinned frame, then a spacer as long as the hand-over (plus the
+   findings' glide on phones, --b-travel, set when sizes change). svh, so a phone's toolbar showing or
+   hiding never changes it mid-scroll. */
 .track {
   position: relative;
-  height: 280svh;
+}
+
+.spacer {
+  height: calc(110svh + var(--b-travel, 0px));
 }
 
 .pin {
   position: sticky;
+  z-index: 1;
   top: calc(var(--nav-offset) + var(--space-2));
   height: calc(100svh - var(--nav-offset) - var(--space-6));
 }
@@ -243,8 +249,8 @@
 
 /* Reduced motion: nothing pinned or scrubbed. The table scrolls in its own window; the findings follow. */
 @media (prefers-reduced-motion: reduce) {
-  .track {
-    height: auto;
+  .spacer {
+    display: none;
   }
 
   .pin {

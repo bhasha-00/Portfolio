@@ -6,14 +6,15 @@ import styles from "./Annotated.module.css";
 // scaled together by the SVG viewBox: `under` (drawn on the page), her export as an image (frames,
 // highlights, leader lines, note cards and the screenshots, stored lossless by
 // scripts/build-lsneo-artifacts.cjs with the outlined text taken out), and `over`, the text set again
-// in Geist / Caveat. So the type is the site's, and every pixel of the screenshots is hers.
+// in Geist / Caveat. So the type is the site's, and every pixel of the screenshots is hers. Her own
+// frame is taken off each export; `frame` draws the one every artifact shares (16px corners).
 
-type Props = { src: string; w: number; h: number; alt: string; under?: ReactNode; over?: ReactNode };
+type Props = { src: string; w: number; h: number; alt: string; under?: ReactNode; over?: ReactNode; frame?: boolean };
 
-export function Annotated({ src, w, h, alt, under, over }: Props) {
+export function Annotated({ src, w, h, alt, under, over, frame = true }: Props) {
   const box = `0 0 ${w} ${h}`;
   return (
-    <figure className={styles.fig} style={{ aspectRatio: `${w} / ${h}` }}>
+    <figure className={frame ? `${styles.fig} ${styles.frame}` : styles.fig} style={{ aspectRatio: `${w} / ${h}` }}>
       {under && (
         <svg className={styles.layer} viewBox={box}>
           {under}

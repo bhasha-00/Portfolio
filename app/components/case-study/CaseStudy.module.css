@@ -341,19 +341,6 @@ a.moreLink:focus-visible {
   line-height: var(--lh-hand-sm);
 }
 
-/* ---------- The fade-up (Reveal.tsx): only what starts below the screen ---------- */
-.page [data-reveal-item="wait"],
-.page [data-reveal-item="in"] {
-  transition:
-    opacity var(--dur-card) var(--ease-out),
-    transform var(--dur-card) var(--ease-out);
-}
-
-.page [data-reveal-item="wait"] {
-  opacity: 0;
-  transform: translateY(var(--space-5));
-}
-
 /* ---------- Tablet and up ---------- */
 @media (min-width: 768px) {
   .meta {

@@ -29,7 +29,18 @@ export type Block =
   /** One of Bhasha's artifacts rebuilt on the page (type in Geist): app/components/case-study/lsneo. */
   | { type: "artifact"; name: ArtifactName };
 
-export type ArtifactName = "tldr" | "context" | "walkthrough" | "synthesis" | "flow" | "versions" | "search-by-title" | "duplicate";
+export type ArtifactName =
+  | "tldr"
+  | "context"
+  | "walkthrough"
+  | "synthesis"
+  | "flow"
+  | "versions"
+  | "six-changes"
+  | "onboarding"
+  | "search-by-title"
+  | "duplicate"
+  | "handoff-isbn";
 
 export type Section = {
   /** Anchor id. */
@@ -173,7 +184,7 @@ const lsneo: CaseStudy = {
         },
         { type: "h3", text: "6 Changes that answer the friction points" },
         { type: "label", text: "Walkthrough" },
-        { type: "media", media: { label: "Walkthrough: the 6 changes", kind: "video", ratio: 408 / 150 } },
+        { type: "artifact", name: "six-changes" },
         { type: "label", text: "Prototype" },
         { type: "media", media: { label: "Prototype: the final flow", kind: "video", ratio: 408 / 247 } },
       ],
@@ -185,7 +196,7 @@ const lsneo: CaseStudy = {
       title: "When a book doesn't cooperate",
       blocks: [
         { type: "label", text: "Onboarding for new users" },
-        { type: "media", media: { label: "Onboarding for new users: set up the catalogue first, then add titles", kind: "image", ratio: 4120 / 2648, src: "/case-studies/lsneo-lite/onboarding-v1.webp" } }, // 1onboarding.png, 4120 x 2648, lossless
+        { type: "artifact", name: "onboarding" },
         {
           type: "p",
           text: "A librarian is never stuck, they search by what they can see on the book instead of what they can scan; **useful for local books with no ISBN**",
@@ -196,9 +207,6 @@ const lsneo: CaseStudy = {
           text: "**Duplicate ISBN :** the system asks whether to add it as a copy of the existing title, update the existing record, or add it as another edition, rather than silently creating a duplicate entry.",
         },
         { type: "artifact", name: "duplicate" },
-        { type: "h3", text: "Duplicate flow" },
-        { type: "label", text: "Prototype" },
-        { type: "media", media: { label: "Prototype: the duplicate flow", kind: "video", ratio: 408 / 249 } },
       ],
     },
     {
@@ -211,7 +219,7 @@ const lsneo: CaseStudy = {
           type: "p",
           text: "Free ISBN source fetched incomplete details for tiles so we paired the ISBN field with a server choice and made every fetched field editable, with title search as the fallback.",
         },
-        { type: "media", media: { label: "Handoff: ISBN field with server choice", kind: "image", ratio: 408 / 518 } },
+        { type: "artifact", name: "handoff-isbn" },
       ],
     },
     {
