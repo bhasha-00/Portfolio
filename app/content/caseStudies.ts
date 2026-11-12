@@ -83,7 +83,16 @@ const lsneo: CaseStudy = {
           text: "LS Neo, Libsys's core library platform, serves schools, colleges, corporates and academic institutions alike. I was brought in to build a simpler, lighter version for schools, **LS Neo lite**, across six to seven modules, with fewer steps to complete a task.",
         },
         { type: "callout", title: "Brief", text: "Simplify the workflows and cut the extra steps needed to finish a task." },
-        { type: "media", media: { label: "Context: LS Neo and LS Neo Lite", kind: "image", ratio: 408 / 170 } },
+        {
+          type: "media",
+          media: {
+            label:
+              "Colleges and corporates: 3 roles, 3 separate flows (students, librarian or admin, purchasing team). Schools: one person runs everything; the librarian handles the whole workflow and purchasing sits with the school ERP.",
+            kind: "image",
+            ratio: 1736 / 658,
+            src: "/case-studies/lsneo-lite/context.webp", // 1 CONTEXT.svg, its 2x picture
+          },
+        },
         {
           type: "p",
           text: "__Why a separate school version? Schools don’t have the roles a college or corporate library does, one person runs the workflow, and purchasing sits entirely outside the product, with the school ERP.__",
