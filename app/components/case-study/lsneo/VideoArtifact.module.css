@@ -1,8 +1,9 @@
-/* A prototype recording in her frame (VideoArtifact.tsx). */
+/* A prototype recording in her frame (VideoArtifact.tsx), spaced like her other artifacts: the same
+   share of inset (53px of her 1024 frames) and the screen's small rounded corners. */
 
 .frame {
   margin: 0;
-  padding: var(--art-pad-sm);
+  padding: var(--art-pad);
   border: 1px solid var(--art-frame-line);
   border-radius: var(--r-md);
   background: var(--art-frame);
@@ -10,6 +11,8 @@
 
 .screen {
   position: relative;
+  border-radius: var(--r-sm);
+  overflow: hidden;
 }
 
 .video {
@@ -39,8 +42,10 @@
   }
 }
 
-@media (min-width: 768px) {
-  .frame {
-    padding: var(--art-pad);
-  }
+.video[data-hidden] {
+  opacity: 0;
+}
+
+.video {
+  transition: opacity var(--dur-base) var(--ease-out);
 }
