@@ -120,7 +120,6 @@ const lsneo: CaseStudy = {
         { type: "h3", text: "What I saw" },
         { type: "label", text: "Walkthrough" },
         { type: "artifact", name: "walkthrough" },
-        { type: "h3", text: "What I understood" },
         { type: "artifact", name: "synthesis" },
       ],
     },

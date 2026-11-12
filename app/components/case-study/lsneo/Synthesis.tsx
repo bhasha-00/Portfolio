@@ -77,7 +77,8 @@ export default function Synthesis() {
       // turned), as far as the screen allows. Only on a phone, where they can't fit, do they glide.
       const pad = parseFloat(getComputedStyle(B).paddingBottom) || 0;
       const border = B.offsetHeight - B.clientHeight;
-      const need = Math.ceil(BB.offsetTop + BB.offsetHeight + pad + border);
+      const head = p0.offsetHeight - F.offsetHeight; // the heading and the gap under it
+      const need = Math.ceil(BB.offsetTop + BB.offsetHeight + pad + border + head);
       const room = Math.floor(vh - nav - 32);
       // (Measured at full width: with a height set, the aspect ratio would widen the frame instead.)
       p0.style.height = "";
@@ -86,7 +87,7 @@ export default function Synthesis() {
       p0.style.aspectRatio = "auto";
       p0.style.height = `${Math.min(Math.max(natural, need), room)}px`;
       p0.style.top = `${Math.round(Math.max(nav + 8, nav + (vh - nav - p0.offsetHeight) / 2))}px`;
-      travelB = Math.max(0, need - B.offsetHeight);
+      travelB = Math.max(0, need - head - B.offsetHeight);
       t.style.setProperty("--b-travel", `${travelB}px`);
       update();
     };
@@ -134,6 +135,8 @@ export default function Synthesis() {
   return (
     <div ref={track} className={styles.track}>
       <div ref={pin} className={styles.pin}>
+        {/* The heading pins with the frame, so it stays while the card turns. */}
+        <h3 className={styles.heading}>What I understood</h3>
         <div ref={frame} className={styles.frame}>
           <div className={styles.a}>
             <p className={styles.caption}>Identified problem → Synthesize gap → HMW solve it and why → Revised design direction</p>

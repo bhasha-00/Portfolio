@@ -15,15 +15,28 @@
 .pin {
   position: sticky;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
   perspective: 2400px;
   top: calc(var(--nav-offset) + var(--space-2));
   height: calc(100svh - var(--nav-offset) - var(--space-6));
 }
 
 /* The card that flips: the table (.a) on its front, the findings (.b) on its back. */
+.heading {
+  flex: none;
+  margin: 0;
+  color: var(--text-on-cream);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-lead);
+  font-weight: var(--fw-label);
+}
+
 .frame {
   position: relative;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   transform-style: preserve-3d;
   will-change: transform;
 }
