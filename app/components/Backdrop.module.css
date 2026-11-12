@@ -13,7 +13,7 @@
   background: var(--red);
 }
 
-/* Dot grid from Bhasha's type + texture test: cream dots 1.3px across every 22px, at 22% (#F3E9DA38).
+/* Dot grid from Bhasha's type + texture test: cream dots 1.3px across every 22px, at 22% (--cream at 22%).
    Drawn by CSS, so nothing downloads. The layer sits at 52% on top of that, so the dots stay muted:
    texture in the red, not a pattern you read. */
 .texture {

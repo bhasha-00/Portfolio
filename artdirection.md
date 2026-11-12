@@ -16,7 +16,7 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 ```css
 :root{
   --red:#A82A1E;      /* hero + page background */
-  --cream:#F3E9DA;    /* text on red, cards, nav pill */
+  --cream:#F8F4E9;    /* text on red, cards, nav pill (was #F3E9DA until 2026-11-12) */
   --ink:#2A1410;      /* text on cream */
   --gold:#E8B04A;     /* paper, accents, large/decorative only */
   --green:#2E7D6B;    /* accent */
@@ -24,13 +24,13 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
   --back:#FFF7E8;     /* paper back side in origami folds; white rabbit paper */
   --lime:#C8D52E;     /* parrot paper only (added 2026-11-10 at Bhasha's request) */}
 ```
-- Cream on red is about 5.8:1 (passes AA). Gold on red is about 3.6:1: use for large or decorative elements only, never body text.
+- Cream on red is about 6.3:1 (passes AA). Gold on red is about 3.6:1: use for large or decorative elements only, never body text.
 - **Texture: none.** Flat colour. (Revisit only if the hero feels heavy once built.)
   - Exception (2026-11-10, at Bhasha's request): the green paper square in the End section is a photo of real paper, texture and its own green included. That square only.
   - Exception (2026-11-11, at Bhasha's request, from bg.svg): the page background is a fixed layer (Backdrop.tsx) of red, a muted CSS dot grid (cream dots 1.3px every 22px at 22%, layer at 52%, from Bhasha's type + texture test), and bg.svg's burst shape in cream at 12%. Content scrolls over it; the burst starts low and rises to the centre over the first screen.
   - Paper grain (same request): the cream surfaces drawn in code (case study cards and tabs, nav) carry the green paper's fibres, taken from the End photo as a near-white tile (public/bg/paper-grain.webp) multiplied onto --cream. Loads after the page. The AI cards get the same grain as a layer clipped to their outline; the About tiles carry it at 0.25 on their cream.
 
-- Roles: `--text-on-red` (cream), `--text-on-cream` (ink), `--text-muted` (~6.3:1 on cream), `--divider` (ink 12%), `--dim-overlay` + `--dim-text-opacity` (covered card), `--cloud-fill`.
+- Roles: `--text-on-red` (cream), `--text-on-cream` (ink), `--text-muted` (~6.6:1 on cream), `--divider` (ink 12%), `--dim-overlay` + `--dim-text-opacity` (covered card), `--cloud-fill`.
 - Radius `--r-sm` 8 / `--r-md` 16 / `--r-pill`; elevation `--shadow-card`. Motion `--dur-fast` 150 / `--dur-base` 250 / `--dur-card` 500 (all 0 under reduced motion), `--ease-out` (entering, exiting, UI) and `--ease-in-out` (on-screen movement: folds lifting, the intro flight). UI transitions use these; only brand moments (intro, crane landing, flips, folds, the End paper settling) keep their own timing. Hover motion is gated to `(hover: hover) and (pointer: fine)`; pressables scale to 0.97.
 
 ## Type
@@ -122,6 +122,6 @@ Brand colours (`--indigo` dropped 2026-11-10; no indigo anywhere):
 
 ## End (2026-11-11)
 - On `.container`. From 768 the paper square is centred on the grid: 4 of 8 columns (tablet), 6 of 12 (desktop, 620 at 1440), never taller than 85svh. Phones: full width, then sign-off, then links.
-- Sign-off on the container's left edge, links ending on its right edge, one row along the bottom from 768. Where the title meets the paper, the text sits on top (cream on green ≈ 4.1:1, large text).
+- Sign-off on the container's left edge, links ending on its right edge, one row along the bottom from 768. Where the title meets the paper, the text sits on top (cream on green ≈ 4.5:1, large text).
 - Title h2 700 (balanced); line and links body 16/24 (links 600, no underline). Email has a copy button on its right (Lucide copy, 16px; "Copied" caption shows above it for 1.6s); LinkedIn has an arrow inside the link (Lucide arrow-right) that nudges 2px on hover. Hover lift 2px, press 0.97, gated to (hover: hover) and (pointer: fine). Spacing tokens; paper shadow `--shadow-card`.
 - "Try a fold?": Bhasha's outline with the question mark moved in next to "fold" (no space), along the line's slant. Cream on the green token 4.63:1.

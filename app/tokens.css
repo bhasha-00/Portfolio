@@ -4,18 +4,18 @@
 :root {
   /* ---------- Colour (brand) ---------- */
   --red: #A82A1E;        /* page + hero background */
-  --cream: #F3E9DA;      /* cards, nav pill, text on red */
+  --cream: #F8F4E9;      /* cards, nav pill, text on red (Bhasha's beige, 2026-11-12) */
   --ink: #2A1410;        /* text on cream */
   --gold: #E8B04A;       /* crane, decorative only, never text */
-  --green: #2E7D6B;      /* paper square; cream on green = 4.1:1, large text only */
+  --green: #2E7D6B;      /* paper square; cream on green = 4.5:1, large text only */
   --vermilion: #D9432F;  /* reserved accent; unused until needed */
   --back: #FFF7E8;       /* origami back side, landing puffs */
   --lime: #C8D52E;       /* parrot paper only (2026-11-10, Bhasha's request) */
 
   /* ---------- Colour (roles, derived from brand only) ---------- */
-  --text-on-red: var(--cream);                                   /* 5.8:1 */
+  --text-on-red: var(--cream);                                   /* 6.3:1 */
   --text-on-cream: var(--ink);
-  --text-muted: color-mix(in srgb, var(--ink) 72%, var(--cream)); /* ~6.3:1 on cream */
+  --text-muted: color-mix(in srgb, var(--ink) 72%, var(--cream)); /* ~6.6:1 on cream */
   --divider: color-mix(in srgb, var(--ink) 12%, transparent);
   --dim-overlay: color-mix(in srgb, var(--ink) 8%, transparent);  /* covered card */
   --dim-text-opacity: 0.32;                                       /* covered card content */

@@ -62,10 +62,10 @@
 }
 
 .tab:not([aria-current]) {
-  opacity: 0.68; /* ~5.6:1 ink on cream, as the home nav */
+  opacity: 0.68; /* ~5.8:1 ink on cream, as the home nav */
 }
 
-/* The marked tab: red text, no pill, so the bar stays quiet (red on cream, 5.3:1). */
+/* The marked tab: red text, no pill, so the bar stays quiet (red on cream, 6.3:1). */
 .tab[aria-current] {
   color: var(--red);
   font-weight: var(--fw-label);
