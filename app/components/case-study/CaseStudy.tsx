@@ -1,10 +1,14 @@
 import Image, { getImageProps } from "next/image";
 import Link from "next/link";
-import { caseStudyHref, type Block, type CaseStudy as CS, type Media } from "../../content/caseStudies";
+import { caseStudyHref, type ArtifactName, type Block, type CaseStudy as CS, type Media } from "../../content/caseStudies";
 import { projects, type Project } from "../../content/projects";
 import { rich } from "../rich";
 import CaseBar from "./CaseBar";
 import Reveal from "./Reveal";
+import Context from "./lsneo/Context";
+import Synthesis from "./lsneo/Synthesis";
+import Tldr from "./lsneo/Tldr";
+import { Duplicate, Flow, SearchByTitle, Versions, Walkthrough } from "./lsneo/artifacts";
 import styles from "./CaseStudy.module.css";
 
 // A case study page: the sticky bar (back to Projects + one tab per section), the header (product,
@@ -61,6 +65,18 @@ function Cover({ image }: { image: NonNullable<Project["image"]> }) {
   );
 }
 
+// Artifacts rebuilt on the page, so their type is the site's (Geist / Caveat).
+const artifacts: Record<ArtifactName, () => React.ReactNode> = {
+  tldr: Tldr,
+  context: Context,
+  walkthrough: Walkthrough,
+  synthesis: Synthesis,
+  flow: Flow,
+  versions: Versions,
+  "search-by-title": SearchByTitle,
+  duplicate: Duplicate,
+};
+
 function BlockView({ block }: { block: Block }) {
   switch (block.type) {
     case "p":
@@ -89,6 +105,10 @@ function BlockView({ block }: { block: Block }) {
       );
     case "media":
       return <Artifact media={block.media} />;
+    case "artifact": {
+      const A = artifacts[block.name];
+      return <A />;
+    }
     case "table":
       return (
         <div className={styles.tableWrap}>

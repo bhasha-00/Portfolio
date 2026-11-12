@@ -1,0 +1,268 @@
+/* What I understood (Synthesis.tsx): a pinned frame that hands the table over to the findings. */
+
+/* The scroll that drives it: the frame's own height plus the travel. */
+.track {
+  position: relative;
+  height: 280svh;
+}
+
+.pin {
+  position: sticky;
+  top: calc(var(--nav-offset) + var(--space-2));
+  height: calc(100svh - var(--nav-offset) - var(--space-6));
+}
+
+.frame {
+  position: relative;
+  height: 100%;
+  border: 1px solid var(--divider);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--back) 50%, var(--cream));
+  overflow: hidden;
+}
+
+.a,
+.b {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5) var(--space-4);
+  will-change: transform, opacity;
+}
+
+.b {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ---------- A: the synthesis table ---------- */
+.caption {
+  margin: 0;
+  color: var(--red);
+  font-family: var(--font-hand);
+  font-size: var(--fs-hand-md);
+  line-height: var(--lh-hand-md);
+}
+
+.arrow {
+  display: none;
+}
+
+/* The window the sheet glides through. */
+.view {
+  flex: 1;
+  min-height: 0;
+  margin-top: var(--space-4);
+  border-radius: var(--r-sm);
+  background: var(--back);
+  overflow: hidden;
+}
+
+.sheet {
+  padding: var(--space-2) var(--space-4) var(--space-7);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text-muted);
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+  text-align: left;
+}
+
+.table th,
+.table td {
+  display: block;
+  padding: 0;
+  vertical-align: top;
+}
+
+.table tr {
+  display: block;
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--divider);
+}
+
+.table tr:first-child {
+  border-top: 0;
+}
+
+.table th {
+  color: var(--text-on-cream);
+  font-weight: var(--fw-label);
+}
+
+.table td {
+  margin-top: var(--space-2);
+}
+
+.table strong {
+  color: var(--text-on-cream);
+  font-weight: var(--fw-label);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- B: the two findings ---------- */
+.cards {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+}
+
+.card {
+  padding: var(--space-5);
+  border: 1px solid var(--divider);
+  border-radius: var(--r-sm);
+  background: var(--back);
+  color: var(--text-muted);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--text-on-cream);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-lead);
+  font-weight: var(--fw-h2);
+}
+
+.icon {
+  flex: none;
+  width: var(--space-6);
+  height: var(--space-6);
+}
+
+.cardText {
+  margin: var(--space-3) 0 0;
+}
+
+.cardText strong {
+  color: var(--text-on-cream);
+  font-weight: var(--fw-label);
+}
+
+.designed {
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--green) 8%, transparent);
+}
+
+.so {
+  margin: 0;
+  color: var(--text-on-cream);
+  font-family: var(--font-hand);
+  font-size: var(--fs-hand-sm);
+  line-height: var(--lh-hand-sm);
+}
+
+.designedText {
+  margin: var(--space-1) 0 0;
+  color: var(--text-on-cream);
+}
+
+/* ---------- From 768: her frame's proportions, the table in columns, the findings side by side ---------- */
+@media (min-width: 768px) {
+  .pin {
+    height: auto;
+    aspect-ratio: 1024 / 600;
+    max-height: calc(100svh - var(--nav-offset) - var(--space-6));
+  }
+
+  .a,
+  .b {
+    padding: var(--space-6) var(--space-7);
+  }
+
+  .arrow {
+    display: block;
+    flex: none;
+    width: 100%;
+    height: var(--space-7);
+    margin-top: calc(var(--space-2) * -1);
+    fill: none;
+    stroke: var(--text-on-cream);
+    stroke-width: 1.5;
+    stroke-dasharray: 5 5;
+  }
+
+  .arrow path {
+    vector-effect: non-scaling-stroke;
+  }
+
+  .view {
+    margin-top: 0;
+  }
+
+  .table {
+    display: table;
+    table-layout: fixed;
+  }
+
+  .table tr {
+    display: table-row;
+    padding: 0;
+    border-top: 1px solid var(--divider);
+  }
+
+  .table th,
+  .table td {
+    display: table-cell;
+    margin: 0;
+    padding: var(--space-4) var(--space-3) var(--space-4) 0;
+  }
+
+  .table th {
+    width: 16%;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6);
+    align-items: start;
+  }
+}
+
+/* Reduced motion: nothing pinned or scrubbed. The table scrolls in its own window; the findings follow. */
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    height: auto;
+  }
+
+  .pin {
+    position: static;
+    height: auto;
+    aspect-ratio: auto;
+    max-height: none;
+  }
+
+  .frame {
+    height: auto;
+  }
+
+  .a,
+  .b {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .view {
+    height: 60svh;
+    overflow: auto;
+  }
+}

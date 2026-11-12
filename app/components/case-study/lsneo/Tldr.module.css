@@ -1,0 +1,135 @@
+/* TL;DR cards (Tldr.tsx). Tints from the brand colours (her indigo middle card became gold: no indigo). */
+
+/* Phones: out to the screen edges, so the side cards peek in to the edge as in AI Tinkering. */
+.wrap {
+  margin-inline: calc(var(--margin) * -1);
+}
+
+.stage {
+  --card-w: min(77vw, 320px);
+  --card-ratio: 0.86;
+  --dx: 93.3%;
+  --side: 0.8;
+  outline: none;
+}
+
+.stage:focus-visible .card[data-front] {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.slot {
+  height: 100%;
+}
+
+.pos {
+  height: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  height: 100%;
+  margin: 0;
+  padding: var(--space-5);
+  border-radius: var(--r-md);
+  background: var(--cream);
+  color: var(--text-muted);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+}
+
+.card[data-front] {
+  cursor: auto;
+}
+
+/* The tint sits over cream so the cards stay opaque where they overlap. */
+.card[data-tone="problem"] {
+  background: color-mix(in srgb, var(--red) 8%, var(--cream));
+}
+
+.card[data-tone="did"] {
+  background: color-mix(in srgb, var(--gold) 16%, var(--cream));
+}
+
+.card[data-tone="impact"] {
+  background: color-mix(in srgb, var(--green) 10%, var(--cream));
+}
+
+.card p {
+  margin: 0;
+}
+
+.label {
+  margin: 0;
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+  font-weight: var(--fw-label);
+}
+
+.card[data-tone="problem"] .label {
+  color: var(--red);
+}
+
+.card[data-tone="did"] .label {
+  color: var(--text-on-cream);
+}
+
+.card[data-tone="impact"] .label {
+  color: var(--green);
+}
+
+.big {
+  color: var(--text-on-cream);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-lead);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tracking-h2);
+}
+
+.ink {
+  color: var(--text-on-cream);
+}
+
+/* From 768: a row of three, as in her frame. The spread's transforms are switched off. */
+@media (min-width: 768px) {
+  .wrap {
+    margin-inline: 0;
+    overflow: visible;
+  }
+
+  .wrap .stage {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gutter);
+    height: auto;
+  }
+
+  .stage .slot {
+    position: static;
+    width: auto;
+    margin: 0;
+    transform: none !important; /* the spread script writes inline transforms; the row ignores them */
+    z-index: auto !important;
+  }
+
+  .stage .pos,
+  .stage .pos[data-role] {
+    transform: none;
+    transition: none;
+  }
+
+  .card,
+  .card[data-front] {
+    box-shadow: none;
+    cursor: auto;
+  }
+
+  .big {
+    font-size: var(--fs-h3);
+    line-height: var(--lh-h3);
+  }
+}

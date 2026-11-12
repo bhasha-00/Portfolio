@@ -25,7 +25,11 @@ export type Block =
   | { type: "callout"; title: string; text: string }
   | { type: "stats"; items: { value: string; label: string }[] }
   | { type: "media"; media: Media }
-  | { type: "table"; head: string[]; rows: string[][] };
+  | { type: "table"; head: string[]; rows: string[][] }
+  /** One of Bhasha's artifacts rebuilt on the page (type in Geist): app/components/case-study/lsneo. */
+  | { type: "artifact"; name: ArtifactName };
+
+export type ArtifactName = "tldr" | "context" | "walkthrough" | "synthesis" | "flow" | "versions" | "search-by-title" | "duplicate";
 
 export type Section = {
   /** Anchor id. */
@@ -72,7 +76,7 @@ const lsneo: CaseStudy = {
       tab: "TL;DR",
       eyebrow: "TL;DR",
       title: "A lighter version of LS Neo for schools, built around how school librarians actually work .",
-      blocks: [{ type: "media", media: { label: "TL;DR: before and after", kind: "image", ratio: 408 / 97 } }],
+      blocks: [{ type: "artifact", name: "tldr" }],
     },
     {
       id: "context",
@@ -85,16 +89,7 @@ const lsneo: CaseStudy = {
           text: "LS Neo, Libsys's core library platform, serves schools, colleges, corporates and academic institutions alike. I was brought in to build a simpler, lighter version for schools, **LS Neo lite**, across six to seven modules, with fewer steps to complete a task.",
         },
         { type: "callout", title: "Brief", text: "Simplify the workflows and cut the extra steps needed to finish a task." },
-        {
-          type: "media",
-          media: {
-            label:
-              "Colleges and corporates: 3 roles, 3 separate flows (students, librarian or admin, purchasing team). Schools: one person runs everything; the librarian handles the whole workflow and purchasing sits with the school ERP.",
-            kind: "image",
-            ratio: 1736 / 660,
-            src: "/case-studies/lsneo-lite/context-v2.webp", // 1CONTEXT.svg, its 2x picture (1736 x 660)
-          },
-        },
+        { type: "artifact", name: "context" },
         {
           type: "p",
           text: "__Why a separate school version? Schools don’t have the roles a college or corporate library does, one person runs the workflow, and purchasing sits entirely outside the product, with the school ERP.__",
@@ -113,9 +108,9 @@ const lsneo: CaseStudy = {
         },
         { type: "h3", text: "What I saw" },
         { type: "label", text: "Walkthrough" },
-        { type: "media", media: { label: "Walkthrough: the existing cataloguing flow", kind: "video", ratio: 408 / 230 } },
+        { type: "artifact", name: "walkthrough" },
         { type: "h3", text: "What I understood" },
-        { type: "media", media: { label: "What I understood: research insights", kind: "video", ratio: 408 / 214 } },
+        { type: "artifact", name: "synthesis" },
       ],
     },
     {
@@ -153,7 +148,7 @@ const lsneo: CaseStudy = {
           type: "p",
           text: "**One entry point **: Whether a book arrived as a purchase, a gift, a complimentary copy, a duplicate, or was still pending approval, it deserved one entry point, not five. Every version kept the UI as fixed as possible across sources, branching only where the source genuinely required it.",
         },
-        { type: "media", media: { label: "Existing and new information architecture", kind: "image", ratio: 408 / 183 } },
+        { type: "artifact", name: "flow" },
       ],
     },
     {
@@ -163,7 +158,7 @@ const lsneo: CaseStudy = {
       title: "Versions which didn’t survive",
       blocks: [
         { type: "h3", text: "V1: Landing first to orient users; V2: New title first to make frequent task as default" },
-        { type: "media", media: { label: "Design explorations: V1 and V2", kind: "image", ratio: 408 / 150 } },
+        { type: "artifact", name: "versions" },
       ],
     },
     {
@@ -190,17 +185,17 @@ const lsneo: CaseStudy = {
       title: "When a book doesn't cooperate",
       blocks: [
         { type: "label", text: "Onboarding for new users" },
-        { type: "media", media: { label: "Onboarding for new users", kind: "image", ratio: 16 / 9 } },
+        { type: "media", media: { label: "Onboarding for new users: set up the catalogue first, then add titles", kind: "image", ratio: 4120 / 2648, src: "/case-studies/lsneo-lite/onboarding-v1.webp" } }, // 1onboarding.png, 4120 x 2648, lossless
         {
           type: "p",
           text: "A librarian is never stuck, they search by what they can see on the book instead of what they can scan; **useful for local books with no ISBN**",
         },
-        { type: "media", media: { label: "Search by title when there is no ISBN", kind: "image", ratio: 408 / 265 } },
+        { type: "artifact", name: "search-by-title" },
         {
           type: "p",
           text: "**Duplicate ISBN :** the system asks whether to add it as a copy of the existing title, update the existing record, or add it as another edition, rather than silently creating a duplicate entry.",
         },
-        { type: "media", media: { label: "Duplicate ISBN: the guided choice", kind: "image", ratio: 408 / 197 } },
+        { type: "artifact", name: "duplicate" },
         { type: "h3", text: "Duplicate flow" },
         { type: "label", text: "Prototype" },
         { type: "media", media: { label: "Prototype: the duplicate flow", kind: "video", ratio: 408 / 249 } },
@@ -208,6 +203,7 @@ const lsneo: CaseStudy = {
     },
     {
       id: "handoff",
+      tab: "Handoff",
       eyebrow: "PM & Engg Collaboration",
       title: "Handoff",
       blocks: [
