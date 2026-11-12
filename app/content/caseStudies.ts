@@ -1,4 +1,6 @@
 // Case study pages (app/case-studies/[slug]). Copy is exactly as on Bhasha's Framer case studies.
+// Artifact files: the picture exactly as exported (pulled out of the SVG unchanged, saved as lossless
+// WebP), never resized or re-encoded; they are served as-is.
 // Inline marks in text: **bold**, __italic__ (rich.tsx). Artifacts are placeholders until the files
 // are supplied: each keeps the shape it has on Framer (`ratio`, width / height), so swapping in the
 // real file later does not move the page.

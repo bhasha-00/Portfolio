@@ -18,7 +18,9 @@ function Artifact({ media, priority = false }: { media: Media; priority?: boolea
   if (media.src && media.kind === "image") {
     return (
       <figure className={styles.media} style={shape}>
-        <Image src={media.src} alt={media.label} fill sizes="(max-width: 767px) 100vw, 840px" quality={90} priority={priority} className={styles.mediaFill} />
+        {/* Served exactly as exported (stored lossless, no resize or re-encode by Next), so what Bhasha
+            exports is what visitors see. */}
+        <Image src={media.src} alt={media.label} fill unoptimized priority={priority} className={styles.mediaFill} />
       </figure>
     );
   }
