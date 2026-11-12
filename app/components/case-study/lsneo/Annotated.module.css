@@ -82,3 +82,9 @@
 .twin {
   clip-path: url(#lsneo-twin);
 }
+
+.ring {
+  fill: none;
+  stroke: var(--art-ring);
+  stroke-width: 24;
+}

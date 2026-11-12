@@ -15,17 +15,17 @@
 .pin {
   position: sticky;
   z-index: 1;
+  perspective: 2400px;
   top: calc(var(--nav-offset) + var(--space-2));
   height: calc(100svh - var(--nav-offset) - var(--space-6));
 }
 
+/* The card that flips: the table (.a) on its front, the findings (.b) on its back. */
 .frame {
   position: relative;
   height: 100%;
-  border: 1px solid var(--art-frame-line);
-  border-radius: var(--r-md);
-  background: var(--art-frame);
-  overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .a,
@@ -35,12 +35,15 @@
   display: flex;
   flex-direction: column;
   padding: var(--space-5) var(--space-4);
-  will-change: transform, opacity;
+  border: 1px solid var(--art-frame-line);
+  border-radius: var(--r-md);
+  background: var(--art-frame);
+  overflow: hidden;
+  backface-visibility: hidden;
 }
 
 .b {
-  opacity: 0;
-  visibility: hidden;
+  transform: rotateY(180deg);
 }
 
 /* As in her frame, the table panel runs off the frame's foot. */
@@ -261,14 +264,15 @@
   }
 
   .frame {
+    display: grid;
+    gap: var(--space-5);
     height: auto;
   }
 
   .a,
   .b {
     position: static;
-    opacity: 1;
-    visibility: visible;
+    transform: none;
   }
 
   .view {

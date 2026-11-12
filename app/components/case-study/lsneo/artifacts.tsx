@@ -1,3 +1,4 @@
+import type React from "react";
 import { Annotated, Lines, Note, annotated as s } from "./Annotated";
 
 // LSNeo Lite's annotated artifacts. Positions are Bhasha's (her Figma frames, px); the text is hers,
@@ -6,11 +7,11 @@ import { Annotated, Lines, Note, annotated as s } from "./Annotated";
 
 const DIR = "/case-studies/lsneo-lite";
 
-type AnimProps = { name: string; w: number; h: number; alt: string; frame?: boolean; className?: string };
+type AnimProps = { name: string; w: number; h: number; alt: string; frame?: boolean; className?: string; over?: React.ReactNode };
 
 /** One of her GIFs, stored as lossless animated WebP (every frame kept, see the build script). Reduced
  *  motion gets the first frame, still. */
-function Anim({ name, w, h, alt, frame = true, className }: AnimProps) {
+function Anim({ name, w, h, alt, frame = true, className, over }: AnimProps) {
   return (
     <figure className={frame ? `${s.fig} ${s.frame}` : s.fig} style={{ aspectRatio: `${w} / ${h}` }}>
       <picture>
@@ -18,6 +19,7 @@ function Anim({ name, w, h, alt, frame = true, className }: AnimProps) {
         {/* eslint-disable-next-line @next/next/no-img-element -- an animation, served exactly as stored */}
         <img className={`${s.layer} ${className ?? ""}`} src={`${DIR}/${name}.webp`} width={w} height={h} loading="lazy" decoding="async" alt={alt} />
       </picture>
+      {over}
     </figure>
   );
 }
@@ -38,6 +40,13 @@ export const SixChanges = () => (
       frame={false}
       className={s.twin}
       alt="The existing New Title screen beside the redesigned one, with the six changes that answer each friction point."
+      over={
+        // Her panels' ring, in #EFE9DC (as on Versions), painted over the GIF's own lighter ring.
+        <svg className={`${s.layer} ${s.twin}`} viewBox="0 0 1800 662" aria-hidden="true">
+          <rect className={s.ring} x={12} y={12} width={860} height={638} rx={60} />
+          <rect className={s.ring} x={928} y={12} width={860} height={638} rx={60} />
+        </svg>
+      }
     />
     <svg width="0" height="0" aria-hidden="true" style={{ position: "absolute" }}>
       <clipPath id="lsneo-twin" clipPathUnits="objectBoundingBox">
@@ -50,7 +59,7 @@ export const SixChanges = () => (
 
 /** Handoff: the ISBN field with its server choice, state by state (isbn_states.gif). */
 export const HandoffIsbn = () => (
-  <Anim name="handoff-isbn-v1" w={1128} h={251} alt="The ISBN field with a server choice, shown in each of its states." />
+  <Anim name="handoff-isbn-v2" w={1128} h={251} alt="The ISBN field with a server choice, shown in each of its states." />
 );
 
 /** Edge cases › Onboarding for new users (1onboarding.png, 4068 x 2596 inside her frame). */

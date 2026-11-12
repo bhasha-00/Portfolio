@@ -4,10 +4,10 @@ import { useEffect, useRef } from "react";
 import { rich } from "../../rich";
 import styles from "./Synthesis.module.css";
 
-// Research › What I understood: one frame, two artifacts, in her colours. It pins in the screen; first
-// her synthesis table as her frame shows it (1synthesis a.svg: the first rows, cut by the frame), then
-// as you scroll the table lifts away and the two findings (1synthesis b.svg) settle into the same
-// frame. Scrubbed by scroll, transform and opacity only. Reduced motion: no pin; one after the other.
+// Research › What I understood: one frame, two artifacts, in her colours. It pins in the screen with her
+// synthesis table on its face (1synthesis a.svg: the first rows, cut by the frame); as you scroll it
+// flips over like a card to the two findings on its back (1synthesis b.svg). Scrubbed by scroll,
+// transform only. Reduced motion: no pin, no flip; one after the other.
 
 // The rows her frame shows at first glance (the frame cuts the table there).
 const rows: [string, string, string, string, string][] = [
@@ -56,7 +56,7 @@ const ease = (t: number) => t * t * (3 - 2 * t); // smooth both ends, for a hand
 export default function Synthesis() {
   const track = useRef<HTMLDivElement>(null);
   const pin = useRef<HTMLDivElement>(null);
-  const a = useRef<HTMLDivElement>(null);
+  const frame = useRef<HTMLDivElement>(null);
   const b = useRef<HTMLDivElement>(null);
   const bBody = useRef<HTMLDivElement>(null);
   const spacer = useRef<HTMLDivElement>(null);
@@ -64,8 +64,8 @@ export default function Synthesis() {
   useEffect(() => {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)");
     const t = track.current, p0 = pin.current, sp = spacer.current;
-    if (!t || !p0 || !sp || !a.current || !b.current || !bBody.current) return;
-    const A = a.current, B = b.current, BB = bBody.current;
+    if (!t || !p0 || !sp || !frame.current || !b.current || !bBody.current) return;
+    const F = frame.current, B = b.current, BB = bBody.current;
     let raf = 0, travelB = 0;
 
     // Layout, only when sizes change (never on scroll): where the frame pins (centred below the bar)
@@ -87,21 +87,15 @@ export default function Synthesis() {
       const run = sp.offsetHeight;
       const d = Math.min(run, Math.max(0, p0.getBoundingClientRect().top - t.getBoundingClientRect().top));
       const base = run - travelB;
-      const lead = base * 0.2, swap = base * 0.45; // the table as framed, then the hand-over
-      const q = clamp((d - lead) / swap);
-      const out = ease(clamp(q / 0.6));
-      const inn = ease(clamp((q - 0.45) / 0.55));
-      A.style.opacity = String(1 - out);
-      A.style.transform = `translate3d(0, ${-24 * out}px, 0)`;
-      A.style.visibility = out < 1 ? "visible" : "hidden";
-      B.style.opacity = String(inn);
-      B.style.transform = `translate3d(0, ${24 * (1 - inn)}px, 0)`;
-      B.style.visibility = inn > 0 ? "visible" : "hidden";
+      const lead = base * 0.2, swap = base * 0.5; // the table as framed, then the flip
+      // The frame turns over like a card: the table on its front, the findings on its back.
+      const q = ease(clamp((d - lead) / swap));
+      F.style.transform = `rotateY(${180 * q}deg)`;
       BB.style.transform = `translate3d(0, ${-Math.min(travelB, Math.max(0, d - lead - swap))}px, 0)`;
     };
 
     const clear = () => {
-      for (const el of [t, p0, A, B, BB]) el.removeAttribute("style");
+      for (const el of [t, p0, F, BB]) el.removeAttribute("style");
     };
     const on = () => {
       if (!raf) raf = requestAnimationFrame(update);
@@ -125,8 +119,8 @@ export default function Synthesis() {
   return (
     <div ref={track} className={styles.track}>
       <div ref={pin} className={styles.pin}>
-        <div className={styles.frame}>
-          <div ref={a} className={styles.a}>
+        <div ref={frame} className={styles.frame}>
+          <div className={styles.a}>
             <p className={styles.caption}>Identified problem → Synthesize gap → HMW solve it and why → Revised design direction</p>
             <svg className={styles.arrow} viewBox="0 0 900 90" preserveAspectRatio="none" aria-hidden="true">
               <path d="M30 10 C 0 40, 20 70, 220 72 C 420 74, 640 40, 790 60 C 830 66, 850 76, 860 88" />
