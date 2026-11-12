@@ -177,11 +177,19 @@ export default function CaseStudy({ cs }: { cs: CS }) {
           </header>
 
           {cs.sections.map((s) => (
-            <section key={s.id} id={s.id} className={styles.section} aria-labelledby={`${s.id}-title`}>
-              <p className={styles.eyebrow}>{s.eyebrow}</p>
-              <h2 id={`${s.id}-title`} className={styles.h2}>
-                {s.title}
-              </h2>
+            <section
+              key={s.id}
+              id={s.id}
+              className={styles.section}
+              aria-labelledby={s.title ? `${s.id}-title` : undefined}
+              aria-label={s.title ? undefined : s.eyebrow}
+            >
+              {s.eyebrow && <p className={styles.eyebrow}>{s.eyebrow}</p>}
+              {s.title && (
+                <h2 id={`${s.id}-title`} className={styles.h2}>
+                  {s.title}
+                </h2>
+              )}
               {s.blocks.map((b, i) => (
                 <BlockView key={i} block={b} />
               ))}
