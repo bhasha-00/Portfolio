@@ -101,7 +101,7 @@ export const DsDiffHands = () => (
 // Her blues, as named in her cards (hex values are the copy itself).
 const BLUES = [
   { y: 0, head: "Existing header gradient", tone: t.red, rows: [["Start", "#1F3BB4", "8 . 96 : 1"], ["End (Indigo)", "#3A19A1", "11 . 45 : 1"]] }, // tokens-allow: copy naming her colours
-  { y: 417, head: "Suggested header gradient", tone: t.green, rows: [["Start", "#1E4DFE", "5 . 92 : 1"], ["End", "#132053", "15 . 45 : 1"]] }, // tokens-allow: copy naming her colours
+  { y: 417, head: "Suggested header gradient", tone: t.green, rows: [["Start", "#1E4DFE", "5 . 92 : 1"], ["End (Part of color family)", "#132053", "15 . 45 : 1"]] }, // tokens-allow: copy naming her colours
 ];
 
 /** Three blues, no owner (2blues.svg): the existing header gradient and the suggested one. Her two
