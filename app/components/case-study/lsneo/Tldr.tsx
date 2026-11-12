@@ -2,13 +2,18 @@
 
 import { ROLE, roleOf, useSpread } from "../../useSpread";
 import spread from "../../Spread.module.css";
+import type React from "react";
 import styles from "./Tldr.module.css";
 
-// TL;DR: Problem, What I did, Impact (1tldr.svg, updated 2026-11-12), set in Geist in her colours. On phones the three cards are the AI
+// TL;DR: Problem, What I did, Impact (each case study passes its own; LSNeo's by default), set in
+// Geist in her colours. On phones the three cards are the AI
 // Tinkering spread (useSpread): one in front, the other two tucked behind on either side; a tap or a
 // swipe brings one forward. From 768 they sit in a row, as in her frame.
 
-const cards = [
+export type TldrCard = { tone: "problem" | "did" | "impact"; label: string; body: React.ReactNode };
+
+/** LSNeo Lite's three (the default). */
+const lsneoCards: readonly TldrCard[] = [
   {
     tone: "problem",
     label: "Problem",
@@ -40,7 +45,7 @@ const cards = [
       </>
     ),
   },
-] as const;
+];
 
 const fan = [
   { swing: 0, tilt: -4 },
@@ -48,7 +53,7 @@ const fan = [
   { swing: 0, tilt: 5 },
 ];
 
-export default function Tldr() {
+export default function Tldr({ cards = lsneoCards }: { cards?: readonly TldrCard[] }) {
   const { section, stage, slots, front, bring, stageProps, swiped, zOf } = useSpread(fan);
   return (
     <section ref={section} className={`${spread.clip} ${styles.wrap}`} aria-label="TL;DR">

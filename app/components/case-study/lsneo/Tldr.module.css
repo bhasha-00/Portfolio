@@ -113,3 +113,10 @@
     line-height: var(--lh-lead);
   }
 }
+
+/* A figure inside a line ("26+ components…"), as in the design system's Impact card. */
+.stat {
+  color: var(--art-green);
+  font-size: var(--fs-lead);
+  font-weight: var(--fw-h2);
+}

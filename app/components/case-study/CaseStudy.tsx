@@ -7,6 +7,7 @@ import CaseBar from "./CaseBar";
 import Context from "./lsneo/Context";
 import Synthesis from "./lsneo/Synthesis";
 import Tldr from "./lsneo/Tldr";
+import * as ds from "./ds/artifacts";
 import { Duplicate, Flow, HandoffIsbn, Onboarding, PrototypeFinal, SearchByTitle, SixChanges, Versions, Walkthrough } from "./lsneo/artifacts";
 import styles from "./CaseStudy.module.css";
 
@@ -65,7 +66,7 @@ function Cover({ image }: { image: NonNullable<Project["image"]> }) {
 }
 
 // Artifacts rebuilt on the page, so their type is the site's (Geist / Caveat).
-const artifacts: Record<ArtifactName, () => React.ReactNode> = {
+const artifacts: Record<ArtifactName, React.ComponentType> = {
   tldr: Tldr,
   context: Context,
   walkthrough: Walkthrough,
@@ -78,6 +79,22 @@ const artifacts: Record<ArtifactName, () => React.ReactNode> = {
   duplicate: Duplicate,
   "handoff-isbn": HandoffIsbn,
   "prototype-final": PrototypeFinal,
+  "ds-tldr": ds.DsTldr,
+  "ds-challenge": ds.DsChallenge,
+  "ds-diff-hands": ds.DsDiffHands,
+  "ds-blues": ds.DsBlues,
+  "ds-do-dont": ds.DsDoDont,
+  "ds-study": ds.DsStudy,
+  "ds-audit": ds.DsAudit,
+  "ds-documentation": ds.DsDocumentation,
+  "ds-tokens": ds.DsTokens,
+  "ds-mapping": ds.DsMapping,
+  "ds-foundation": ds.DsFoundation,
+  "ds-foundation-b": ds.DsFoundationB,
+  "ds-references": ds.DsReferences,
+  "ds-components": ds.DsComponents,
+  "ds-nav": ds.DsNav,
+  "ds-before-after": ds.DsBeforeAfter,
 };
 
 function BlockView({ block }: { block: Block }) {

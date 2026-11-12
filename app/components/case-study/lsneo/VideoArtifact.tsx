@@ -8,9 +8,10 @@ import styles from "./VideoArtifact.module.css";
 // readies, then it plays from the start, muted and looping. Off screen it pauses. Reduced motion: no
 // autoplay, her first frame with the player's controls.
 
-type Props = { src: string; poster: string; w: number; h: number; label: string };
+/** `gif`: shown like her GIFs: its first frame at once, no loader, playing from the start on arrival. */
+type Props = { src: string; poster: string; w: number; h: number; label: string; gif?: boolean };
 
-export default function VideoArtifact({ src, poster, w, h, label }: Props) {
+export default function VideoArtifact({ src, poster, w, h, label, gif = false }: Props) {
   const video = useRef<HTMLVideoElement>(null);
   const [state, setState] = useState<"idle" | "loading" | "playing" | "still">("idle");
 
@@ -22,7 +23,7 @@ export default function VideoArtifact({ src, poster, w, h, label }: Props) {
       return;
     }
     const onPlaying = () => setState("playing");
-    const onWaiting = () => setState("loading");
+    const onWaiting = () => !gif && setState("loading");
     v.addEventListener("playing", onPlaying);
     v.addEventListener("waiting", onWaiting);
     // Each arrival: the loader shows while the recording is fetched and readied (at least a moment,
@@ -41,7 +42,7 @@ export default function VideoArtifact({ src, poster, w, h, label }: Props) {
           return;
         }
         const turn = ++shown;
-        setState("loading");
+        if (!gif) setState("loading");
         if (!v.getAttribute("src")) {
           v.preload = "auto";
           v.src = src;
@@ -49,7 +50,7 @@ export default function VideoArtifact({ src, poster, w, h, label }: Props) {
         }
         v.pause();
         v.currentTime = 0;
-        await Promise.all([ready(), new Promise((r) => setTimeout(r, 900))]);
+        await Promise.all([ready(), new Promise((r) => setTimeout(r, gif ? 0 : 900))]);
         if (turn !== shown) return;
         v.play().catch(() => {});
       },
@@ -61,7 +62,7 @@ export default function VideoArtifact({ src, poster, w, h, label }: Props) {
       v.removeEventListener("playing", onPlaying);
       v.removeEventListener("waiting", onWaiting);
     };
-  }, [src]);
+  }, [src, gif]);
 
   return (
     <figure className={styles.frame}>
@@ -75,13 +76,13 @@ export default function VideoArtifact({ src, poster, w, h, label }: Props) {
           loop
           playsInline
           preload="none"
-          poster={state === "still" ? poster : undefined}
-          data-hidden={state === "loading" || state === "idle" || undefined}
+          poster={gif || state === "still" ? poster : undefined}
+          data-hidden={(!gif && (state === "loading" || state === "idle")) || undefined}
           controls={state === "still"}
           src={state === "still" ? src : undefined}
           aria-label={label}
         />
-        {state === "loading" && (
+        {state === "loading" && !gif && (
           // Four dots in a square that turn and breathe, as in Figma's prototype loader, with "loading..."
           <span className={styles.loader} role="status">
             <span className={styles.dots} aria-hidden="true">

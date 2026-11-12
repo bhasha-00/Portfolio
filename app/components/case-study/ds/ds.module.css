@@ -1,0 +1,71 @@
+/* Her text set again over the Design system artifacts (artifacts.tsx), in her colours (--art-*). Sizes
+   are a base token scaled to her px by the SVG transform. Doubled classes outrank the shared
+   `.layer text` colour. */
+
+.t {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+}
+
+.t.body {
+  font-size: var(--fs-body);
+}
+
+.t.hand {
+  font-family: var(--font-hand);
+  font-size: var(--fs-hand-md);
+}
+
+.t.medium {
+  font-weight: 500;
+}
+
+.t.semi {
+  font-weight: var(--fw-label);
+}
+
+.t.bold {
+  font-weight: var(--fw-h2);
+}
+
+.t.ink {
+  fill: var(--art-ink);
+}
+
+.t.muted {
+  fill: var(--art-muted);
+}
+
+.t.quiet {
+  fill: var(--art-quiet);
+}
+
+.t.red {
+  fill: var(--art-red);
+}
+
+.t.green {
+  fill: var(--art-green);
+}
+
+.t.paper {
+  fill: var(--art-paper);
+}
+
+.t.black {
+  fill: var(--art-black);
+}
+
+.t.amber {
+  fill: var(--art-amber);
+}
+
+.t.indigo {
+  fill: var(--art-indigo);
+}
+
+/* Caveat runs small: her hand-lettered notes at the larger hand step. */
+.t.handLg {
+  font-family: var(--font-hand);
+  font-size: var(--fs-hand-lg);
+}

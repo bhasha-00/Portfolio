@@ -41,7 +41,23 @@ export type ArtifactName =
   | "search-by-title"
   | "duplicate"
   | "handoff-isbn"
-  | "prototype-final";
+  | "prototype-final"
+  | "ds-tldr"
+  | "ds-challenge"
+  | "ds-diff-hands"
+  | "ds-blues"
+  | "ds-do-dont"
+  | "ds-study"
+  | "ds-audit"
+  | "ds-documentation"
+  | "ds-tokens"
+  | "ds-mapping"
+  | "ds-foundation"
+  | "ds-foundation-b"
+  | "ds-references"
+  | "ds-components"
+  | "ds-nav"
+  | "ds-before-after";
 
 export type Section = {
   /** Anchor id. */
@@ -323,8 +339,6 @@ const nova: CaseStudy = {
 };
 
 
-// Placeholders keep each artifact's exact Framer proportions until the file is supplied.
-const img = (label: string, w: number, h: number): Block => ({ type: "media", media: { label, kind: "image", ratio: w / h } });
 
 const designSystem: CaseStudy = {
   slug: "turning-static-frames-into-a-tokenized-design-system",
@@ -344,7 +358,7 @@ const designSystem: CaseStudy = {
       id: "tldr",
       eyebrow: "TL;DR",
       title: "One dedicated system, so new designers can build on-brand screens from day one.",
-      blocks: [img("TL;DR: the design system at a glance", 856, 230)],
+      blocks: [{ type: "artifact", name: "ds-tldr" }],
     },
     {
       id: "challenge",
@@ -352,20 +366,20 @@ const designSystem: CaseStudy = {
       eyebrow: "Challenge",
       title: "A system we could look at, but not build with",
       blocks: [
-        { type: "media", media: { label: "The repository tabs and their layers panel: each nav item a hand-built group", kind: "video", ratio: 801 / 502 } },
+        { type: "artifact", name: "ds-challenge" },
         {
           type: "p",
           text: "__The repository tabs look like one system. But in the layers panel, each nav item is its own hand-built group, no component, no shared structure, one repeated by hand for every tab.__",
         },
         { type: "h3", text: "Same product, different hands" },
-        img("Same product, different hands: two screens side by side", 856, 312),
+        { type: "artifact", name: "ds-diff-hands" },
         { type: "p", text: "Left: Dense, compact and functional. Right: Roomier and structurally different. Same product, no shared system to hold them together." },
         { type: "h3", text: "Three blues, no owner" },
         {
           type: "p",
           text: "The product used the header gradient (#1F3BB4→ #3A19A1), module accents like #6678E8, and the brand blue #1E4DFE, with no rule for which was the brand. We chose **#1E4DFE**, and white text on it passes AA contrast at 5.9:1.", // tokens-allow: case study copy quoting Libsys colours
         },
-        img("Three blues, no owner: the header gradient, module accents and the brand blue", 856, 448),
+        { type: "artifact", name: "ds-blues" },
         {
           type: "p",
           text: "I kept the header gradient, since it's part of the platform's look, but removed the Indigo end because it wasn't a part of brand colour scale. It now runs #1E4DFE → #132053.", // tokens-allow: case study copy quoting Libsys colours
@@ -379,7 +393,7 @@ const designSystem: CaseStudy = {
       tab: "Scope",
       eyebrow: "Scope",
       title: "Keeping the surface, fixing the structure",
-      blocks: [img("Scope: what stayed on the surface and what changed underneath", 856, 447)],
+      blocks: [{ type: "artifact", name: "ds-do-dont" }],
     },
     {
       id: "approach",
@@ -387,11 +401,11 @@ const designSystem: CaseStudy = {
       eyebrow: "Approach",
       blocks: [
         { type: "p", text: "**Studied the current file** — every existing element to identify what to create" },
-        img("Studying the current file", 856, 497),
+        { type: "artifact", name: "ds-study" },
         { type: "p", text: "**Mapped when to use what** — which patterns were real, which were on-off exceptions" },
-        img("Mapping when to use what", 856, 497),
+        { type: "artifact", name: "ds-audit" },
         { type: "p", text: "**Converted that into structure** — atoms, molecules, organisms __& some ready to use templates__." },
-        img("Atoms, molecules, organisms and templates", 856, 422),
+        { type: "artifact", name: "ds-documentation" },
       ],
     },
     {
@@ -403,8 +417,8 @@ const designSystem: CaseStudy = {
         { type: "p", text: "**Brand tokens:** the raw palette (Blue, Green, Red, Yellow, Grey, 50-950)" },
         { type: "p", text: "**Alias tokens:** the palette given meaning (Primary, Success, Error, Warning, Neutral)" },
         { type: "p", text: "**Mapped tokens:** meaning assigned to jobs (Surface, Text, Icon, Border), light and dark" },
-        img("Three token layers: Brand, Alias, Mapped", 856, 192),
-        img("Tokens mapped to surface, text, icon and border, light and dark", 856, 517),
+        { type: "artifact", name: "ds-tokens" },
+        { type: "artifact", name: "ds-mapping" },
       ],
     },
     {
@@ -412,17 +426,17 @@ const designSystem: CaseStudy = {
       title: "Documentation",
       blocks: [
         { type: "h3", text: "Foundation" },
-        img("Foundation documentation: colour", 856, 347),
-        img("Foundation documentation: type", 856, 347),
+        { type: "artifact", name: "ds-foundation" },
+        { type: "artifact", name: "ds-foundation-b" },
         {
           type: "p",
           text: "Documentation covers colour, type and component usage, built for designers who need to find the right piece quickly, not browse a style guide.",
         },
         { type: "h3", text: "Components / The input field chapter" },
-        img("The input field chapter", 856, 381),
-        img("The input field: its 48 variants", 856, 668),
+        { type: "artifact", name: "ds-references" },
+        { type: "artifact", name: "ds-components" },
         { type: "p", text: "48 variants, one component. Width, state, icon and helper text as properties" },
-        img("26 components across their categories", 856, 526),
+        { type: "artifact", name: "ds-nav" },
         {
           type: "p",
           text: "26 Components with 150+ variants in total spread across categories such as Navigation, Action, Forms, Content, Feedback, Data Display ",
@@ -433,10 +447,9 @@ const designSystem: CaseStudy = {
       id: "in-use",
       tab: "In Use",
       eyebrow: "In Use",
-      title: "Same fields, same data, a system underneath this time",
+      // the title pins with the before/after flip (it is set there)
       blocks: [
-        img("A screen rebuilt with the system", 856, 526),
-        img("The same fields and data, before and after", 856, 681),
+        { type: "artifact", name: "ds-before-after" },
         { type: "p", text: "Consistency coming from tokens, not eyeballing while keeping the visual intensity similar." },
       ],
     },

@@ -1,0 +1,61 @@
+/* A card that turns over on scroll (Flip.tsx). */
+
+.track {
+  position: relative;
+}
+
+.pin {
+  position: sticky;
+  z-index: 1;
+  top: calc(var(--nav-offset) + var(--space-2));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  perspective: 2400px;
+}
+
+.heading {
+  flex: none;
+}
+
+.card {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.face {
+  position: absolute;
+  inset: 0 0 auto;
+  backface-visibility: hidden;
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+/* The turn's length of scroll; svh, so a phone's toolbar never changes it mid-scroll. */
+.spacer {
+  height: 110svh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pin {
+    position: static;
+  }
+
+  .card {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .face,
+  .back {
+    position: static;
+    transform: none;
+  }
+
+  .spacer {
+    display: none;
+  }
+}
