@@ -47,7 +47,7 @@ const jobs = {
   "search-by-title": { src: "1searchbytitle.svg", strip: [] },
 };
 
-(async () => {
+if (process.argv[2] !== "gif") (async () => {
   for (const [name, j] of Object.entries(jobs)) {
     console.log(name);
     const svg = await reencode(drop(fs.readFileSync(j.src, "utf8"), j.strip));
@@ -59,3 +59,26 @@ const jobs = {
   fs.writeFileSync(path.join(OUT, `onboarding-${V}.webp`), webp);
   console.log(`onboarding ${w}x${h} lossless ${(webp.length / 1024).toFixed(0)} KB`);
 })();
+
+// The walkthrough is her GIF (1errorwalkthrough.gif, 1600x900, every frame kept): lossless animated
+// WebP, checked frame for frame, plus its first frame as a still for reduced motion.
+// Run: node scripts/build-lsneo-artifacts.cjs gif
+if (process.argv[2] === "gif") {
+  (async () => {
+    const o = { animated: true, limitInputPixels: false };
+    const webp = await sharp("1errorwalkthrough.gif", o).webp({ lossless: true, exact: true, effort: 4, loop: 0 }).toBuffer();
+    // WebP merges back-to-back identical frames, so compare what shows at each GIF frame's moment.
+    const [ma, mb] = await Promise.all(["1errorwalkthrough.gif", webp].map((x) => sharp(x, o).metadata()));
+    const [a, b] = await Promise.all(["1errorwalkthrough.gif", webp].map((x) => sharp(x, o).ensureAlpha().raw().toBuffer()));
+    const F = ma.width * ma.pageHeight * 4;
+    const at = (t) => { let s = 0; for (let j = 0; j < mb.pages; j++) { s += mb.delay[j]; if (t < s) return j; } return mb.pages - 1; };
+    for (let i = 0, t = 0; i < ma.pages; t += ma.delay[i++]) {
+      const j = at(t + 1);
+      if (!a.subarray(i * F, (i + 1) * F).equals(b.subarray(j * F, (j + 1) * F))) throw new Error(`frame ${i} differs`);
+    }
+    fs.writeFileSync(path.join(OUT, `walkthrough-${V}.webp`), webp);
+    const still = await sharp("1errorwalkthrough.gif", { limitInputPixels: false }).webp({ lossless: true, exact: true }).toBuffer();
+    fs.writeFileSync(path.join(OUT, `walkthrough-still-${V}.webp`), still);
+    console.log(`walkthrough ${ma.width}x${ma.pageHeight}, ${ma.pages} frames identical, ${(webp.length / 1048576).toFixed(1)} MB`);
+  })();
+}

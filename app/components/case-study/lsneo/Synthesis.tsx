@@ -4,24 +4,17 @@ import { useEffect, useRef } from "react";
 import { rich } from "../../rich";
 import styles from "./Synthesis.module.css";
 
-// Research › What I understood: one frame, two artifacts. It pins below the bar; scrolling first
-// glides through her synthesis table (1synthesis a.svg), then the table lifts away as the two findings
-// (1synthesis b.svg) settle into the same frame. Scrubbed by scroll, transform and opacity only.
-// Reduced motion: no pin; the table scrolls on its own and the findings follow below it.
+// Research › What I understood: one frame, two artifacts, in her colours. It pins in the screen; first
+// her synthesis table as her frame shows it (1synthesis a.svg: the first rows, cut by the frame), then
+// as you scroll the table lifts away and the two findings (1synthesis b.svg) settle into the same
+// frame. Scrubbed by scroll, transform and opacity only. Reduced motion: no pin; one after the other.
 
+// The rows her frame shows at first glance (the frame cuts the table there).
 const rows: [string, string, string, string, string][] = [
   ["Entering Title Management", "Catalogue opens directly into New Title. Users must already know their intended route.", "Adds onboarding, an overview, and visible New Title, Update Title, Generate Label, Add Copy and Bulk Import actions.", "The populated overview emphasises counts and a chart. Their usefulness for starting everyday work is not established.", "Explore a task-focused landing state with recent records and clear entry actions. Retain metrics where they support a specific decision."],
   ["Bibliographic entry", "Long scrolling form; cover/media is a separate stage. Interviews report substantial manual effort.", "Combines cover and bibliographic details; introduces a compact Linear view alongside MARC.", "Required markers appear inconsistent across shown states. “Linear” may not explain the mode to users.", "Clarify required fields and group related information. Test a clearer mode label, such as “Standard form,” while retaining MARC access. Confirm field requirements first."],
   ["ISBN retrieval", "Interviews report incomplete records and missing covers. The recording does not demonstrate retrieval end to end.", "Shows a no-data message and suggests manual entry or another server.", "No-result, invalid ISBN, unavailable source, and partial metadata need distinct handling. Partial-result review is not clearly shown.", "Show what was retrieved, what remains incomplete, and a clear next action. Preserve entered information when trying another source."],
   ["Duplicate checking", "Team notes confirm it exists; its complete behaviour is not demonstrated in the recording.", "Shows duplicate candidates with Update Title, Add Copy and Add as New Edition options.", "“Duplicate Titles found” may sound conclusive when records could represent different editions. Selection and choice consequences need clarity.", "Present “Possible matching titles,” with edition, publisher, year and ISBN for comparison. Explain when to add a copy, edit a record, or create another edition."],
-  ["Saving a new title", "Continue and Submit coexist; Holdings also has a separate save icon.", "Includes a title-specific success message and recently added record.", "Continue and Submit still coexist. The difference between saving a title and proceeding to copies is not sufficiently explicit.", "Explore **Save title** and **Save and add copies**, subject to confirmed saving rules. Labels should explain the outcome before the click."],
-  ["Adding copies", "Accession, category and location entry use lookups; saving has multiple controls.", "Uses a Copies stage, quantity control and copy-detail rows.", "The screen asks users to select a title from the right panel, including after new-title creation. The selected book is not prominently identified in the main form.", "Carry the newly created title into the Copies stage and show its identity above the form. For standalone Add Copy, search and select first. Reduce ambiguity about which title receives the copies."],
-  ["Accession numbers", "An error indicator appears near Start Accession No. Team notes identify missing guidance about numbers already taken.", "Required fields are more visibly marked; generated copy rows are shown.", "Existing-number conflicts, manual/system-generated rules, and recovery are not demonstrated.", "Explain the numbering rule and validate conflicts before final submission. Show the affected copy and a valid next step. Do not invent an automatic-numbering feature without confirming support."],
-  ["Finding a title to update", "Search fields sit far above the Search button.", "Separates basic and advanced search visually.", "The Search button remains distant. Multiple search routes are still shown simultaneously; how they combine is unclear.", "Place the primary Search action with its inputs. Make common criteria easy to use and advanced combinations available on demand. Confirm whether criteria combine or act as alternatives."],
-  ["After updating", "Recording shows “Updated Successfully,” then clears search/results and returns to the blank search screen.", "Edit form and results remain side by side before saving.", "The revised post-save state is not shown.", "Preserve query, results and selection after saving; identify the updated title and offer a clear route to the next record. This supports repeated editing and verification."],
-  ["Enrichment", "Prominent percentage without a clear explanation in the observed flow.", "Remains visible and changes to 65% in populated examples.", "Calculation, importance and the action needed to improve it remain unclear.", "Retain provisionally, with an explanation and actionable missing-information details. Separate optional completeness from required validity; do not imply a record is unusable because optional fields are empty."],
-  ["Barcode and label generation", "Nested inside Bulk Processing; multiple icon controls and limited empty-state guidance.", "Promotes Generate Label to main navigation; adds selection, preview and progress states.", "One mockup shows **65% done / 1 min left** alongside a success message and **Printed Successfully** action.", "Separate generating, ready to print, print requested and user-confirmed printing states. The interface should not communicate completion while progress is still incomplete."],
-  ["Bulk import", "Excel/MARC routes are available; the recording does not cover the complete import.", "Adds upload, field mapping, preview and saved mapping actions.", "Mapping and record-editing steps contain several competing actions: Submit, Upload, and Save Mapping and Upload. Partial failures are not shown.", "Define a clear sequence: upload → map → review → import → outcome. Distinguish saving one record from importing the selected batch. Show imported, skipped and failed counts with recovery."],
 ];
 
 // Her icons, redrawn from her export (colours hers).
@@ -65,7 +58,6 @@ export default function Synthesis() {
   const pin = useRef<HTMLDivElement>(null);
   const a = useRef<HTMLDivElement>(null);
   const aView = useRef<HTMLDivElement>(null);
-  const aBody = useRef<HTMLDivElement>(null);
   const b = useRef<HTMLDivElement>(null);
   const bBody = useRef<HTMLDivElement>(null);
 
@@ -73,32 +65,31 @@ export default function Synthesis() {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)");
     let raf = 0;
     const clear = () => {
-      for (const el of [track.current, pin.current, a.current, aBody.current, b.current, bBody.current]) el?.removeAttribute("style");
+      for (const el of [track.current, pin.current, a.current, b.current, bBody.current]) el?.removeAttribute("style");
     };
     const update = () => {
       raf = 0;
       const t = track.current, p0 = pin.current;
-      if (!t || !p0 || !a.current || !aView.current || !aBody.current || !b.current || !bBody.current) return;
+      if (!t || !p0 || !a.current || !aView.current || !b.current || !bBody.current) return;
       if (reduce.matches) return clear();
       // The frame pins centred in the screen below the bar.
       const nav = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-offset")) || 0;
       const top = Math.max(nav + 8, nav + (innerHeight - nav - p0.offsetHeight) / 2);
       p0.style.top = `${top}px`;
-      // Lengths in px of scroll: the table moves 1:1 with the page (it reads like scrolling), then
-      // the hand-over, then the findings (gliding on phones where they are taller than the frame).
-      const travelA = Math.max(0, aBody.current.scrollHeight - aView.current.clientHeight);
+      // Lengths in px of scroll: the hand-over, then the findings (gliding on phones where they are
+      // taller than the frame).
       const pad = parseFloat(getComputedStyle(b.current).paddingBottom) || 0;
       const travelB = Math.max(0, bBody.current.offsetTop + bBody.current.offsetHeight + pad - b.current.clientHeight);
+      const lead = innerHeight * 0.25; // the table, as she framed it, before anything moves
       const swap = innerHeight * 0.5;
       const hold = Math.max(travelB, innerHeight * 0.3);
-      const height = Math.round(p0.offsetHeight + travelA + swap + hold);
+      const height = Math.round(p0.offsetHeight + lead + swap + hold);
       if (Math.abs(t.offsetHeight - height) > 1) t.style.height = `${height}px`;
-      const d = Math.min(travelA + swap + hold, Math.max(0, top - t.getBoundingClientRect().top));
+      const d = Math.min(lead + swap + hold, Math.max(0, top - t.getBoundingClientRect().top));
 
-      aBody.current.style.transform = `translateY(${-Math.min(d, travelA)}px)`;
       // The table lifts away, then the findings rise into the same frame; they barely overlap, so the
       // two never read on top of each other.
-      const q = clamp((d - travelA) / swap);
+      const q = clamp((d - lead) / swap);
       const out = ease(clamp(q / 0.6));
       const inn = ease(clamp((q - 0.45) / 0.55));
       a.current.style.opacity = String(1 - out);
@@ -107,15 +98,15 @@ export default function Synthesis() {
       b.current.style.opacity = String(inn);
       b.current.style.transform = `translateY(${24 * (1 - inn)}px)`;
       b.current.style.visibility = inn > 0 ? "visible" : "hidden";
-      bBody.current.style.transform = `translateY(${-Math.min(travelB, Math.max(0, d - travelA - swap))}px)`;
+      bBody.current.style.transform = `translateY(${-Math.min(travelB, Math.max(0, d - lead - swap))}px)`;
     };
     const on = () => {
       if (!raf) raf = requestAnimationFrame(update);
     };
     update();
-    // Fonts and widths change the table's length: measure again whenever either sheet resizes.
+    // Fonts and widths change the sizes: measure again whenever the frame or the findings resize.
     const ro = new ResizeObserver(on);
-    for (const el of [aBody.current, bBody.current]) if (el) ro.observe(el);
+    for (const el of [aView.current, bBody.current]) if (el) ro.observe(el);
     addEventListener("scroll", on, { passive: true });
     addEventListener("resize", on);
     reduce.addEventListener("change", on);
@@ -139,7 +130,7 @@ export default function Synthesis() {
               <path d="M850 82 L 861 90 L 864 77" />
             </svg>
             <div ref={aView} className={styles.view}>
-              <div ref={aBody} className={styles.sheet}>
+              <div className={styles.sheet}>
                 <table className={styles.table}>
                   <caption className={styles.srOnly}>Synthesis: what the recording showed, what the revised design does, the gap, and the direction to explore, per area.</caption>
                   <tbody>

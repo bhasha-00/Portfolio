@@ -1,4 +1,4 @@
-/* TL;DR cards (Tldr.tsx). Tints from the brand colours (her indigo middle card became gold: no indigo). */
+/* TL;DR cards (Tldr.tsx), in her colours (--art-*). */
 
 /* Phones: out to the screen edges, so the side cards peek in to the edge as in AI Tinkering. */
 .wrap {
@@ -29,13 +29,14 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
   height: 100%;
   margin: 0;
   padding: var(--space-5);
+  border: 1.5px solid var(--art-card-line);
   border-radius: var(--r-md);
-  background: var(--cream);
-  color: var(--text-muted);
+  background: var(--art-frame);
+  color: var(--art-ink);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
   box-shadow: var(--shadow-card);
@@ -46,52 +47,31 @@
   cursor: auto;
 }
 
-/* The tint sits over cream so the cards stay opaque where they overlap. */
-.card[data-tone="problem"] {
-  background: color-mix(in srgb, var(--red) 8%, var(--cream));
-}
-
-.card[data-tone="did"] {
-  background: color-mix(in srgb, var(--gold) 16%, var(--cream));
-}
-
-.card[data-tone="impact"] {
-  background: color-mix(in srgb, var(--green) 10%, var(--cream));
-}
-
 .card p {
   margin: 0;
 }
 
 .label {
-  margin: 0;
+  margin: 0 0 calc(var(--space-1) * -1);
+  color: var(--art-muted);
   font-size: var(--fs-small);
   line-height: var(--lh-small);
-  font-weight: var(--fw-label);
-}
-
-.card[data-tone="problem"] .label {
-  color: var(--red);
-}
-
-.card[data-tone="did"] .label {
-  color: var(--text-on-cream);
-}
-
-.card[data-tone="impact"] .label {
-  color: var(--green);
+  font-weight: var(--fw-body);
 }
 
 .big {
-  color: var(--text-on-cream);
-  font-size: var(--fs-lead);
-  line-height: var(--lh-lead);
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
   font-weight: var(--fw-h2);
   letter-spacing: var(--tracking-h2);
 }
 
-.ink {
-  color: var(--text-on-cream);
+.card[data-tone="problem"] .big {
+  color: var(--art-red);
+}
+
+.card[data-tone="impact"] .big {
+  color: var(--art-green);
 }
 
 /* From 768: a row of three, as in her frame. The spread's transforms are switched off. */
@@ -129,7 +109,7 @@
   }
 
   .big {
-    font-size: var(--fs-h3);
-    line-height: var(--lh-h3);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
   }
 }

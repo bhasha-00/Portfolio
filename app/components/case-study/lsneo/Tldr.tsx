@@ -4,7 +4,7 @@ import { ROLE, roleOf, useSpread } from "../../useSpread";
 import spread from "../../Spread.module.css";
 import styles from "./Tldr.module.css";
 
-// TL;DR: Problem, What I did, Impact (1tldr.svg), set in Geist. On phones the three cards are the AI
+// TL;DR: Problem, What I did, Impact (1tldr.svg, updated 2026-11-12), set in Geist in her colours. On phones the three cards are the AI
 // Tinkering spread (useSpread): one in front, the other two tucked behind on either side; a tap or a
 // swipe brings one forward. From 768 they sit in a row, as in her frame.
 
@@ -14,8 +14,8 @@ const cards = [
     label: "Problem",
     body: (
       <>
-        <p className={styles.big}>Librarians typed every book by hand</p>
-        <p>300-400 books a batch, 5-10 minutes per title. Incomplete records broke search.</p>
+        <p className={styles.big}>Librarians entered every book by hand</p>
+        <p>300-400 books a batch, 5-10 minutes per title. Tedious entry led to incomplete record breaking search.</p>
       </>
     ),
   },
@@ -24,9 +24,9 @@ const cards = [
     label: "What I did",
     body: (
       <>
-        <p className={styles.ink}>Interviewed librarians to map workflows and identify friction points.</p>
-        <p className={styles.ink}>Reimagined 7 cataloguing workflows into a unified scan-and-confirm flow.</p>
-        <p className={styles.ink}>Documented duplicates, empty and errors states for handoff.</p>
+        <p>Interviewed librarians to map workflows and identify friction points.</p>
+        <p>Reimagined 7 cataloguing workflows into a unified scan and confirm flow.</p>
+        <p>Documented duplicates, empty and errors states for handoff.</p>
       </>
     ),
   },

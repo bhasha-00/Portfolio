@@ -14,9 +14,10 @@
   height: 100%;
 }
 
+/* Text in her colours (--art-*), so each artifact reads exactly as she drew it. */
 .layer text {
   font-family: var(--font-sans);
-  fill: var(--ink);
+  fill: var(--art-note);
 }
 
 .note {
@@ -29,25 +30,25 @@
 
 .layer .sign {
   font-size: var(--fs-caption);
-  fill: var(--text-muted);
+  fill: var(--art-black);
+  fill-opacity: 0.5;
 }
 
 .layer .hand {
   font-family: var(--font-hand);
   font-size: var(--fs-hand-md);
-}
-
-.layer .accent {
-  fill: var(--red);
+  fill: var(--art-black);
 }
 
 /* The IA diagram (Flow), in the raster's half-size space. */
-.head {
+.layer .head {
   font-size: var(--fs-lead);
   font-weight: var(--fw-h2);
+  fill: var(--art-ink);
 }
 
-.title {
+.layer .title {
+  fill: var(--art-ink);
   font-size: var(--fs-lead);
   font-weight: var(--fw-label);
   text-anchor: middle;
@@ -55,9 +56,19 @@
 
 .layer .sub {
   font-size: var(--fs-small);
-  fill: var(--text-muted);
+  fill: var(--art-muted);
 }
 
 .mid {
   text-anchor: middle;
+}
+
+.layer .blue {
+  fill: var(--art-blue);
+}
+
+/* The outline her other frames carry; on the cream page the versions' pale ring needs it to show. */
+.outline {
+  fill: none;
+  stroke: var(--art-frame-line);
 }

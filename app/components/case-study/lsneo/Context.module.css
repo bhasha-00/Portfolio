@@ -1,14 +1,15 @@
-/* Context (Context.tsx). Her frame: a light surface, a white card for colleges, a tinted one for schools. */
+/* Context (Context.tsx), in her colours (--art-*, sampled from 1CONTEXT.svg): her frame, a white card for
+   colleges, a pale blue panel for schools, the yellow sticky note and the black dashed arrow. */
 
 .frame {
   position: relative;
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-5);
   margin: 0;
-  padding: var(--space-5) var(--space-4);
-  border: 1px solid var(--divider);
+  padding: var(--space-7) var(--space-4) var(--space-5);
+  border: 1px solid var(--art-frame-line);
   border-radius: var(--r-md);
-  background: color-mix(in srgb, var(--back) 50%, var(--cream));
+  background: var(--art-frame);
 }
 
 .panel {
@@ -16,19 +17,19 @@
   min-width: 0;
   padding: var(--space-5);
   border-radius: var(--r-sm);
-  background: var(--back);
-  color: var(--text-muted);
+  background: var(--art-paper);
+  color: var(--art-muted);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
 }
 
 .school {
-  background: color-mix(in srgb, var(--green) 6%, var(--back));
+  background: var(--art-blue-bg);
 }
 
 .title {
   margin: 0;
-  color: var(--text-on-cream);
+  color: var(--art-ink);
   font-size: var(--fs-h3);
   line-height: var(--lh-h3);
   font-weight: var(--fw-label);
@@ -36,7 +37,7 @@
 }
 
 .schoolTitle {
-  color: var(--green); /* large text: 4.5:1 */
+  color: var(--art-blue);
 }
 
 .sub {
@@ -52,33 +53,37 @@
 }
 
 .list strong {
-  color: var(--text-on-cream);
+  color: var(--art-ink);
   font-weight: var(--fw-label);
 }
 
 .lit {
   padding: var(--space-2) var(--space-3);
   border-radius: var(--r-sm);
-  background: color-mix(in srgb, var(--green) 12%, transparent);
+  background: var(--art-blue-lit);
 }
 
 .out {
   padding: var(--space-2) var(--space-3);
-  border: 1px dashed var(--divider);
+  border: 1px dashed var(--art-rule);
   border-radius: var(--r-sm);
-  opacity: 0.6;
+  color: var(--art-faint);
+}
+
+.out strong {
+  color: var(--art-faint);
 }
 
 /* Her sticky note, tilted, in the hand font. */
 .note {
   position: absolute;
-  top: calc(var(--space-6) * -1);
-  right: var(--space-4);
+  top: calc(var(--space-5) * -1);
+  right: var(--space-2);
   max-width: 9em;
   margin: 0;
   padding: var(--space-2) var(--space-3);
-  background: color-mix(in srgb, var(--gold) 45%, var(--cream));
-  color: var(--red);
+  background: var(--art-sticky);
+  color: var(--art-orange);
   font-family: var(--font-hand);
   font-size: var(--fs-hand-md);
   line-height: var(--lh-hand-md);
@@ -110,10 +115,9 @@
     height: 100%;
     pointer-events: none;
     fill: none;
-    stroke: var(--text-on-cream);
+    stroke: var(--art-black);
     stroke-width: 1.5;
     stroke-dasharray: 5 5;
-    vector-effect: non-scaling-stroke;
   }
 
   .arrow path {

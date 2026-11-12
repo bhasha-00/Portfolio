@@ -21,6 +21,29 @@
   --dim-text-opacity: 0.32;                                       /* covered card content */
   --cloud-fill: color-mix(in srgb, var(--cream) 12%, transparent);
 
+  /* ---------- Artifact palette (case study artifacts only) ----------
+     Bhasha's own colours from her Figma exports, sampled exactly, for the artifacts rebuilt on the page
+     (app/components/case-study/lsneo) so they look as she drew them. Never for site UI. */
+  --art-frame: #FBF9F3;       /* artifact frame surface, TL;DR cards */
+  --art-frame-line: #E4D9C2;  /* frame outline */
+  --art-card-line: #F0E8D1;   /* TL;DR card outline */
+  --art-paper: #FFFFFF;       /* white cards and panels */
+  --art-ink: #1F2540;         /* titles, strong text */
+  --art-muted: #5B6280;       /* body, labels */
+  --art-faint: #A8ACBC;       /* out-of-scope row text */
+  --art-note: #1E1E1E;        /* note-card text */
+  --art-black: #000000;       /* hand headings, arrows, "Bhasha" tags (at 50%) */
+  --art-strong: #292D32;      /* bold runs in the findings */
+  --art-table: #252628;       /* synthesis table text */
+  --art-rule: #E0E0E0;        /* card and table rules */
+  --art-red: #DC2626;         /* TL;DR problem */
+  --art-green: #16A34A;       /* TL;DR impact */
+  --art-orange: #E59310;      /* hand-lettered captions */
+  --art-blue: #106EAD;        /* "Schools", "Revised", the designed answers */
+  --art-blue-bg: #F4FAFE;     /* schools panel, answer boxes */
+  --art-blue-lit: #DEF0FC;    /* highlighted row */
+  --art-sticky: #F0F4B3;      /* sticky note */
+
   /* ---------- Fonts: exactly two families ---------- */
   /* next/font sets --nf-geist and --nf-hand via its `variable` option */
   --font-sans: var(--nf-geist), ui-sans-serif, system-ui, sans-serif;

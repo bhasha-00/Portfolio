@@ -6,41 +6,26 @@ import { Annotated, Lines, Note, annotated as s } from "./Annotated";
 
 const DIR = "/case-studies/lsneo-lite";
 
-/** Research › What I saw: the existing New Title screen, with what broke. 1errorwalkthrough.svg */
+/** Research › What I saw: her walkthrough GIF of the existing New Title screen (1errorwalkthrough.gif,
+ *  1600 x 900, 388 frames), stored as lossless animated WebP with every frame kept. The text inside is
+ *  part of the recording. Reduced motion gets its first frame, still. */
 export function Walkthrough() {
   return (
-    <Annotated
-      src={`${DIR}/walkthrough-v1.svg`}
-      w={1924}
-      h={733}
-      alt="The existing Direct Cataloguing screen in LS Neo, with the friction points marked."
-      over={
-        <>
-          <Note x={54} y={112} lines={["Cover upload split off : A", "separate second step made it", "hard to check a book against", "its details."]} />
-          <Note x={54} y={292} lines={["12+ fields typed by hand :", "Every title meant a long form", "with nothing prefilled."]} />
-          <Note x={54} y={551} lines={["Three competing buttons :", "Cancel, Continue, and Submit", "gave no clear main action."]} />
-          <Note x={1646} y={113} lines={["Several ways to add a title :", "Nothing signals which to pick,", "so every entry starts with a", "guess."]} />
-          <Note x={1648} y={261} lines={["Import routes nobody used :", "Bulk download added options", "without adding value."]} />
-          <Note
-            x={1646}
-            y={409}
-            h={140.867}
-            lines={["Pending work was hidden :", "Recently added titles sat", "behind a separate click, so you", "couldn't see what was left", "within their entry."]}
-          />
-          {/* The sticky note: her question, under a hand-lettered heading beside the emoji. */}
-          <text className={`${s.hand} ${s.accent}`} x={1349} y={540}>
-            What else I questioned?
-          </text>
-          <Note
-            x={1315}
-            y={498}
-            h={216.867}
-            top={82.7}
-            lines={["CTA placed at the right bottom", "of left panel !", "", "Why not left bottom or as", "sticky footer at the bottom", "following F or L pattern ?"]}
-          />
-        </>
-      }
-    />
+    <figure className={s.fig} style={{ aspectRatio: "1600 / 900" }}>
+      <picture>
+        <source media="(prefers-reduced-motion: reduce)" srcSet={`${DIR}/walkthrough-still-v1.webp`} />
+        {/* eslint-disable-next-line @next/next/no-img-element -- an animation, served exactly as stored */}
+        <img
+          className={s.layer}
+          src={`${DIR}/walkthrough-v1.webp`}
+          width={1600}
+          height={900}
+          loading="lazy"
+          decoding="async"
+          alt="Walkthrough of the existing Direct Cataloguing screen in LS Neo, with the friction points marked one by one."
+        />
+      </picture>
+    </figure>
   );
 }
 
@@ -71,7 +56,7 @@ function Verdict({ at, head, headX, lines }: { at: string; head: string; headX: 
       <text className={s.hand} x={headX} y={37}>
         {head}
       </text>
-      <Lines x={22} y={85} step={24} lines={lines} className={s.body} />
+      <Lines x={22} y={85} step={24} lines={lines} className={`${s.body} ${s.blue}`} />
     </g>
   );
 }
@@ -86,6 +71,8 @@ export function Versions() {
       alt="Two explorations of LS Neo lite: V1, a full-page title table, and V2, a New Title form that put approval and ordering inside each title."
       over={
         <>
+          <rect className={s.outline} x={0.5} y={0.5} width={887} height={664} rx={71.5} />
+          <rect className={s.outline} x={920.5} y={0.5} width={887} height={664} rx={71.5} />
           <Verdict
             at="translate(496.363 333) rotate(11.7515)"
             head="Why v1 didn't survive :"
@@ -176,7 +163,7 @@ function FlowDiagram() {
 
         {/* Revised */}
         <rect x={40} y={400} width={1480} height={420} rx={16} fill="#F3F9FE" stroke="#A9D0EA" strokeWidth={2} />
-        <text className={s.head} x={72} y={448}>
+        <text className={`${s.head} ${s.blue}`} x={72} y={448}>
           Revised: one flow, work visible
         </text>
         <Box x={72} y={602} w={140} h={76} title="Toolbar" stroke={blue} />
