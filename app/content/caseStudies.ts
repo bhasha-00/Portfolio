@@ -89,8 +89,8 @@ const lsneo: CaseStudy = {
             label:
               "Colleges and corporates: 3 roles, 3 separate flows (students, librarian or admin, purchasing team). Schools: one person runs everything; the librarian handles the whole workflow and purchasing sits with the school ERP.",
             kind: "image",
-            ratio: 1736 / 658,
-            src: "/case-studies/lsneo-lite/context.webp", // 1 CONTEXT.svg, its 2x picture
+            ratio: 1736 / 660,
+            src: "/case-studies/lsneo-lite/context-v2.webp", // 1CONTEXT.svg, its 2x picture (1736 x 660)
           },
         },
         {
