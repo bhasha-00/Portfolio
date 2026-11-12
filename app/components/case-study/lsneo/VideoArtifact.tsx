@@ -82,7 +82,16 @@ export default function VideoArtifact({ src, poster, w, h, label }: Props) {
           aria-label={label}
         />
         {state === "loading" && (
-          <span className={styles.loader} role="status" aria-label="Loading the prototype" />
+          // Four dots in a square that turn and breathe, as in Figma's prototype loader, with "loading..."
+          <span className={styles.loader} role="status">
+            <span className={styles.dots} aria-hidden="true">
+              <i />
+              <i />
+              <i />
+              <i />
+            </span>
+            <span className={styles.loading}>loading...</span>
+          </span>
         )}
       </div>
     </figure>
