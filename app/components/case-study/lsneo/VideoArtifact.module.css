@@ -1,0 +1,46 @@
+/* A prototype recording in her frame (VideoArtifact.tsx). */
+
+.frame {
+  margin: 0;
+  padding: var(--art-pad-sm);
+  border: 1px solid var(--art-frame-line);
+  border-radius: var(--r-md);
+  background: var(--art-frame);
+}
+
+.screen {
+  position: relative;
+}
+
+.video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--art-frame);
+}
+
+/* A ring that turns while the recording loads. */
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--space-7);
+  height: var(--space-7);
+  margin: calc(var(--space-7) / -2) 0 0 calc(var(--space-7) / -2);
+  border: 3px solid var(--art-frame-line);
+  border-top-color: var(--art-muted);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 768px) {
+  .frame {
+    padding: var(--art-pad);
+  }
+}

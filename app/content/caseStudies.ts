@@ -40,7 +40,8 @@ export type ArtifactName =
   | "onboarding"
   | "search-by-title"
   | "duplicate"
-  | "handoff-isbn";
+  | "handoff-isbn"
+  | "prototype-final";
 
 export type Section = {
   /** Anchor id. */
@@ -185,7 +186,7 @@ const lsneo: CaseStudy = {
         { type: "label", text: "Walkthrough" },
         { type: "artifact", name: "six-changes" },
         { type: "label", text: "Prototype" },
-        { type: "media", media: { label: "Prototype: the final flow", kind: "video", ratio: 408 / 247 } },
+        { type: "artifact", name: "prototype-final" },
       ],
     },
     {

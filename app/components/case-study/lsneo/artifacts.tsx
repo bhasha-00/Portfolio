@@ -1,6 +1,7 @@
 import type React from "react";
 import { Annotated, Lines, Note, annotated as s } from "./Annotated";
 import AnimImg from "./AnimImg";
+import VideoArtifact from "./VideoArtifact";
 
 // LSNeo Lite's annotated artifacts. Positions are Bhasha's (her Figma frames, px); the text is hers,
 // set in Geist (notes) and Caveat (hand-lettered headings). Line breaks are where Geist wraps inside
@@ -267,3 +268,15 @@ export function Flow() {
     />
   );
 }
+
+/** Final design › Prototype: the final flow, recorded (1698 x 1026, her MP4 with the video stream
+ *  copied as is). */
+export const PrototypeFinal = () => (
+  <VideoArtifact
+    src={`${DIR}/prototype-final-v1.mp4`}
+    poster={`${DIR}/prototype-final-v1-poster.webp`}
+    w={1698}
+    h={1026}
+    label="Prototype of the final Add Title flow in LS Neo lite: scan or search, review the record, choose the source, add copies."
+  />
+);

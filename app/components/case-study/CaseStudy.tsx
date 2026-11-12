@@ -7,7 +7,7 @@ import CaseBar from "./CaseBar";
 import Context from "./lsneo/Context";
 import Synthesis from "./lsneo/Synthesis";
 import Tldr from "./lsneo/Tldr";
-import { Duplicate, Flow, HandoffIsbn, Onboarding, SearchByTitle, SixChanges, Versions, Walkthrough } from "./lsneo/artifacts";
+import { Duplicate, Flow, HandoffIsbn, Onboarding, PrototypeFinal, SearchByTitle, SixChanges, Versions, Walkthrough } from "./lsneo/artifacts";
 import styles from "./CaseStudy.module.css";
 
 // A case study page: the sticky bar (back to Projects + one tab per section), the header (product,
@@ -77,6 +77,7 @@ const artifacts: Record<ArtifactName, () => React.ReactNode> = {
   "search-by-title": SearchByTitle,
   duplicate: Duplicate,
   "handoff-isbn": HandoffIsbn,
+  "prototype-final": PrototypeFinal,
 };
 
 function BlockView({ block }: { block: Block }) {

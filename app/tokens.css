@@ -43,7 +43,9 @@
   --art-blue-bg: #F4FAFE;     /* schools panel, answer boxes */
   --art-blue-lit: #DEF0FC;    /* highlighted row */
   --art-sticky: #F0F4B3;      /* sticky note */
-  --art-ring: #EFE9DC;        /* the ring round her two-panel artifacts (Versions, 6 changes) */
+  --art-ring: #EFE9DC;
+  --art-pad: 53px;            /* inset inside her artifact frames (prototype videos), from 768 */
+  --art-pad-sm: 5.2%;         /* the same share of a 1024 frame, on phones */        /* the ring round her two-panel artifacts (Versions, 6 changes) */
 
   /* ---------- Fonts: exactly two families ---------- */
   /* next/font sets --nf-geist and --nf-hand via its `variable` option */
