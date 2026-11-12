@@ -182,6 +182,7 @@ export default function CaseStudy({ cs }: { cs: CS }) {
               {cs.product} <span aria-hidden="true">•</span> {cs.year}
             </p>
             <h1 className={styles.h1}>{cs.title}</h1>
+            {cs.dek && <p className={styles.dek}>{cs.dek}</p>}
             <dl className={styles.meta}>
               {cs.meta.map((m) => (
                 <div key={m.label}>

@@ -43,6 +43,13 @@
   text-wrap: balance;
 }
 
+.dek {
+  margin: var(--space-4) 0 0;
+  color: var(--text-muted);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-lead);
+}
+
 .meta {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
