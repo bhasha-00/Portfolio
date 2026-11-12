@@ -73,9 +73,20 @@ export default function Synthesis() {
     const measure = () => {
       const nav = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-offset")) || 0;
       const vh = document.documentElement.clientHeight;
-      p0.style.top = `${Math.round(Math.max(nav + 8, nav + (vh - nav - p0.offsetHeight) / 2))}px`;
+      // The frame grows to hold the findings whole (so nothing in them moves once the card has
+      // turned), as far as the screen allows. Only on a phone, where they can't fit, do they glide.
       const pad = parseFloat(getComputedStyle(B).paddingBottom) || 0;
-      travelB = Math.max(0, Math.round(BB.offsetTop + BB.offsetHeight + pad - B.clientHeight));
+      const border = B.offsetHeight - B.clientHeight;
+      const need = Math.ceil(BB.offsetTop + BB.offsetHeight + pad + border);
+      const room = Math.floor(vh - nav - 32);
+      // (Measured at full width: with a height set, the aspect ratio would widen the frame instead.)
+      p0.style.height = "";
+      p0.style.aspectRatio = "";
+      const natural = p0.offsetHeight;
+      p0.style.aspectRatio = "auto";
+      p0.style.height = `${Math.min(Math.max(natural, need), room)}px`;
+      p0.style.top = `${Math.round(Math.max(nav + 8, nav + (vh - nav - p0.offsetHeight) / 2))}px`;
+      travelB = Math.max(0, need - B.offsetHeight);
       t.style.setProperty("--b-travel", `${travelB}px`);
       update();
     };
@@ -104,12 +115,16 @@ export default function Synthesis() {
     const ro = new ResizeObserver(() => !reduce.matches && measure());
     ro.observe(p0);
     ro.observe(BB);
+    const remeasure = () => !reduce.matches && measure();
     if (reduce.matches) clear();
     else measure();
+    document.fonts.ready.then(remeasure); // the findings' height depends on the web fonts
+    addEventListener("resize", remeasure);
     addEventListener("scroll", on, { passive: true });
     reduce.addEventListener("change", onReduce);
     return () => {
       removeEventListener("scroll", on);
+      removeEventListener("resize", remeasure);
       reduce.removeEventListener("change", onReduce);
       ro.disconnect();
       cancelAnimationFrame(raf);

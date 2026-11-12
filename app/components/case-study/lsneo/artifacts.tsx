@@ -1,5 +1,6 @@
 import type React from "react";
 import { Annotated, Lines, Note, annotated as s } from "./Annotated";
+import AnimImg from "./AnimImg";
 
 // LSNeo Lite's annotated artifacts. Positions are Bhasha's (her Figma frames, px); the text is hers,
 // set in Geist (notes) and Caveat (hand-lettered headings). Line breaks are where Geist wraps inside
@@ -9,16 +10,19 @@ const DIR = "/case-studies/lsneo-lite";
 
 type AnimProps = { name: string; w: number; h: number; alt: string; frame?: boolean; className?: string; over?: React.ReactNode };
 
-/** One of her GIFs, stored as lossless animated WebP (every frame kept, see the build script). Reduced
- *  motion gets the first frame, still. */
+/** One of her GIFs, stored as lossless animated WebP (every frame kept, see the build script). It plays
+ *  from the start each time it comes into view (AnimImg); reduced motion gets the first frame, still. */
 function Anim({ name, w, h, alt, frame = true, className, over }: AnimProps) {
   return (
     <figure className={frame ? `${s.fig} ${s.frame}` : s.fig} style={{ aspectRatio: `${w} / ${h}` }}>
-      <picture>
-        <source media="(prefers-reduced-motion: reduce)" srcSet={`${DIR}/${name}-still.webp`} />
-        {/* eslint-disable-next-line @next/next/no-img-element -- an animation, served exactly as stored */}
-        <img className={`${s.layer} ${className ?? ""}`} src={`${DIR}/${name}.webp`} width={w} height={h} loading="lazy" decoding="async" alt={alt} />
-      </picture>
+      <AnimImg
+        src={`${DIR}/${name}.webp`}
+        still={`${DIR}/${name}-still.webp`}
+        w={w}
+        h={h}
+        alt={alt}
+        className={`${s.layer} ${className ?? ""}`}
+      />
       {over}
     </figure>
   );

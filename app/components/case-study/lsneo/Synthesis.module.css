@@ -127,6 +127,7 @@
 
 /* ---------- B: the two findings ---------- */
 .cards {
+  flex: none; /* its natural height, never squeezed to the frame: the frame is sized from it */
   display: grid;
   gap: var(--space-4);
   align-content: start;
