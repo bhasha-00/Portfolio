@@ -1,5 +1,6 @@
 /* Case study page (CaseStudy.tsx). The case study cards' surface: cream with the paper grain, ink type,
-   muted body text, eyebrows hand-lettered in red (6.3:1 on cream). One column across the whole container; running text is capped at a readable line on desktop. */
+   muted body text, eyebrows hand-lettered in red (6.3:1 on cream). One reading column: all 4 columns
+   on phones, all 8 on tablets, columns 3–10 of 12 on desktop. Headings fill that column (no balanced wrapping). */
 
 .page {
   min-height: 100vh;
@@ -81,7 +82,9 @@
   border-top: 1px solid var(--divider);
 }
 
-.section > * + * {
+/* The gap between blocks. Doubled class: it must beat an artifact's own `margin: 0`, whichever
+   stylesheet loads last. */
+.section.section > * + * {
   margin-top: var(--space-5);
 }
 
@@ -368,9 +371,8 @@ a.moreLink:focus-visible {
   }
 }
 
-/* Desktop: the page uses the full container (headings, artifacts); running text keeps a readable line. */
 @media (min-width: 1200px) {
-  .p {
-    max-width: 880px;
+  .col {
+    grid-column: 3 / 11;
   }
 }
