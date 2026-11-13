@@ -72,7 +72,7 @@ if (process.argv[2] !== "gif") (async () => {
 // merges back-to-back identical frames). `trim` takes her baked frame off (border and rounded corner)
 // so the page draws the one 16px frame every artifact shares; nothing inside is touched. The first
 // frame is also saved as a still for reduced motion. Run: node scripts/build-lsneo-artifacts.cjs gif
-async function gif(src, name, trim = 0, speed = 1) {
+async function gif(src, name, trim = 0, speed = 1, recolor = null) {
   const o = { animated: true, limitInputPixels: false };
   const m = await sharp(src, o).metadata();
   // `speed` > 1 plays it faster: every frame is kept, each shown for less time.
@@ -80,6 +80,7 @@ async function gif(src, name, trim = 0, speed = 1) {
   const w = m.width - 2 * trim, h = m.pageHeight - 2 * trim;
   // Crop frame by frame (raw, so nothing is resampled), then stack them back into one animation.
   const raw = await sharp(src, o).ensureAlpha().raw().toBuffer();
+  if (recolor) for (let i = 0; i < raw.length; i += 4) recolor(raw, i, (i / 4) % m.width);
   const F = m.width * m.pageHeight * 4, out = Buffer.alloc(w * h * 4 * m.pages);
   for (let p = 0; p < m.pages; p++)
     for (let y = 0; y < h; y++) {
@@ -108,6 +109,16 @@ if (process.argv[2] === "gif") {
     const only = process.argv[3];
     if (!only || only === "walkthrough") await gif("1errorwalkthrough-v4.gif", "walkthrough-v2", 6); // 1px border, ~10px corner
     if (!only || only === "six") await gif("1sixchanges.gif", "six-changes-v1"); // her two panels; corners clipped on the page
-    if (!only || only === "isbn") await gif("1handoff-isbn.gif", "handoff-isbn-v2", 8, 1.5); // 1px border, ~20px corner; 1.5x faster (2026-11-12)
+    // 1px border, ~20px corner; 1.5x faster (2026-11-12). Her 2026-11-13 export adds the step dots on the
+    // right (isbn_states_dots.gif); their blue turns the site's red (#A82A1E), only right of the cards.
+    const red = (px, i, x) => {
+      const [r, g, b] = [px[i], px[i + 1], px[i + 2]];
+      if (x < 1090 || b < r + 40) return;
+      const t = Math.min(1, Math.max(0, (251 - r) / (251 - 24))); // 0 = the cream behind, 1 = her full blue
+      px[i] = Math.round(251 + (168 - 251) * t);
+      px[i + 1] = Math.round(249 + (42 - 249) * t);
+      px[i + 2] = Math.round(243 + (30 - 243) * t);
+    };
+    if (!only || only === "isbn") await gif("1handoff-isbn-dots.gif", "handoff-isbn-v3", 8, 1.5, red);
   })();
 }

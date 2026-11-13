@@ -32,7 +32,7 @@
   font-weight: var(--fw-h2);
   letter-spacing: var(--tracking-h2);
   text-align: center;
-  text-wrap: balance;
+  text-wrap: pretty; /* full width: lines fill, no balancing */
 }
 
 /* Bhasha's handwriting (About.tsx Hand): her outline as a mask, filled with the text colour. Each
@@ -70,15 +70,15 @@
 }
 
 /* One tile: one element, one inset, one radius. The photo and its caption sit inside the same
-   --space-3 padding (Bhasha's card: 12 around the photo, 8 down to the caption); no notches. */
+   --space-4 padding (16 around the photo, 12 down to the caption); no notches. */
 .face {
   position: absolute;
   inset: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-3);
-  border-radius: var(--r-md);
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--r-art);
   background: var(--cream);
   color: var(--text-on-cream);
   box-shadow: var(--shadow-card);
@@ -110,7 +110,7 @@
   position: relative;
   flex: 1;
   min-height: 0;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-art);
   background: var(--ink);
   overflow: hidden;
 }
@@ -160,7 +160,7 @@
 .card:focus-visible {
   outline: 2px solid var(--cream);
   outline-offset: 6px;
-  border-radius: var(--r-md);
+  border-radius: var(--r-art);
 }
 
 @media (prefers-reduced-motion: reduce) {

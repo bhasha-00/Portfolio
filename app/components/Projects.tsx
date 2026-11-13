@@ -35,7 +35,7 @@ function Shot({ image }: { image: NonNullable<Project["image"]> }) {
     alt: image.alt,
     fill: true,
     quality: 90,
-    sizes: "calc(100vw - 88px)", // phone: the card's inner width (20px margins, 24px card padding)
+    sizes: "calc(100vw - 64px)", // phone: the card's inner width (20px margins, 12px card padding)
   });
   return (
     <picture>
@@ -63,7 +63,6 @@ export default function Projects() {
   const bars = useRef<(HTMLSpanElement | null)[]>([]);
   const counts = useRef<number[]>([]);
   const [reduced, setReduced] = useState<boolean | null>(null);
-
   useEffect(() => {
     const mq = matchMedia("(prefers-reduced-motion: reduce)");
     const on = () => setReduced(mq.matches);
@@ -115,12 +114,17 @@ export default function Projects() {
       const cs = cards.current.filter((c): c is HTMLElement => !!c);
       if (!w || !row || !pt || !first || !cs.length) return;
       w.style.removeProperty("--card-h");
-      const H = Math.ceil(Math.max(...cs.map((c) => c.offsetHeight)));
-      w.style.setProperty("--card-h", `${H}px`);
+      let H = Math.ceil(Math.max(...cs.map((c) => c.offsetHeight)));
       const st = getComputedStyle(first);
       const padTop = parseFloat(st.paddingTop), padBottom = parseFloat(st.paddingBottom);
+      // Phones: every card fills the screen below the nav; a card with more text than that grows.
+      if (innerWidth < 768) H = Math.max(H, Math.floor(innerHeight - padTop - padBottom));
+      w.style.setProperty("--card-h", `${H}px`);
       const slotH = Math.max(innerHeight, padTop + H + padBottom);
-      const top = `${Math.min(0, innerHeight - slotH)}px`;
+      // A card taller than the screen sticks higher to show more of itself, but never above 88px (the
+      // crane on its edge stays in view; the card's own padding absorbs the rest). Phones: not at all.
+      const lift = innerWidth < 768 ? 0 : Math.max(-(padTop - 88), innerHeight - slotH);
+      const top = `${Math.min(0, lift)}px`;
       w.style.setProperty("--slot-h", `${slotH}px`);
       slots.current.forEach((s) => s && (s.style.top = top));
       row.style.top = top;
@@ -340,6 +344,8 @@ export default function Projects() {
         Projects
       </h2>
       <ol className={styles.stack}>
+        {/* Phones: a strip under the nav, so card text scrolls away below it, never behind it. */}
+        <li className={styles.band} aria-hidden="true" />
         {/* The crane's perch: holds still on the top card's top-right edge while cards slide under. */}
         <li ref={perchRow} className={styles.perchRow} aria-hidden="true">
           <span ref={perch} className={styles.perch}>
@@ -360,7 +366,9 @@ export default function Projects() {
             </span>
           </span>
         </li>
-        {projects.map((p, j) => (
+        {projects.map((p, j) => {
+          const href = p.image ? caseStudyHref(p.name) : null;
+          return (
           <li
             key={j}
             ref={(el) => {
@@ -375,6 +383,10 @@ export default function Projects() {
               }}
               className={styles.card}
               aria-labelledby={`project-${j}`}
+              data-link={href ? "" : undefined}
+              // The whole card is the link (the title's link covers it); the View bubble follows the cursor over all of it.
+              onPointerMove={href ? follow : undefined}
+              onPointerLeave={href ? unfollow : undefined}
             >
               <span className={styles.shade} aria-hidden="true" />
               <span className={styles.grain} aria-hidden="true" />
@@ -396,7 +408,13 @@ export default function Projects() {
                 )}
               </p>
               <h3 id={`project-${j}`} className={styles.title}>
-                {p.title ?? p.name}
+                {href ? (
+                  <Link href={href} className={styles.stretch}>
+                    {p.title ?? p.name}
+                  </Link>
+                ) : (
+                  (p.title ?? p.name)
+                )}
               </h3>
 
               <div className={styles.body}>
@@ -416,19 +434,12 @@ export default function Projects() {
                   </div>
                 </div>
 
-                {p.image && caseStudyHref(p.name) ? (
-                  // The case study page. The View bubble follows the cursor over it.
-                  <Link
-                    href={caseStudyHref(p.name)!}
-                    className={`${styles.media} ${styles.shot}`}
-                    aria-label={`Read the case study: ${p.title ?? p.name}`}
-                    onPointerMove={follow}
-                    onPointerLeave={unfollow}
-                  >
+                {href && p.image ? (
+                  <div className={`${styles.media} ${styles.shot}`}>
                     <Shot image={p.image} />
-                  </Link>
+                  </div>
                 ) : p.image ? (
-                  <div className={`${styles.media} ${styles.shot}`} onPointerMove={follow} onPointerLeave={unfollow}>
+                  <div className={`${styles.media} ${styles.shot}`}>
                     <Shot image={p.image} />
                   </div>
                 ) : p.demo ? (
@@ -472,7 +483,8 @@ export default function Projects() {
               <span className={styles.dim} aria-hidden="true" />
             </article>
           </li>
-        ))}
+          );
+        })}
       </ol>
 
       {bubble}

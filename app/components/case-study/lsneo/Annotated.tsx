@@ -9,12 +9,13 @@ import styles from "./Annotated.module.css";
 // in Geist / Caveat. So the type is the site's, and every pixel of the screenshots is hers. Her own
 // frame is taken off each export; `frame` draws the one every artifact shares (16px corners).
 
-type Props = { src: string; w: number; h: number; alt: string; under?: ReactNode; over?: ReactNode; frame?: boolean };
+/** `view`: show only the band from y to y + h of the artifact (one card of a stacked pair). */
+type Props = { src: string; w: number; h: number; alt: string; under?: ReactNode; over?: ReactNode; frame?: boolean; view?: { y: number; h: number } };
 
-export function Annotated({ src, w, h, alt, under, over, frame = true }: Props) {
+export function Annotated({ src, w, h, alt, under, over, frame = true, view }: Props) {
   const box = `0 0 ${w} ${h}`;
-  return (
-    <figure className={frame ? `${styles.fig} ${styles.frame}` : styles.fig} style={{ aspectRatio: `${w} / ${h}` }}>
+  const layers = (
+    <>
       {under && (
         <svg className={styles.layer} viewBox={box}>
           {under}
@@ -25,6 +26,21 @@ export function Annotated({ src, w, h, alt, under, over, frame = true }: Props) 
         <svg className={styles.layer} viewBox={box}>
           {over}
         </svg>
+      )}
+    </>
+  );
+  return (
+    <figure
+      className={frame ? `${styles.fig} ${styles.frame}` : styles.fig}
+      style={{ aspectRatio: `${w} / ${view ? view.h : h}`, ...(view && { overflow: "hidden" }) }}
+    >
+      {view ? (
+        // The whole artifact, shifted up so only its band shows.
+        <div className={styles.band} style={{ top: `${(-view.y / view.h) * 100}%`, height: `${(h / view.h) * 100}%` }}>
+          {layers}
+        </div>
+      ) : (
+        layers
       )}
     </figure>
   );

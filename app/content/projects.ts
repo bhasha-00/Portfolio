@@ -34,7 +34,7 @@ export const projects: Project[] = [
   {
     name: "LSNeo Lite",
     label: { text: "Optimizing workflow", art: { src: "/projects/label-optimizing-workflow.svg", w: 158.8, h: 19 } },
-    title: "Simplified cataloguing from 10-minute guesswork to a scan-and-confirm flow",
+    title: "Simplified cataloguing from 10 minute guesswork to a scan and confirm flow",
     problem: "Librarians added 300-400 books a batch, **5-10 minutes each**. Tedious entry led to incomplete records, which broke search.",
     whatIDid:
       "Talked to librarians to find what slowed them down. Merged 7 ways of adding a book into one scan-and-confirm flow, with every state documented for handoff.",

@@ -1,6 +1,5 @@
 /* Case study page (CaseStudy.tsx). The case study cards' surface: cream with the paper grain, ink type,
-   muted body text, eyebrows hand-lettered in red (6.3:1 on cream). One reading column: all 4 columns
-   on phones, all 8 on tablets, columns 3–10 of 12 on desktop. */
+   muted body text, eyebrows hand-lettered in red (6.3:1 on cream). One column across the whole container; running text is capped at a readable line on desktop. */
 
 .page {
   min-height: 100vh;
@@ -40,7 +39,7 @@
   line-height: var(--lh-display);
   font-weight: var(--fw-h2);
   letter-spacing: var(--tracking-h2);
-  text-wrap: balance;
+  text-wrap: pretty; /* runs the full width of the column (balance wrapped it short) */
 }
 
 .dek {
@@ -96,7 +95,7 @@
   line-height: var(--lh-h2);
   font-weight: var(--fw-h2);
   letter-spacing: var(--tracking-h2);
-  text-wrap: balance;
+  text-wrap: pretty; /* full width: lines fill, no balancing */
 }
 
 .h3 {
@@ -130,7 +129,7 @@
 
 .callout {
   padding: var(--space-5);
-  border-radius: var(--r-md);
+  border-radius: var(--r-art);
   background: var(--dim-overlay);
 }
 
@@ -185,7 +184,7 @@
   position: relative;
   width: 100%;
   margin-bottom: 0;
-  border-radius: var(--r-md);
+  border-radius: var(--r-art);
   overflow: hidden;
   background: var(--dim-overlay);
 }
@@ -320,13 +319,13 @@ a.moreLink .moreShot {
 a.moreLink:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 4px;
-  border-radius: var(--r-md);
+  border-radius: var(--r-art);
 }
 
 .moreShot {
   position: relative;
   aspect-ratio: 4 / 3;
-  border-radius: var(--r-md);
+  border-radius: var(--r-art);
   overflow: hidden;
   background: var(--dim-overlay);
 }
@@ -369,8 +368,9 @@ a.moreLink:focus-visible {
   }
 }
 
+/* Desktop: the page uses the full container (headings, artifacts); running text keeps a readable line. */
 @media (min-width: 1200px) {
-  .col {
-    grid-column: 3 / 11;
+  .p {
+    max-width: 880px;
   }
 }

@@ -81,3 +81,29 @@
 .t.small {
   font-size: var(--fs-small);
 }
+
+/* Three blues: the two cards stacked on phones and tablets; from desktop (1200) her side-by-side export. */
+.blues {
+  display: grid;
+  gap: var(--gutter);
+}
+
+.bluesWeb {
+  display: none;
+  position: relative;
+  width: 100%; /* no margin here: the section's spacing between blocks applies */
+}
+
+.bluesImg {
+  object-fit: contain;
+}
+
+@media (min-width: 1200px) {
+  .blues {
+    display: none;
+  }
+
+  .bluesWeb {
+    display: block;
+  }
+}

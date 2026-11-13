@@ -5,16 +5,24 @@
 
 /* The section is a .container (Projects.tsx): cards run the full container, edge to edge. */
 .work {
-  --pad-top: calc(var(--space-9) + var(--space-4)); /* nav + room for the crane perched on the card's top edge */
-  --pad-bottom: var(--space-6);
+  --pad-top: calc(var(--space-9) + var(--space-4)); /* where a card stops: the nav pill and room for the crane on the card's edge */
+  --pad-bottom: var(--space-4);
   --avail: calc(100svh - var(--pad-top) - var(--pad-bottom));
   --card-h: var(--avail); /* mobile: the card fills the screen */
   position: relative;
 }
 
+/* Extra room after the last card: it stays put for one more scroll before AI Tinkering comes up. */
 .stack {
   padding: 0;
   list-style: none;
+}
+
+/* (padding would not do: a sticky card is held by its parent's content box, not its padding) */
+.stack::after {
+  content: "";
+  display: block;
+  height: 60svh;
 }
 
 /* One screen per card. Transparent: the next card slides straight over the last one. */
@@ -41,7 +49,7 @@
   min-height: fit-content;
   margin: auto 0;
   padding: var(--card-pad);
-  border-radius: 0 var(--r-sm) var(--r-sm) var(--r-sm);
+  border-radius: 0 var(--r-art) var(--r-art) var(--r-art);
   background: var(--cream);
   color: var(--text-on-cream);
   isolation: isolate; /* keeps the shadow and grain layers below with their own card */
@@ -96,11 +104,11 @@
   left: 0;
   bottom: calc(100% - 1px);
   display: flex;
-  align-items: center;
+  align-items: flex-end; /* the number sits at the tab's foot, on the card's edge */
   width: 120px;
   height: var(--space-6);
-  padding: 0 var(--space-4);
-  border-radius: var(--r-sm) var(--r-sm) 0 0;
+  padding: 0 var(--card-pad) var(--space-1); /* the number lines up with the card's text */
+  border-radius: var(--r-art) var(--r-art) 0 0;
   background: var(--cream); /* same sheet as the card */
   isolation: isolate;
   font-size: var(--fs-caption);
@@ -126,6 +134,33 @@
   letter-spacing: var(--tracking-chip);
   opacity: 0.88; /* faint, but still 4.5:1 on red */
   transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+/* The whole card opens the case study: the title's link stretches over it. */
+.card[data-link] {
+  cursor: pointer;
+}
+
+.stretch {
+  color: inherit;
+  text-decoration: none;
+}
+
+.stretch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.stretch:focus-visible {
+  outline: none;
+}
+
+.stretch:focus-visible::after {
+  outline: 2px solid var(--ink);
+  outline-offset: -4px;
 }
 
 .card[data-covered] .count {
@@ -212,7 +247,7 @@
   width: 100%;
   min-height: 140px;
   border: 0;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-sm); /* 8: tighter than the card's 16, so the image sits neatly inside it */
   background: color-mix(in srgb, var(--ink) 9%, var(--cream));
   color: var(--ink);
   font: inherit;
@@ -271,6 +306,34 @@ button.media:active {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   opacity: 0.75;
+}
+
+/* ---------- Under the nav (phones) ----------
+   A sticky layer that takes no space: a red strip from the top of the screen to a little below the
+   nav pill, over the cards (below the nav and the crane). Card text stops at its lower edge. */
+.band {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .band {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    display: block;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .band::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: calc(var(--margin) * -1);
+    right: calc(var(--margin) * -1);
+    height: calc(var(--nav-top) + var(--space-7)); /* the nav pill (58) and a little */
+    background: var(--red);
+  }
 }
 
 /* ---------- The crane's perch ----------
@@ -335,6 +398,7 @@ button.media:active {
 @media (min-width: 768px) {
   .work {
     --pad-top: calc(var(--space-9) + var(--space-2));
+    --pad-bottom: var(--space-6);
     /* Sized by content: Projects.tsx gives every card the tallest card's natural height. */
     --card-h: auto;
   }
@@ -400,13 +464,49 @@ button.media:active {
    so a card never grows taller than the screen. */
 .media.shot {
   position: relative;
-  flex: 1;
-  min-height: 140px;
+  flex: none;
+  aspect-ratio: 2000 / 1360; /* the whole shot at every size, never cropped */
+  min-height: 0;
   overflow: hidden;
-  cursor: default;
+  cursor: inherit; /* a pointer when the card is a link */
 }
 
 .shotImg {
   object-fit: cover;
   object-position: left center; /* keep each shot's headline in view when cropped */
+}
+
+/* Phones: no folder tab; the card's top-left corner is rounded like the others. The cards are kept as
+   short as they can be (they stack on a screen of their own): a card stops just under the crane, and the
+   text blocks sit closer together. */
+@media (max-width: 767px) {
+  .work {
+    --pad-top: calc(var(--space-9) + var(--space-1));
+  }
+
+  .body {
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
+
+  .col + .col {
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+  }
+
+  .tab {
+    display: none;
+  }
+
+  .card {
+    border-radius: var(--r-art);
+  }
+
+  /* The text shows two lines, then "…". */
+  .text {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }

@@ -13,9 +13,16 @@
   box-sizing: content-box;
   width: calc(100% - 2px);
   border: 1px solid var(--art-frame-line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-art);
   background: var(--art-frame);
   overflow: hidden;
+}
+
+/* The whole artifact, positioned inside a figure that shows one band of it (Annotated `view`). */
+.band {
+  position: absolute;
+  left: 0;
+  width: 100%;
 }
 
 .layer {

@@ -64,7 +64,7 @@ export const SixChanges = () => (
 
 /** Handoff: the ISBN field with its server choice, state by state (isbn_states.gif). */
 export const HandoffIsbn = () => (
-  <Anim name="handoff-isbn-v2" w={1128} h={251} alt="The ISBN field with a server choice, shown in each of its states." />
+  <Anim name="handoff-isbn-v3" w={1128} h={251} alt="The ISBN field with a server choice, shown in each of its states." />
 );
 
 /** Edge cases › Onboarding for new users (1onboarding.png, 4068 x 2596 inside her frame). */

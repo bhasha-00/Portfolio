@@ -5,7 +5,7 @@
   margin: 0;
   padding: var(--art-pad);
   border: 1px solid var(--art-frame-line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-art);
   background: var(--art-frame);
 }
 
@@ -86,4 +86,48 @@
 
 .video {
   transition: opacity var(--dur-base) var(--ease-out);
+}
+
+/* The play button over the first frame: a cream disc and a red triangle on a veil over the first frame.
+   The whole screen is the button. */
+.play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: color-mix(in srgb, var(--ink) 16%, transparent); /* a veil over the first frame, so the disc stands out */
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.play svg {
+  box-sizing: border-box;
+  width: clamp(var(--space-8), 8%, var(--space-9));
+  aspect-ratio: 1;
+  padding: var(--space-3);
+  border-radius: 50%;
+  background: var(--cream);
+  grid-area: 1 / 1;
+  fill: var(--red);
+  stroke: var(--red);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .play:hover svg {
+    transform: scale(1.06);
+  }
+}
+
+.play:active svg {
+  transform: scale(0.96);
+}
+
+.play:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: -2px;
 }

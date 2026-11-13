@@ -8,7 +8,7 @@
   margin: 0;
   padding: var(--space-7) var(--space-4) var(--space-5);
   border: 1px solid var(--art-frame-line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-art);
   background: var(--art-frame);
 }
 

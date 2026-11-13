@@ -88,7 +88,7 @@
   line-height: var(--lh-h2);
   font-weight: var(--fw-h2);
   letter-spacing: var(--tracking-h2);
-  text-wrap: balance;
+  text-wrap: pretty; /* full width: lines fill, no balancing */
 }
 
 /* Role: body. */

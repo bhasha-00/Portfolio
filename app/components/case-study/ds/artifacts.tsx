@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
 import { Annotated, Lines, Note } from "../lsneo/Annotated";
 import Tldr, { type TldrCard } from "../lsneo/Tldr";
@@ -105,47 +106,65 @@ const BLUES = [
 ];
 
 /** Three blues, no owner (2blues.svg): the existing header gradient and the suggested one. Her two
- *  cards, so no outer frame. */
+ *  cards, so no outer frame. One above the other on phones and tablets; on desktop her side-by-side export. */
 export const DsBlues = () => (
-  <Annotated
-    src={`${DIR}/blues-v1.svg`}
-    w={814}
-    h={810}
-    frame={false}
-    alt="The existing header gradient, blue to indigo, and the suggested one, brand blue to deep navy; both pass AA with white text."
-    over={BLUES.map((c) => (
-      <g key={c.head} transform={`translate(0 ${c.y})`}>
-        <T x={23} y={44.5} size={22} className={`${t.bold} ${c.tone}`}>
-          {c.head}
-        </T>
-        <T x={22.3} y={88.5} size={12} className={t.quiet}>
-          Blue to Indigo, no rule for which hue to follow
-        </T>
-        <T x={63.3} y={190} size={22} className={`${t.semi} ${t.paper}`}>
-          LSNeo Library Services Platform
-        </T>
-        <T x={61.8} y={221} size={14} className={t.paper}>
-          White text on a full-opacity gradient
-        </T>
-        {c.rows.map(([name, hex, ratio], i) => (
-          <g key={name} transform={`translate(0 ${48 * i})`}>
-            <T x={54} y={317.5} className={t.ink}>
-              {name}
+  <>
+    {/* Desktop: her side-by-side export, as supplied (lossless, not resized). */}
+    <figure className={t.bluesWeb} style={{ aspectRatio: "1211 / 390" }}>
+      <Image
+        src={`${DIR}/blues-web-v1.webp`}
+        alt="The existing header gradient, blue to indigo, and the suggested one, brand blue to deep navy; both pass AA with white text."
+        fill
+        unoptimized
+        className={t.bluesImg}
+      />
+    </figure>
+  <div className={t.blues}>
+    {BLUES.map((c) => (
+      <Annotated
+        key={c.head}
+        src={`${DIR}/blues-v1.svg`}
+        w={814}
+        h={810}
+        frame={false}
+        view={{ y: c.y, h: 393 }}
+        alt={`${c.head}: ${c.rows.map((r) => `${r[0]} ${r[1]}`).join(", ")}; both pass AA with white text.`}
+        over={
+          <g transform={`translate(0 ${c.y})`}>
+            <T x={23} y={44.5} size={22} className={`${t.bold} ${c.tone}`}>
+              {c.head}
             </T>
-            <T x={292.6} y={317.5} className={t.ink}>
-              {hex}
+            <T x={22.3} y={88.5} size={12} className={t.quiet}>
+              Blue to Indigo, no rule for which hue to follow
             </T>
-            <T x={509.7} y={317.5} className={t.ink}>
-              {ratio}
+            <T x={63.3} y={190} size={22} className={`${t.semi} ${t.paper}`}>
+              LSNeo Library Services Platform
             </T>
-            <T x={720} y={317.5} className={t.green}>
-              Passes AA
+            <T x={61.8} y={221} size={14} className={t.paper}>
+              White text on a full-opacity gradient
             </T>
+            {c.rows.map(([name, hex, ratio], i) => (
+              <g key={name} transform={`translate(0 ${48 * i})`}>
+                <T x={54} y={317.5} className={t.ink}>
+                  {name}
+                </T>
+                <T x={292.6} y={317.5} className={t.ink}>
+                  {hex}
+                </T>
+                <T x={509.7} y={317.5} className={t.ink}>
+                  {ratio}
+                </T>
+                <T x={720} y={317.5} className={t.green}>
+                  Passes AA
+                </T>
+              </g>
+            ))}
           </g>
-        ))}
-      </g>
+        }
+      />
     ))}
-  />
+  </div>
+  </>
 );
 
 /** Scope: what we didn't do and what we did (2dodont.svg). */

@@ -26,7 +26,7 @@
   aspect-ratio: var(--card-ratio);
   padding: 0;
   border: 0;
-  border-radius: var(--r-md);
+  border-radius: var(--r-art);
   background: none;
   color: var(--text-on-cream);
   font: inherit;
@@ -51,7 +51,7 @@
   flex-direction: column;
   width: 306px;
   height: 410px;
-  border-radius: var(--r-md);
+  border-radius: calc(var(--r-art) / var(--k));
   background: var(--cream);
   box-shadow: var(--shadow-card);
   transform: scale(var(--k));
@@ -74,9 +74,12 @@
 
 .media {
   position: relative;
-  flex: none;
-  height: 251px;
-  border-radius: var(--r-md) var(--r-md) 0 0;
+  flex: 1; /* the photo takes what the footer leaves, so the footer's 12px is the card's bottom padding */
+  min-height: 0;
+  /* The card is drawn at 306 x 410 and scaled by --k, so its padding and radius are divided by --k:
+     they come out as 16px and --r-art on screen, the same as About's card. */
+  margin: calc(var(--space-4) / var(--k)) calc(var(--space-4) / var(--k)) 0;
+  border-radius: calc(var(--r-art) / var(--k));
   overflow: hidden; /* no fill: scaled, an ink fill showed as a hairline above the footer */
 }
 
@@ -84,14 +87,14 @@
   object-fit: cover;
 }
 
-/* Footer (the frames): the pill 12 in from the edges, the one-liner 16 under it and 20 in. */
+/* Footer: 12 padding all round, like every card; the one-liner 16 under the pill. */
 .foot {
-  flex: 1;
+  flex: none;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--space-4);
-  padding: var(--space-3);
+  gap: calc(var(--space-3) / var(--k));
+  padding: calc(var(--space-4) / var(--k));
 }
 
 .pill {
@@ -102,7 +105,7 @@
 }
 
 .line {
-  padding-inline: var(--space-2);
+  padding-inline: 0;
   color: var(--text-muted);
   font-size: var(--fs-body);
   line-height: var(--lh-body);

@@ -80,6 +80,7 @@
 
   /* ---------- Radius / elevation ---------- */
   --r-sm: 8px; --r-md: 16px; --r-pill: 999px;
+  --r-art: 12px;               /* every card, artifact and frame on phones; 16 (--r-md) from 768 */
   --shadow-card: 0 8px 24px color-mix(in srgb, var(--ink) 20%, transparent);
 
   /* ---------- Layout: 4 / 8 / 12 columns ---------- */
@@ -87,7 +88,7 @@
   --margin: 20px;      /* 390 */
   --gutter: 16px;
   --cols: 4;
-  --card-pad: var(--space-5);   /* 24 mobile, 48 desktop */
+  --card-pad: var(--space-6);   /* case study cards; the AI and About cards use 16 (--space-4) */
   --nav-offset: 96px;           /* sticky cards stop below the nav */
 
   /* ---------- Layers ---------- */
@@ -102,7 +103,7 @@
 /* Tablet 768–1199 */
 @media (min-width: 768px) {
   :root {
-    --margin: 40px; --gutter: 24px; --cols: 8; --card-pad: var(--space-6);
+    --margin: 40px; --gutter: 24px; --cols: 8; --r-art: var(--r-md);
     --fs-h3: 28px; --lh-h3: 32px;
     --fs-h2: 32px; --lh-h2: 36px;
     --fs-display: 40px; --lh-display: 44px;
@@ -113,7 +114,7 @@
 /* Desktop 1200+ */
 @media (min-width: 1200px) {
   :root {
-    --margin: 80px; --cols: 12; --card-pad: var(--space-7);
+    --margin: 80px; --cols: 12;
     --fs-h2: 40px; --lh-h2: 44px;
     --fs-display: 48px; --lh-display: 52px;
     --fs-numeral: 192px;

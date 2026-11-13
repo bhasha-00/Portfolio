@@ -49,7 +49,7 @@
   flex-direction: column;
   padding: var(--space-5) var(--space-4);
   border: 1px solid var(--art-frame-line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-art);
   background: var(--art-frame);
   overflow: hidden;
   backface-visibility: hidden;
@@ -255,6 +255,11 @@
 
   .table th {
     width: 16%;
+  }
+
+  /* The findings sit in the middle of the frame, whatever its height. */
+  .b {
+    justify-content: center;
   }
 
   .cards {

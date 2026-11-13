@@ -180,8 +180,14 @@ export default function CaseStudy({ cs }: { cs: CS }) {
   let last = tabs[0]?.id ?? "";
   const spy = cs.sections.map((s) => ({ id: s.id, tab: s.tab ? (last = s.id) : last }));
   spy.push({ id: "more", tab: last }); // Explore more keeps the last tab marked
-  const cover = projects.find((p) => p.name === cs.project)?.image;
-  const more = cs.more.map((m) => ({ ...m, p: projects.find((p) => p.name === m.project), href: caseStudyHref(m.project) }));
+  const card = projects.find((p) => p.name === cs.project);
+  const cover = card?.image;
+  // The page's title is the card's title on home, so the two always match.
+  const title = card?.title ?? cs.title;
+  const more = cs.more.map((m) => {
+    const p = projects.find((q) => q.name === m.project);
+    return { ...m, title: p?.title ?? m.title, p, href: caseStudyHref(m.project) };
+  });
 
   return (
     <div className={styles.page}>
@@ -192,7 +198,7 @@ export default function CaseStudy({ cs }: { cs: CS }) {
             <p className={styles.kicker}>
               {cs.product} <span aria-hidden="true">•</span> {cs.year}
             </p>
-            <h1 className={styles.h1}>{cs.title}</h1>
+            <h1 className={styles.h1}>{title}</h1>
             {cs.dek && <p className={styles.dek}>{cs.dek}</p>}
             <dl className={styles.meta}>
               {cs.meta.map((m) => (

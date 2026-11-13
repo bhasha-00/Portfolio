@@ -7,6 +7,7 @@
   min-height: 100svh;
   padding-top: var(--nav-offset);
   overflow: hidden;
+  container-type: inline-size; /* cqw: the numeral's baseline follows the art's width */
 }
 
 /* Phones and tablet: stacked, full width. Desktop: headline cols 1–8, intro 9–12. */
@@ -27,7 +28,7 @@
   line-height: var(--lh-display);
   font-weight: var(--fw-display);
   letter-spacing: var(--tracking-display);
-  text-wrap: balance;
+  text-wrap: pretty; /* full width: lines fill, no balancing */
 }
 
 /* Phones: the steps run on and wrap balanced; one line per step from 768 up. */
@@ -41,7 +42,7 @@
   line-height: var(--lh-h3);
   font-weight: var(--fw-h2);
   letter-spacing: var(--tracking-h2);
-  text-wrap: balance;
+  text-wrap: pretty; /* full width: lines fill, no balancing */
 }
 
 /* Role: hand-md (outlined handwriting, sized to the role's font size). */
@@ -64,11 +65,12 @@
   font-weight: var(--fw-body);
 }
 
-/* Tinted numeral, behind everything. Its baseline sits on the bottom edge, where the art ends. */
+/* Tinted numeral, behind everything. One bottom with the art: the numeral's lowest point (the slash's
+   descender) sits on the art's lowest visible pixel (the file ends 45 of 2000 px below it, 2.25% of its width). */
 .big {
   position: absolute;
   right: 0; /* the container's right edge */
-  bottom: -0.13em; /* cancels Geist's space under the baseline */
+  bottom: calc(-0.034em + min(640px, 100cqw) * 0.0225); /* -0.144em puts the baseline on the art; +0.11em lifts the slash's descender (0.11em) clear of the bottom edge */
   z-index: 0;
   font-size: var(--fs-numeral);
   font-weight: var(--fw-display);
