@@ -1,5 +1,6 @@
 import { Annotated, Lines, Note } from "../lsneo/Annotated";
 import t from "../ds/ds.module.css";
+import v from "../lsneo/VideoArtifact.module.css";
 
 // The Chatbot case study's artifacts (Bhasha's 3*.svg exports, built by
 // scripts/build-chatbot-artifacts.cjs). The bot screens are hers, exactly as drawn; her notes, the
@@ -30,7 +31,7 @@ const Green = ({ x, y, lines }: { x: number; y: number; lines: string[] }) => (
 const design = (name: string, w: number, h: number, alt: string, notes: { x: number; y: number; lines: string[] }[]) => {
   const D = () => (
     <Annotated
-      src={`${DIR}/${name}-v1.svg`}
+      src={`${DIR}/${name}-v2.svg`}
       w={w}
       h={h}
       alt={alt}
@@ -177,7 +178,7 @@ const AUDIT: { x: number; y: number; h: number; lines: string[] }[] = [
 /** The heuristic evaluation: four screens of the old bot, each problem noted (3audit.svg). */
 export const CbAudit = () => (
   <Annotated
-    src={`${DIR}/audit-v1.svg`}
+    src={`${DIR}/audit-v2.svg`}
     w={2835}
     h={2414}
     alt="Heuristic evaluation of the old Ask MODAL Assistant Ace bot: four screens, each friction point noted against a usability heuristic."
@@ -190,7 +191,7 @@ export const CbAudit = () => (
 /** The three flows mapped from contextual inquiry (3flow.svg). */
 export const CbFlow = () => (
   <Annotated
-    src={`${DIR}/flow-v1.svg`}
+    src={`${DIR}/flow-v2.svg`}
     w={988}
     h={1574}
     alt="Three user flows from the contextual inquiry: pre-audit trade logs, start-of-day pending trades and morning corporate actions, with bot responses and error recovery."
@@ -201,7 +202,7 @@ export const CbFlow = () => (
 /** The response decision tree document, with her vocabulary of the bot (3doc.svg). */
 export const CbDoc = () => (
   <Annotated
-    src={`${DIR}/doc-v1.svg`}
+    src={`${DIR}/doc-v2.svg`}
     w={1318}
     h={720}
     alt="The response decision tree document for admins: identify the query type, choose the response template, apply components."
@@ -252,12 +253,21 @@ export const CbRevisedB = design("revised-b", 1869, 983, "Before and present: an
 ]);
 
 // ---------- Documentation ----------
-/** Component guidelines for the admin team (3last.svg). */
+/** Component guidelines for the admin team: her full screenshot (3last.png), in the frame and inset
+ *  the prototype recordings use. */
 export const CbAdminDoc = () => (
-  <Annotated
-    src={`${DIR}/admin-doc-v1.svg`}
-    w={1017}
-    h={792}
-    alt="Component guidelines for the admin team: text bar, chips and text with link, each with anatomy, variants and usage."
-  />
+  <figure className={v.frame}>
+    <div className={v.screen} style={{ aspectRatio: "2272 / 1510" }}>
+      {/* eslint-disable-next-line @next/next/no-img-element -- served exactly as stored */}
+      <img
+        className={v.video}
+        src={`${DIR}/admin-doc-v2.webp`}
+        width={2272}
+        height={1510}
+        loading="lazy"
+        decoding="async"
+        alt="Component guidelines for the admin team: text bar, chips and text with link, each with anatomy, variants, usage and her notes."
+      />
+    </div>
+  </figure>
 );
