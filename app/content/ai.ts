@@ -20,6 +20,14 @@ export type Tinker = {
   soon?: boolean;
 };
 
+/** The section's header. */
+export const aiHead = {
+  eyebrow: "On my own time",
+  title: "Tools I wished existed, so I built them.",
+  lead: "Small experiments that each start with a question and end as something you can use.",
+  count: "3 experiments / many random incomplete ones.",
+};
+
 /** Height of every name pill, in px at the card's full size. */
 export const PILL_H = 48;
 

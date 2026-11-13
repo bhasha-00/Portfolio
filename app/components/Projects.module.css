@@ -49,7 +49,7 @@
   min-height: fit-content;
   margin: auto 0;
   padding: var(--card-pad);
-  border-radius: 0 var(--r-art) var(--r-art) var(--r-art);
+  border-radius: var(--r-art);
   background: var(--cream);
   color: var(--text-on-cream);
   isolation: isolate; /* keeps the shadow and grain layers below with their own card */
@@ -91,31 +91,6 @@
   background: var(--dim-overlay);
   opacity: 0;
   pointer-events: none;
-}
-
-/* The tab's number: dims with the card's type (Projects.tsx). */
-.ink {
-  position: relative;
-}
-
-/* Folder tab, same paper as the card, sitting on its top edge. */
-.tab {
-  position: absolute;
-  left: 0;
-  bottom: calc(100% - 1px);
-  display: flex;
-  align-items: flex-end; /* the number sits at the tab's foot, on the card's edge */
-  width: 120px;
-  height: var(--space-6);
-  padding: 0 var(--card-pad) var(--space-1); /* the number lines up with the card's text */
-  border-radius: var(--r-art) var(--r-art) 0 0;
-  background: var(--cream); /* same sheet as the card */
-  isolation: isolate;
-  font-size: var(--fs-caption);
-  line-height: var(--lh-caption);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--tracking-chip);
 }
 
 /* Counter "01 / 04": in its own card's tab row, right-aligned to the card edge, on the red. */
@@ -403,10 +378,6 @@ button.media:active {
     --card-h: auto;
   }
 
-  .tab {
-    width: 160px;
-  }
-
   .body {
     margin-top: var(--space-6);
   }
@@ -476,7 +447,7 @@ button.media:active {
   object-position: left center; /* keep each shot's headline in view when cropped */
 }
 
-/* Phones: no folder tab; the card's top-left corner is rounded like the others. The cards are kept as
+/* Phones: the cards are kept as
    short as they can be (they stack on a screen of their own): a card stops just under the crane, and the
    text blocks sit closer together. */
 @media (max-width: 767px) {
@@ -492,14 +463,6 @@ button.media:active {
   .col + .col {
     margin-top: var(--space-3);
     padding-top: var(--space-3);
-  }
-
-  .tab {
-    display: none;
-  }
-
-  .card {
-    border-radius: var(--r-art);
   }
 
   /* The text shows two lines, then "…". */

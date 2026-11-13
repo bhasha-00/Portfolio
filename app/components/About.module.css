@@ -31,7 +31,7 @@
   line-height: var(--lh-h2);
   font-weight: var(--fw-h2);
   letter-spacing: var(--tracking-h2);
-  text-align: center;
+  text-align: left;
   text-wrap: pretty; /* full width: lines fill, no balancing */
 }
 
@@ -188,8 +188,102 @@
   /* About.svg: front card 31.1% of the container, side cards at 75% of it, their centres 76% of a
      card width out. Short screens: the card keeps clear of the nav and the line above it. */
   .stage {
-    --card-w: min(31.1cqw, (100svh - 260px) * 434 / 623);
+    --card-w: min(31.1cqw, (100svh - 440px) * 434 / 623); /* room for the text above */
     --dx: 76%;
     --side: 0.75;
+  }
+}
+
+/* The text: eyebrow, line, paragraph and tag, left-aligned at every size. */
+.text {
+  color: var(--text-on-red);
+}
+
+.eyebrow {
+  margin-bottom: var(--space-1);
+  font-family: var(--font-hand);
+  font-size: var(--fs-hand-md);
+  line-height: var(--lh-hand-md);
+}
+
+.body {
+  margin-top: var(--space-5);
+  font-size: var(--fs-body); /* as the hero's summary line */
+  line-height: var(--lh-body);
+}
+
+.tag {
+  display: inline-block;
+  margin-top: var(--space-5);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--r-pill);
+  background: var(--cloud-fill);
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+  font-weight: var(--fw-label);
+}
+
+/* ---------- Desktop: no pin and no fan. The text on the left (eyebrow, line, paragraph, tag), the
+   three cards scattered on the right, each a little turned and overlapping, as a handful of prints
+   laid on a desk. The spread's inline transforms are replaced. ---------- */
+@media (min-width: 1200px) {
+  .about {
+    height: auto;
+    padding: var(--space-9) 0;
+  }
+
+  .pin {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    column-gap: var(--gutter);
+    align-items: center;
+    height: auto;
+    padding: 0;
+  }
+
+  .text {
+    grid-column: 1 / span 5;
+  }
+
+  /* The cards: three sizes, placed by hand, so the group is uneven on purpose. */
+  .pin .stage {
+    grid-column: 6 / -1;
+    height: auto;
+    aspect-ratio: 10 / 9;
+  }
+
+  .stage > div {
+    margin: 0;
+    z-index: auto !important;
+  }
+
+  .stage > div:nth-child(1) {
+    left: 28%;
+    top: 0;
+    width: 46%;
+    transform: rotate(3deg) !important; /* the spread script writes inline transforms; these replace them */
+    z-index: 2 !important;
+  }
+
+  .stage > div:nth-child(2) {
+    left: 2%;
+    top: 26%;
+    width: 42%;
+    transform: rotate(-5deg) !important;
+  }
+
+  .stage > div:nth-child(3) {
+    left: 61%;
+    top: 30%;
+    width: 37%;
+    transform: rotate(6deg) !important;
+    z-index: 3 !important;
+  }
+
+  .stage > div > div,
+  .stage > div > div[data-role] {
+    transform: none;
+    transition: none;
   }
 }

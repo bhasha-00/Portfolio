@@ -22,7 +22,8 @@ export const ROLE = ["front", "left", "right"] as const;
 /** Swing angles of the fan, in degrees: `swing` from 768, `tilt` on phones. */
 export type Fan = { swing: number; tilt: number };
 
-export function useSpread(fan: Fan[]) {
+/** `pinned`: the widths at which the section is pinned and the fan is scrubbed by scroll. */
+export function useSpread(fan: Fan[], pinned = "(min-width: 768px)") {
   const section = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const slots = useRef<(HTMLDivElement | null)[]>([]);
@@ -43,7 +44,7 @@ export function useSpread(fan: Fan[]) {
 
   useEffect(() => {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)");
-    const wide = matchMedia("(min-width: 768px)");
+    const wide = matchMedia(pinned);
     let raf = 0;
 
     const update = () => {
@@ -104,7 +105,7 @@ export function useSpread(fan: Fan[]) {
       wide.removeEventListener("change", onScroll);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [pinned]);
 
   // Swipe (phones, or a mouse drag): left brings the right card to the front, right the left one.
   const stageProps = {

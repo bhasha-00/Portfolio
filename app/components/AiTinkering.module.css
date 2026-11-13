@@ -246,9 +246,117 @@
   opacity: 1;
 }
 
-@media (min-width: 1200px) {
+/* ---------- The header: eyebrow, title, lead; the count beside it from 768 ---------- */
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-7);
+  color: var(--text-on-red);
+}
+
+.eyebrow {
+  margin-bottom: var(--space-1);
+  font-family: var(--font-hand);
+  font-size: var(--fs-hand-md);
+  line-height: var(--lh-hand-md);
+}
+
+.title {
+  font-size: var(--fs-h2);
+  line-height: var(--lh-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tracking-h2);
+  text-wrap: pretty;
+}
+
+.lead {
+  margin-top: var(--space-5);
+  font-size: var(--fs-body); /* as the hero's summary line */
+  line-height: var(--lh-body);
+}
+
+.count {
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+  font-weight: var(--fw-label);
+}
+
+@media (min-width: 768px) {
+  .head {
+    flex-direction: row;
+    align-items: flex-end;
+    align-items: last baseline; /* the count sits on the lead's last line of text */
+    justify-content: space-between;
+    gap: var(--gutter);
+    margin-bottom: 0;
+  }
+
+  .count {
+    flex: none;
+    text-align: right;
+    white-space: nowrap; /* one line */
+  }
+
+  /* Tablet: the header sits above the pinned spread, so the cards give it room. */
+  .pin {
+    grid-template-rows: auto 1fr;
+    row-gap: var(--space-5);
+    padding-top: var(--space-9);
+  }
+
   .stage {
-    --card-w: min(30cqw, (100svh - 176px) * 306 / 410);
-    --k: 1.25;
+    --card-w: min(40cqw, (100svh - 420px) * 306 / 410);
+  }
+}
+
+/* ---------- Desktop: no pin and no fan. The header, then the three cards in one row, in the
+   spread's order (left, front, right). The spread's inline transforms are switched off. ---------- */
+@media (min-width: 1200px) {
+  .ai {
+    height: auto;
+    padding: var(--space-9) 0;
+  }
+
+  .pin {
+    position: static;
+    display: block;
+    height: auto;
+    padding: 0;
+  }
+
+  .head {
+    margin-bottom: var(--space-7);
+  }
+
+  .title {
+    white-space: nowrap; /* one line beside the count */
+  }
+
+  .pin .stage {
+    --k: 1.3;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gutter);
+    height: auto;
+  }
+
+  .stage > div {
+    position: relative;
+    left: auto;
+    width: auto;
+    margin: 0;
+    transform: none !important; /* the spread script writes inline transforms; the row ignores them */
+    z-index: auto !important;
+  }
+
+  .stage > div:nth-child(2) {
+    order: -1; /* the ring's left card comes first */
+  }
+
+  .stage > div > div,
+  .stage > div > div[data-role] {
+    transform: none;
+    transition: none;
   }
 }

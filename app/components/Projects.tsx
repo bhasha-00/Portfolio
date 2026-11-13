@@ -265,14 +265,11 @@ export default function Projects() {
     const layersOf = (c: HTMLElement) => {
       let l = layers.get(c);
       if (!l) {
-        const skip = [styles.tab, styles.count, styles.grain, styles.shade, styles.dim];
+        const skip = [styles.count, styles.grain, styles.shade, styles.dim];
         l = {
           shade: [...c.querySelectorAll<HTMLElement>(`.${styles.shade}`)],
           dim: [...c.querySelectorAll<HTMLElement>(`.${styles.dim}`)],
-          ink: [
-            ...[...c.children].filter((e): e is HTMLElement => !skip.some((k) => e.classList.contains(k))),
-            ...c.querySelectorAll<HTMLElement>(`.${styles.tab} .${styles.ink}`),
-          ],
+          ink: [...c.children].filter((e): e is HTMLElement => !skip.some((k) => e.classList.contains(k))),
           at: -1,
         };
         layers.set(c, l);
@@ -390,11 +387,6 @@ export default function Projects() {
             >
               <span className={styles.shade} aria-hidden="true" />
               <span className={styles.grain} aria-hidden="true" />
-              <span className={styles.tab} aria-hidden="true">
-                <span className={styles.grain} />
-                <span className={styles.ink}>{pad(j + 1)}</span>
-                <span className={styles.dim} />
-              </span>
               <span className={styles.count} aria-hidden="true">
                 {pad(j + 1)} / {pad(N)}
               </span>

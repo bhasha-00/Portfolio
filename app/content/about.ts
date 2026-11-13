@@ -49,4 +49,11 @@ export const slots: Slot[] = [
 export const HAND_H = 15.6;
 
 /** The line above the cards, in Geist (h2). */
-export const aboutLine = "Shaped by industrial design, grounded in the act of creating";
+export const aboutLine = "Shaped by industrial design, grounded in the act of building.";
+
+/** Desktop only: the eyebrow above the line, the paragraph and the tag under it. */
+export const aboutHead = {
+  eyebrow: "Before pixels",
+  text: "I trained in product design, where I learned to think with my hands before my screen. Paper, light and cut-outs taught me how things hold together. Outside work I still build, now with AI as the workshop.",
+  tag: "B.Des, Product Design",
+};

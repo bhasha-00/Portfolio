@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { PILL_H, tinkers } from "../content/ai";
+import { aiHead, PILL_H, tinkers } from "../content/ai";
 import Origami from "./companion/Origami";
 import PerchPuff from "./companion/PerchPuff";
 import { ROLE, roleOf, useSpread } from "./useSpread";
@@ -12,6 +12,8 @@ import styles from "./AiTinkering.module.css";
 
 const PERCH = 0; // the crane perches on the card that starts in front
 const FRAME_W = 306; // the cards' width in Frames 1984079200–202, px
+const TABLET = "(min-width: 768px) and (max-width: 1199px)"; // pinned fan; desktop is a plain row
+const ROW = "(min-width: 1200px)";
 
 // A card's clip, over its still. Only the front card's clip plays; a side card's is paused and
 // faded out, so the still shows. The file is fetched once the section is near (never with the
@@ -50,10 +52,20 @@ function Clip({ src, focus, play }: { src: string; focus?: string; play: boolean
 // card brings it to the front; clicking the front card opens the tool in a new tab, or, for one not
 // out yet, shows "Coming soon" over its media.
 export default function AiTinkering() {
-  const { section, stage, slots, front, bring, stageProps, swiped, zOf } = useSpread(tinkers);
+  const { section, stage, slots, front, bring, stageProps, swiped, zOf } = useSpread(tinkers, TABLET);
   const fly = useRef<HTMLSpanElement>(null);
   const { bubble, follow, unfollow } = useViewBubble(); // "View ↗" over any card
   const craneWidth = useCallback(() => (fly.current?.firstElementChild as HTMLElement | null)?.offsetWidth ?? 0, []);
+
+  // Desktop: the three cards side by side, all of them "in front" (each opens its tool, each clip plays).
+  const [row, setRow] = useState(false);
+  useEffect(() => {
+    const mq = matchMedia(ROW);
+    const on = () => setRow(mq.matches);
+    on();
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
 
   // The cards are laid out at the frames' 306px and scaled to the slot's width: --k = width / 306.
   useEffect(() => {
@@ -93,14 +105,21 @@ export default function AiTinkering() {
 
   return (
     <section ref={section} id="ai-tinkering" className={`${spread.clip} ${styles.ai}`} aria-labelledby="ai-tinkering-title">
-      <h2 id="ai-tinkering-title" className="sr-only">
-        AI Tinkering
-      </h2>
       <div className={`container ${spread.frame} ${styles.pin}`}>
+        <header className={styles.head}>
+          <div>
+            <p className={styles.eyebrow}>{aiHead.eyebrow}</p>
+            <h2 id="ai-tinkering-title" className={styles.title}>
+              {aiHead.title}
+            </h2>
+            <p className={styles.lead}>{aiHead.lead}</p>
+          </div>
+          <p className={styles.count}>{aiHead.count}</p>
+        </header>
         <div ref={stage} className={`${spread.stage} ${styles.stage}`} {...stageProps}>
           {tinkers.map((c, i) => {
             const role = roleOf(i, front);
-            const isFront = role === 0;
+            const isFront = row || role === 0;
             // The card as designed (306 x 410), scaled to the card's width as one piece (--k).
             const inner = (
               <span className={styles.face}>
@@ -160,7 +179,7 @@ export default function AiTinkering() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className={styles.card}
-                      aria-current="true"
+                      aria-current={role === 0 || undefined}
                       aria-label={`${c.name}: ${c.line} Opens in a new tab.`}
                       onClick={(e) => swiped() && e.preventDefault()}
                     >
@@ -170,7 +189,7 @@ export default function AiTinkering() {
                     <button
                       type="button"
                       className={styles.card}
-                      aria-current={isFront || undefined}
+                      aria-current={role === 0 || undefined}
                       aria-label={
                         !isFront ? `Bring ${c.name} to the front` : c.soon ? `${c.name}: ${c.line} Coming soon.` : undefined
                       }
