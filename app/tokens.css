@@ -46,7 +46,8 @@
   --art-ring: #EFE9DC;
   --art-quiet: #80828E;       /* small captions in her design system cards */
   --art-amber: #E68109;       /* her hand-lettered "Borrowed" notes */
-  --art-indigo: #4F46E5;      /* one heading in her References artifact (hers; never site UI) */
+  --art-indigo: #4F46E5;
+  --art-leaf: #078237;        /* text on her green sticky notes (chatbot) */      /* one heading in her References artifact (hers; never site UI) */
   --art-pad: 5.2%;            /* inset inside her frames: 53px of a 1024 frame, as on her other artifacts */        /* the ring round her two-panel artifacts (Versions, 6 changes) */
 
   /* ---------- Fonts: exactly two families ---------- */

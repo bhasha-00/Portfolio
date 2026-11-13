@@ -8,6 +8,7 @@ import Context from "./lsneo/Context";
 import Synthesis from "./lsneo/Synthesis";
 import Tldr from "./lsneo/Tldr";
 import * as ds from "./ds/artifacts";
+import * as cb from "./chatbot/artifacts";
 import { Duplicate, Flow, HandoffIsbn, Onboarding, PrototypeFinal, SearchByTitle, SixChanges, Versions, Walkthrough } from "./lsneo/artifacts";
 import styles from "./CaseStudy.module.css";
 
@@ -95,6 +96,16 @@ const artifacts: Record<ArtifactName, React.ComponentType> = {
   "ds-components": ds.DsComponents,
   "ds-nav": ds.DsNav,
   "ds-before-after": ds.DsBeforeAfter,
+  "cb-audit": cb.CbAudit,
+  "cb-flow": cb.CbFlow,
+  "cb-doc": cb.CbDoc,
+  "cb-intents": cb.CbIntents,
+  "cb-layers": cb.CbLayers,
+  "cb-errors": cb.CbErrors,
+  "cb-context-id": cb.CbContextId,
+  "cb-revised-a": cb.CbRevisedA,
+  "cb-revised-b": cb.CbRevisedB,
+  "cb-admin-doc": cb.CbAdminDoc,
 };
 
 function BlockView({ block }: { block: Block }) {

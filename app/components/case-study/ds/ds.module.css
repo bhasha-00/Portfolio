@@ -69,3 +69,15 @@
   font-family: var(--font-hand);
   font-size: var(--fs-hand-lg);
 }
+
+.t.strong {
+  fill: var(--art-strong);
+}
+
+.t.leaf {
+  fill: var(--art-leaf);
+}
+
+.t.small {
+  font-size: var(--fs-small);
+}

@@ -55,10 +55,28 @@ export function Lines({ x, y, lines, step = LINE, className }: { x: number; y: n
 }
 
 /** A note card of hers (222 wide): the text, and her "Bhasha" tag in the bottom corner. */
-export function Note({ x, y, h = 128, lines, top = 25.7 }: { x: number; y: number; h?: number; lines: string[]; top?: number }) {
+export function Note({
+  x,
+  y,
+  h = 128,
+  lines,
+  top = 25.7,
+  step = LINE,
+  tone,
+}: {
+  x: number;
+  y: number;
+  h?: number;
+  lines: string[];
+  top?: number;
+  /** Line spacing in her px (20 unless her card sets it tighter or looser). */
+  step?: number;
+  /** A class for the note's text colour (her green notes). */
+  tone?: string;
+}) {
   return (
     <g>
-      <Lines x={x + 11} y={y + top} lines={lines} className={styles.note} />
+      <Lines x={x + 11} y={y + top} step={step} lines={lines} className={tone ? `${styles.note} ${tone}` : styles.note} />
       <text className={styles.sign} transform={`translate(${x + 11} ${y + h - 12.2}) scale(0.55)`}>
         Bhasha
       </text>

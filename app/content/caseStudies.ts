@@ -57,7 +57,17 @@ export type ArtifactName =
   | "ds-references"
   | "ds-components"
   | "ds-nav"
-  | "ds-before-after";
+  | "ds-before-after"
+  | "cb-audit"
+  | "cb-flow"
+  | "cb-doc"
+  | "cb-intents"
+  | "cb-layers"
+  | "cb-errors"
+  | "cb-context-id"
+  | "cb-revised-a"
+  | "cb-revised-b"
+  | "cb-admin-doc";
 
 export type Section = {
   /** Anchor id. */
@@ -495,8 +505,6 @@ const designSystem: CaseStudy = {
 };
 
 
-// Placeholders keep each artifact's exact Framer proportions until the file is supplied.
-const shot = (label: string, w: number, h: number): Block => ({ type: "media", media: { label, kind: "image", ratio: w / h } });
 
 const chatbot: CaseStudy = {
   slug: "optimizing-response-syntax-for-chatbot-adoption",
@@ -543,13 +551,13 @@ const chatbot: CaseStudy = {
           type: "p",
           text: "**What I found:** The bot invited vague queries. Errors ended in dead ends, and users couldn’t tell what it could or couldn’t do.",
         },
-        shot("Heuristic evaluation of the bot as a first-time user", 1036, 885),
+        { type: "artifact", name: "cb-audit" },
         { type: "h3", text: "Collecting evidence" },
         {
           type: "p",
           text: "I ran contextual inquiry sessions to see how users actually consumed data in the moment, so decisions rested on real behavior and not assumption.",
         },
-        shot("Contextual inquiry: how users consumed data in the moment", 1036, 1771),
+        { type: "artifact", name: "cb-flow" },
         { type: "p", text: "**Observation:** Users typed queries with filters, like “Show asset valuation as of today” and “List all unsettled trades." },
         { type: "h3", text: "Opportunity" },
         { type: "p", text: "Needed transparency, trust, ways to narrow scope, and fallback elements." },
@@ -587,7 +595,7 @@ const chatbot: CaseStudy = {
           type: "p",
           text: "This led to **response syntax**: a framework that made responses actionable and traceable. The goal was consistent patterns that users wouldn’t have to relearn with every interaction.",
         },
-        shot("Response syntax: components chosen by what they communicate", 1036, 637),
+        { type: "artifact", name: "cb-doc" },
       ],
     },
     {
@@ -608,22 +616,22 @@ const chatbot: CaseStudy = {
       eyebrow: "Design decisions",
       blocks: [
         { type: "h3", text: "Landing on the right answer first time" },
-        shot("Queries mapped to intent categories", 1036, 381),
+        { type: "artifact", name: "cb-intents" },
         { type: "p", text: "Problem: Queries went to the wrong place, causing dead clicks." },
         { type: "p", text: "Decision: I mapped queries to intent categories so the bot routes users to the right response." },
         { type: "h3", text: "Dense data without endless scrolling" },
-        shot("Three layers: Summary, Details, Context", 1036, 381),
+        { type: "artifact", name: "cb-layers" },
         { type: "p", text: "Problem: Long tables made status hard to find." },
         {
           type: "p",
           text: "Decision: Three layers: Summary (status, key metrics, critical dates), Details (transaction specifics, download, mark for follow-up, flag report), Context (source, timestamp, reference IDs, follow-up actions).",
         },
         { type: "h3", text: "Errors that teach" },
-        shot("Errors that explain what went wrong and what to try next", 1036, 535),
+        { type: "artifact", name: "cb-errors" },
         { type: "p", text: "Problem: Errors ended in dead ends." },
         { type: "p", text: "Decision: Errors now explain what went wrong and suggest what to try next, keeping users in the flow." },
         { type: "h3", text: "No re-entering the same ID" },
-        shot("The “Add ID” utterance carrying context across turns", 1036, 381),
+        { type: "artifact", name: "cb-context-id" },
         { type: "p", text: "Problem: Users retyped the same ID on every turn." },
         { type: "p", text: "Decision: An “Add ID” utterance carries context forward across turns." },
       ],
@@ -640,8 +648,8 @@ const chatbot: CaseStudy = {
           text: "I remapped each component to the user’s goal and the mental model behind the task, so responses became quicker to scan and easier to act on.",
         },
         { type: "p", text: "__In hindsight, I should have questioned component choice earlier. Stakeholders agreed quickly, which told me the problem was already felt.__" },
-        shot("Components remapped to the user’s goal", 1036, 710),
-        shot("The revised responses", 1036, 535),
+        { type: "artifact", name: "cb-revised-a" },
+        { type: "artifact", name: "cb-revised-b" },
       ],
     },
     {
@@ -649,7 +657,7 @@ const chatbot: CaseStudy = {
       eyebrow: "Documentation",
       title: "What it looked like for admin",
       blocks: [
-        shot("Templates and annotations for the admin team", 1036, 637),
+        { type: "artifact", name: "cb-admin-doc" },
         {
           type: "p",
           text: "The templates and annotations were later adopted by the admin team. They now map responses by what they need to communicate, without guessing which component to use.",
