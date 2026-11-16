@@ -117,7 +117,7 @@
 @media (min-width: 1200px) {
   :root {
     --margin: 80px; --cols: 12;
-    --fs-h2: 40px; --lh-h2: 44px;
+    /* --fs-h2 stays 32/36 on desktop: section and card headings sit under the hero headline (display) */
     --fs-display: 48px; --lh-display: 52px;
   }
 }

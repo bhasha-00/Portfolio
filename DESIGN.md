@@ -19,9 +19,9 @@ typography:
     letterSpacing: "-0.03em"
   headline:
     fontFamily: "Geist, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "40px"
+    fontSize: "32px"
     fontWeight: 700
-    lineHeight: "44px"
+    lineHeight: "36px"
     letterSpacing: "-0.02em"
   title:
     fontFamily: "Geist, ui-sans-serif, system-ui, sans-serif"
@@ -154,7 +154,7 @@ A warm, saturated red ground with cream paper and brown ink; gold and a few pape
 
 ### Hierarchy
 - **Display** (800, -0.03em): the hero headline only. 32px on phones, 40px on tablets, 32/36 on desktop, where it sits in the right half of the hero in three hand-set lines beside the greeting at the same size (600): the two differ by weight only.
-- **Headline** (700, 28px to 40px, -0.02em): card titles, section titles and case study headings.
+- **Headline** (700, -0.02em): card titles, section titles and case study headings. 28/32 on phones, 32/36 from tablets up, desktop included: on desktop it matches the hero headline's size, which still leads by its heavier weight (800).
 - **Title** (700, 24px to 28px): the name in the hero, sub-heads.
 - **Lead** (600, 20px / 28px): callout titles and column heads.
 - **Body** (400, 16px / 24px): all running text, including the summary lines under section headers. Running text in case studies stays within the reading column.
