@@ -77,8 +77,12 @@
   align-self: center;
 }
 
+/* The collage file has a clear strip under the drawing (45 of its 2000px width). A negative margin of
+   that share of the width (margins resolve against the width) drops the drawing onto the hero's
+   bottom edge; the hero clips the clear strip. */
 .artBox {
   position: relative;
+  margin-bottom: -2.25%;
 }
 
 /* The collage's shadows are baked into the image file (hero-collage-3840): no CSS filter to paint.
