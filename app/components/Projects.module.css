@@ -134,8 +134,8 @@
 }
 
 .stretch:focus-visible::after {
-  outline: 2px solid var(--ink);
-  outline-offset: -4px;
+  outline: 2px solid var(--ink); /* the whole card is the link: a clear ink ring just inside its edge */
+  outline-offset: calc(-1 * var(--space-2));
 }
 
 .card[data-covered] .count {
@@ -168,7 +168,7 @@
 .hand {
   display: block;
   width: auto;
-  height: var(--fs-hand-md);
+  height: var(--fs-hand-md); /* 20: every handwritten label on the home page */
 }
 
 /* Text column, then media (stacked on phones, side by side from 768: see the end of this file). */
@@ -203,6 +203,40 @@
 
 .text strong {
   font-weight: var(--fw-h2); /* key figures (metrics): 700, same colour as the body text */
+}
+
+/* The outcome reads like the other blocks (same size, colour and weight); only its figures change,
+   to the red, so the proof is the first thing the eye catches. */
+.outcome .text strong {
+  color: var(--red); /* 6.3:1 on cream */
+}
+
+/* "Read case study →": the card's action, in words. The whole card is the link (.stretch). */
+.read {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  color: var(--text-on-cream);
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+  font-weight: var(--fw-label);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: var(--space-1);
+}
+
+.read svg {
+  flex: none;
+  width: var(--space-4);
+  height: var(--space-4);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .read svg {
+    transform: translateX(var(--space-1)); /* the arrow leans the way it goes */
+  }
 }
 
 .note {

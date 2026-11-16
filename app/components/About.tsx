@@ -37,6 +37,10 @@ export default function About() {
   const hovered = useRef<boolean[]>(slots.map(() => false));
   const touched = useRef<number[]>(slots.map(() => 0)); // last manual flip, per slot
   const inView = useRef(false);
+  // The automatic flips stop for good once the visitor touches the cards (hover, tap, click or
+  // keyboard focus): from then on the cards only move when asked (WCAG 2.2.2, pause / stop).
+  const stopped = useRef(false);
+  const stop = () => (stopped.current = true);
   const frontRef = useRef(front);
   frontRef.current = front;
   // Desktop: the three cards scattered beside the text, each of them flips when clicked.
@@ -98,7 +102,7 @@ export default function About() {
     early.observe(sec);
     let next = 0;
     const timer = setInterval(() => {
-      if (!inView.current || !settled.current || reduce.matches || document.hidden) return;
+      if (stopped.current || !inView.current || !settled.current || reduce.matches || document.hidden) return;
       // The next side card in turn (the front card only flips when clicked).
       let i = next;
       if (!rowRef.current && roleOf(i, frontRef.current) === 0) i = (i + 1) % slots.length;
@@ -124,7 +128,14 @@ export default function About() {
           <p className={styles.body}>{aboutHead.text}</p>
           <p className={styles.tag}>{aboutHead.tag}</p>
         </div>
-        <div ref={stage} className={`${spread.stage} ${styles.stage}`} {...stageProps}>
+        <div
+          ref={stage}
+          className={`${spread.stage} ${styles.stage}`}
+          {...stageProps}
+          onPointerEnter={stop}
+          onFocusCapture={stop}
+          onPointerDownCapture={stop}
+        >
           {slots.map((s, i) => {
             const f = faces[i];
             const now = crafts[showing(f)];

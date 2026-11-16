@@ -33,6 +33,17 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Home: a scroll that ends near the start of a section settles on it, so the reader lands on Projects,
+   AI Tinkering, About or the contact, not between two of them. "Proximity", not "mandatory": inside a
+   long section (the stacked case studies, the pinned spreads) the page scrolls freely. */
+html:has(main > section#home) {
+  scroll-snap-type: y proximity;
+}
+
+main > section {
+  scroll-snap-align: start;
+}
+
 body {
   min-height: 100vh;
   background: var(--red);

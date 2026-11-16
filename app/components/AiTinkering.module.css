@@ -11,8 +11,8 @@
 /* Phones: the front card 77% of the screen, sides at 80% scale with ~10px clear of it. */
 .stage {
   --card-w: min(77vw, 320px);
-  --card-ratio: 306 / 410; /* Frames 1984079200–202 */
-  --k: 0.98; /* --card-w / 306px, set exactly by AiTinkering.tsx; this is the first paint */
+  --card-ratio: 338 / 384; /* the frames' 306 x 251 image with 16px padding round it, then the footer */
+  --k: 0.89; /* --card-w / 338px, set exactly by AiTinkering.tsx; this is the first paint */
   --dx: 93.3%;
   --side: 0.8;
 }
@@ -39,7 +39,7 @@
   user-select: none;
 }
 
-/* The card as designed, at the frames' size (306 x 410), scaled as one piece to the card's width, so
+/* The card as drawn (338 x 384: the frames' 306 x 251 image, 16px round it, the footer), scaled as one piece to the card's width, so
    the media, pill and type keep the frames' proportions at every size. --shadow-card all round: the
    front card's shadow falls on the side cards along both its edges and below it. */
 .face {
@@ -49,8 +49,8 @@
   isolation: isolate;
   display: flex;
   flex-direction: column;
-  width: 306px;
-  height: 410px;
+  width: 338px;
+  height: 384px;
   border-radius: calc(var(--r-art) / var(--k));
   background: var(--cream);
   box-shadow: var(--shadow-card);
@@ -72,12 +72,13 @@
   pointer-events: none;
 }
 
+/* The image keeps the frames' size, 306 x 251 (it takes what the footer leaves, which at the desktop
+   scale is that). The card is scaled by --k, so its padding and radius are divided by --k: they come
+   out as 16px and --r-art on screen, the same as About's card. */
 .media {
   position: relative;
-  flex: 1; /* the photo takes what the footer leaves, so the footer's 12px is the card's bottom padding */
+  flex: 1;
   min-height: 0;
-  /* The card is drawn at 306 x 410 and scaled by --k, so its padding and radius are divided by --k:
-     they come out as 16px and --r-art on screen, the same as About's card. */
   margin: calc(var(--space-4) / var(--k)) calc(var(--space-4) / var(--k)) 0;
   border-radius: calc(var(--r-art) / var(--k));
   overflow: hidden; /* no fill: scaled, an ink fill showed as a hairline above the footer */
@@ -104,11 +105,13 @@
   max-width: 100%;
 }
 
+/* Body text, divided by --k like the padding, so it comes out at 16 / 24 on screen: the same body
+   size as the case study, About and hero text. */
 .line {
   padding-inline: 0;
   color: var(--text-muted);
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
+  font-size: calc(var(--fs-body) / var(--k)); /* tokens-allow: the card is scaled by --k, so this comes out at --fs-body on screen */
+  line-height: calc(var(--lh-body) / var(--k));
 }
 
 /* Hover / focus / tap: the card lifts and its shadow deepens a little (a soft layer fading in
@@ -208,7 +211,7 @@
      The front card 40% of the container on tablets, 30% on desktop (as About's); short screens: it
      keeps clear of the nav. */
   .stage {
-    --card-w: min(40cqw, (100svh - 176px) * 306 / 410);
+    --card-w: min(40cqw, (100svh - 176px) * 338 / 384);
     --k: 0.9;
     --dx: 82.2%;
     --side: 0.756;
@@ -257,9 +260,18 @@
 
 .eyebrow {
   margin-bottom: var(--space-1);
-  font-family: var(--font-hand);
-  font-size: var(--fs-hand-md);
-  line-height: var(--lh-hand-md);
+  line-height: 0;
+}
+
+/* "From my personal vault", her outline (471 x 44) as a mask filled with the text colour, at the
+   hand-md size (as the handwriting in the hero). */
+.eyebrowHand {
+  display: inline-block;
+  height: var(--fs-hand-md); /* 20: every handwritten label on the home page */
+  aspect-ratio: 471 / 44;
+  background: currentColor;
+  -webkit-mask: url("/ai/from-my-personal-vault.svg") left center / contain no-repeat;
+  mask: url("/ai/from-my-personal-vault.svg") left center / contain no-repeat;
 }
 
 .title {
@@ -271,14 +283,15 @@
 }
 
 .lead {
-  margin-top: var(--space-5);
+  margin-top: var(--space-3);
   font-size: var(--fs-body); /* as the hero's summary line */
   line-height: var(--lh-body);
 }
 
+/* The count: the lead's size, in semibold, so the two share a baseline and differ by weight only. */
 .count {
-  font-size: var(--fs-small);
-  line-height: var(--lh-small);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
   font-weight: var(--fw-label);
 }
 
@@ -306,7 +319,7 @@
   }
 
   .stage {
-    --card-w: min(40cqw, (100svh - 420px) * 306 / 410);
+    --card-w: min(40cqw, (100svh - 420px) * 338 / 384);
   }
 }
 
@@ -326,7 +339,7 @@
   }
 
   .head {
-    margin-bottom: var(--space-7);
+    margin-bottom: var(--space-8); /* room for the crane perched on the first card's top edge */
   }
 
   .title {
@@ -334,7 +347,7 @@
   }
 
   .pin .stage {
-    --k: 1.3;
+    --k: 1.2; /* first paint only: AiTinkering.tsx sets it to the column width / 338 at once */
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--gutter);
@@ -351,7 +364,7 @@
   }
 
   .stage > div:nth-child(2) {
-    order: -1; /* the ring's left card comes first */
+    order: 1; /* Exploded Hierarchy (not out yet) goes last: the row reads Pixel peeper, Slither, then it */
   }
 
   .stage > div > div,

@@ -128,7 +128,9 @@ export default function Intro() {
           </g>
         </svg>
       </div>
-      <p className={styles.hint}>Tap, click or press a key to skip</p>
+      <p className={styles.hint}>
+        <span className={styles.hintWord}>Folding..</span> (Tap to skip)
+      </p>
     </div>
   );
 }

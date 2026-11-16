@@ -13,8 +13,7 @@ import { projects, type Project } from "../content/projects";
 import { caseStudyHref } from "../content/caseStudies";
 import { controls, flightFrames, type Pt } from "./craneFlight";
 import PerchPuff from "./companion/PerchPuff";
-import Origami from "./companion/Origami";
-import { useViewBubble } from "./useViewBubble";
+import Origami, { REFOLD, type RefoldDetail } from "./companion/Origami";
 import { rich } from "./rich";
 import styles from "./Projects.module.css";
 
@@ -237,11 +236,17 @@ export default function Projects() {
       [1, 2].forEach((i) => i !== f && flyOf(i) && (flyOf(i)!.style.transform = ""));
       showOnly(f);
       html.dataset.crane = "away";
+      const FLIGHT = 1100;
       const anim = el.animate(flightFrames(P, s0, scale(to), up), {
-        duration: 1100,
+        duration: FLIGHT,
         easing: "linear",
         fill: "forwards",
       });
+      // On the way to AI Tinkering the crane unfolds and folds into the parrot in the air; leaving it,
+      // it folds back into the crane. The paper changes over the length of the flight.
+      const shape = to === 2 ? 2 : at === 2 ? 0 : -1;
+      if (shape >= 0)
+        dispatchEvent(new CustomEvent<RefoldDetail>(REFOLD, { detail: { target: el, to: shape, seconds: FLIGHT / 1000 } }));
       flight = { anim, el };
       holder = f;
       anim.onfinish = () => {
@@ -332,8 +337,6 @@ export default function Projects() {
     };
   }, [reduced, craneWidth]);
 
-  // The "View ↗" bubble over the media (useViewBubble).
-  const { bubble, follow, unfollow } = useViewBubble();
 
   return (
     <section ref={work} id="projects" className={`container ${styles.work}`} aria-labelledby="projects-title">
@@ -344,7 +347,9 @@ export default function Projects() {
         {/* Phones: a strip under the nav, so card text scrolls away below it, never behind it. */}
         <li className={styles.band} aria-hidden="true" />
         {/* The crane's perch: holds still on the top card's top-right edge while cards slide under. */}
-        <li ref={perchRow} className={styles.perchRow} aria-hidden="true">
+        {/* Not aria-hidden: the crane on it is a real, labelled button (tap to refold). The landing puff
+            hides itself; while the crane is elsewhere it is visibility: hidden, so out of the tab order. */}
+        <li ref={perchRow} className={styles.perchRow}>
           <span ref={perch} className={styles.perch}>
             <PerchPuff at="cards" size={craneWidth} />
             <span ref={fly} className={styles.fly}>
@@ -381,9 +386,7 @@ export default function Projects() {
               className={styles.card}
               aria-labelledby={`project-${j}`}
               data-link={href ? "" : undefined}
-              // The whole card is the link (the title's link covers it); the View bubble follows the cursor over all of it.
-              onPointerMove={href ? follow : undefined}
-              onPointerLeave={href ? unfollow : undefined}
+              // The whole card is the link (the title's link covers it); "Read case study →" says so.
             >
               <span className={styles.shade} aria-hidden="true" />
               <span className={styles.grain} aria-hidden="true" />
@@ -419,11 +422,21 @@ export default function Projects() {
                     <h4 className={styles.label}>What I did</h4>
                     <p className={styles.text}>{rich(p.whatIDid)}</p>
                   </div>
-                  <div className={styles.col}>
+                  <div className={`${styles.col} ${styles.outcome}`}>
                     <h4 className={styles.label}>Outcome</h4>
                     <p className={styles.text}>{rich(p.outcome)}</p>
                     {p.note && <p className={styles.note}>{p.note}</p>}
                   </div>
+                  {href && (
+                    // What the card does, said on the card (the card itself is the link).
+                    <span className={styles.read} aria-hidden="true">
+                      Read case study
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                      </svg>
+                    </span>
+                  )}
                 </div>
 
                 {href && p.image ? (
@@ -439,8 +452,6 @@ export default function Projects() {
                     type="button"
                     className={styles.media}
                     onClick={() => count(j)}
-                    onPointerMove={follow}
-                    onPointerLeave={unfollow}
                   >
                     <span className="sr-only">{p.outcome.replace(/\*\*/g, "")}. </span>
                     <span
@@ -468,7 +479,7 @@ export default function Projects() {
                     <span className={styles.hint}>Tap to replay</span>
                   </button>
                 ) : (
-                  <div className={styles.media} aria-hidden="true" onPointerMove={follow} onPointerLeave={unfollow} />
+                  <div className={styles.media} aria-hidden="true" />
                 )}
               </div>
               {/* Last, so it lies over the content when the next card covers this one. */}
@@ -479,7 +490,6 @@ export default function Projects() {
         })}
       </ol>
 
-      {bubble}
     </section>
   );
 }

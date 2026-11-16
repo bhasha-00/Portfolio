@@ -7,11 +7,10 @@ import Origami from "./companion/Origami";
 import PerchPuff from "./companion/PerchPuff";
 import { ROLE, roleOf, useSpread } from "./useSpread";
 import spread from "./Spread.module.css";
-import { useViewBubble } from "./useViewBubble";
 import styles from "./AiTinkering.module.css";
 
 const PERCH = 0; // the crane perches on the card that starts in front
-const FRAME_W = 306; // the cards' width in Frames 1984079200–202, px
+const FRAME_W = 338; // the card's drawn width: the frames' 306px image plus 16px padding each side, px
 const TABLET = "(min-width: 768px) and (max-width: 1199px)"; // pinned fan; desktop is a plain row
 const ROW = "(min-width: 1200px)";
 
@@ -54,7 +53,6 @@ function Clip({ src, focus, play }: { src: string; focus?: string; play: boolean
 export default function AiTinkering() {
   const { section, stage, slots, front, bring, stageProps, swiped, zOf } = useSpread(tinkers, TABLET);
   const fly = useRef<HTMLSpanElement>(null);
-  const { bubble, follow, unfollow } = useViewBubble(); // "View ↗" over any card
   const craneWidth = useCallback(() => (fly.current?.firstElementChild as HTMLElement | null)?.offsetWidth ?? 0, []);
 
   // Desktop: the three cards side by side, all of them "in front" (each opens its tool, each clip plays).
@@ -67,15 +65,19 @@ export default function AiTinkering() {
     return () => mq.removeEventListener("change", on);
   }, []);
 
-  // The cards are laid out at the frames' 306px and scaled to the slot's width: --k = width / 306.
+  // The cards are laid out at 338px wide and scaled to the slot's width: --k = width / 338. Set now and
+  // on every resize, and again whenever the layout switches between the spread and the desktop row
+  // (`row`), so a card is never drawn wider than its column.
   useEffect(() => {
     const st = stage.current;
     const slot = slots.current[0];
     if (!st || !slot) return;
-    const ro = new ResizeObserver(() => st.style.setProperty("--k", String(slot.offsetWidth / FRAME_W)));
+    const fit = () => st.style.setProperty("--k", String(slot.offsetWidth / FRAME_W));
+    fit();
+    const ro = new ResizeObserver(fit);
     ro.observe(slot);
     return () => ro.disconnect();
-  }, [stage, slots]);
+  }, [stage, slots, row]);
 
   // "Coming soon" on the front card (Exploded Hierarchy); cleared when the ring turns.
   const [soon, setSoon] = useState(false);
@@ -108,7 +110,11 @@ export default function AiTinkering() {
       <div className={`container ${spread.frame} ${styles.pin}`}>
         <header className={styles.head}>
           <div>
-            <p className={styles.eyebrow}>{aiHead.eyebrow}</p>
+            {/* In Bhasha's hand (her outline, filled with the text colour); the words are given as text too. */}
+            <p className={styles.eyebrow}>
+              <span className={styles.eyebrowHand} aria-hidden="true" />
+              <span className="sr-only">{aiHead.eyebrow}</span>
+            </p>
             <h2 id="ai-tinkering-title" className={styles.title}>
               {aiHead.title}
             </h2>
@@ -120,7 +126,7 @@ export default function AiTinkering() {
           {tinkers.map((c, i) => {
             const role = roleOf(i, front);
             const isFront = row || role === 0;
-            // The card as designed (306 x 410), scaled to the card's width as one piece (--k).
+            // The card as drawn (338 x 384), scaled to the card's width as one piece (--k).
             const inner = (
               <span className={styles.face}>
                 <span className={styles.deep} aria-hidden="true" />
@@ -168,8 +174,6 @@ export default function AiTinkering() {
                 }}
                 className={spread.slot}
                 style={{ zIndex: zOf(i) }}
-                onPointerMove={follow}
-                onPointerLeave={unfollow}
               >
                 <div className={spread.pos} data-role={ROLE[role]}>
                   {isFront && c.href ? (
@@ -205,7 +209,8 @@ export default function AiTinkering() {
 
                   {i === PERCH && (
                     // The crane's last perch: on this card's top edge, near its right corner.
-                    <span className={styles.perch} data-perch="ai" aria-hidden="true">
+                    // Not aria-hidden: the crane is a labelled button; hidden (visibility) while it is elsewhere.
+                    <span className={styles.perch} data-perch="ai">
                       <PerchPuff at="ai" size={craneWidth} />
                       <span ref={fly} className={styles.fly} data-fly="">
                         <Origami className={styles.craneArt}>
@@ -228,7 +233,6 @@ export default function AiTinkering() {
           })}
         </div>
       </div>
-      {bubble}
     </section>
   );
 }

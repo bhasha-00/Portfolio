@@ -7,31 +7,28 @@ import styles from "./Hero.module.css";
 export default function Hero() {
   return (
     <section id="home" className={`container ${styles.hero}`} aria-labelledby="home-title">
+      {/* One reading unit, in order: who (name, role), what she delivers (headline), the proof of
+          experience (summary). */}
       <div className={`grid ${styles.top}`}>
-        {/* Three lines, set by hand, from 768 up; phones wrap it balanced. */}
-        <p className={styles.headline}>
-          <span className={styles.step}>Translating business goals</span>{" "}
-          <span className={styles.step}>and user needs into</span>{" "}
-          <span className={styles.step}>interfaces that perform.</span>
-        </p>
-
-        <div className={styles.intro}>
+        <div className={styles.text}>
           <h1 id="home-title" className={styles.name}>
-            Bhasha Maheshwari
+            Hi, I am Bhasha
           </h1>
           {/* In Bhasha's hand (Figma Hand), as an outline from her export (2026-11-11). */}
           <p className={styles.role}>
             <img src="/hero/product-designer.svg" alt="Product designer" width={150} height={20} className={styles.hand} />
           </p>
+          {/* Three lines, set by hand, from 768 up; phones let it wrap. */}
+          <p className={styles.headline}>
+            <span className={styles.step}>Translating business goals and</span>{" "}
+            <span className={styles.step}>user needs into interfaces that</span>{" "}
+            <span className={styles.step}>perform.</span>
+          </p>
           <p className={styles.summary}>
-            2+ years across B2B SaaS. Strong focus on complex systems, scale
-            and end‑to‑end ownership.
+            With 2+ years across B2B SaaS, I bring strong focus in complex systems,
+            scale and end‑to‑end ownership.
           </p>
         </div>
-      </div>
-
-      <div className={styles.big} aria-hidden="true">
-        80/20
       </div>
 
       {/* Hero art: designer workspace, top-down. Decorative, so empty alt.
@@ -76,8 +73,6 @@ export default function Hero() {
           </div>
         </div>
       </div>
-
-      <p className={styles.cue}>Scroll for work</p>
     </section>
   );
 }

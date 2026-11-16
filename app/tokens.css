@@ -62,9 +62,9 @@
   --fs-body: 16px;     --lh-body: 24px;      /* body, 400 */
   --fs-lead: 20px;     --lh-lead: 28px;      /* summary, column labels (600) */
   --fs-h3: 24px;       --lh-h3: 32px;        /* name, sub-heads (mobile) */
+  --fs-name: 28px;     --lh-name: 32px;      /* hero greeting (mobile); 32/36 from 768 */
   --fs-h2: 28px;       --lh-h2: 32px;        /* card + section titles (mobile) */
   --fs-display: 32px;  --lh-display: 36px;   /* hero headline (mobile) */
-  --fs-numeral: 96px;                        /* decorative "80/20" behind the hero only, line-height 1 */
 
   /* hand font runs ~2px bigger for the same optical size */
   --fs-hand-sm: 16px;  --lh-hand-sm: 20px;   /* chips */
@@ -105,9 +105,9 @@
   :root {
     --margin: 40px; --gutter: 24px; --cols: 8; --r-art: var(--r-md);
     --fs-h3: 28px; --lh-h3: 32px;
+    --fs-name: 32px; --lh-name: 36px;
     --fs-h2: 32px; --lh-h2: 36px;
     --fs-display: 40px; --lh-display: 44px;
-    --fs-numeral: 128px;
   }
 }
 
@@ -117,7 +117,6 @@
     --margin: 80px; --cols: 12;
     --fs-h2: 40px; --lh-h2: 44px;
     --fs-display: 48px; --lh-display: 52px;
-    --fs-numeral: 192px;
   }
 }
 

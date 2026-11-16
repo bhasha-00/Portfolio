@@ -127,7 +127,6 @@
   line-height: var(--lh-caption);
   font-weight: 500;
   letter-spacing: 0.14em;
-  text-transform: uppercase;
   color: var(--ink);
   transition: opacity var(--dur-fast) var(--ease-out);
 }
@@ -140,4 +139,9 @@
 
 .revealed .hint {
   opacity: 0;
+}
+
+/* "FOLDING.." in capitals, "(Tap to skip)" as written. */
+.hintWord {
+  text-transform: uppercase;
 }

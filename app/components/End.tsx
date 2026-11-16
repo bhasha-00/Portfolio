@@ -26,7 +26,8 @@ function ArrowIcon() {
 }
 
 // The end, from end II.svg: a square of real green paper in the middle ("Try a fold ?" in the
-// designer's hand), the sign-off bottom-left over it, contact pills bottom-right. The paper settles
+// designer's hand), the sign-off bottom-left over it, contact pills bottom-right: the email as the
+// one filled cream pill, LinkedIn in outline. The paper settles
 // in (lift and fade, transform and opacity only) when the section comes into view; the text never
 // waits. A click or tap on the paper (or Enter / Space) starts the fold: the handwriting goes, and
 // the paper guides a crab one outlined part at a time (end/CrabFold.tsx).
@@ -105,18 +106,22 @@ export default function End() {
         </div>
         <ul className={styles.links}>
           <li className={styles.item}>
-            <a className={styles.pill} href={`mailto:${email}`}>
-              {email}
-            </a>
-            <button type="button" className={styles.copy} onClick={copy} aria-label="Copy email address">
-              <CopyIcon />
-            </button>
+            {/* One pill, two actions: the address opens mail, the icon at its end copies it (a button
+                cannot sit inside a link, so the pill is a wrapper around both). */}
+            <span className={`${styles.pill} ${styles.split}`}>
+              <a className={styles.mail} href={`mailto:${email}`}>
+                {email}
+              </a>
+              <button type="button" className={styles.copy} onClick={copy} aria-label="Copy email address">
+                <CopyIcon />
+              </button>
+            </span>
             <span className={styles.copied} data-on={copied || undefined} role="status" aria-live="polite">
               {copied ? "Copied" : ""}
             </span>
           </li>
           <li className={styles.item}>
-            <a className={styles.pill} href={linkedin} target="_blank" rel="noopener noreferrer">
+            <a className={`${styles.pill} ${styles.ghost}`} href={linkedin} target="_blank" rel="noopener noreferrer">
               LinkedIn
               <ArrowIcon />
             </a>

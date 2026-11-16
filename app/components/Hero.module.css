@@ -1,29 +1,30 @@
-/* Home hero, on .container (edges) + .grid (columns) from tokens.css. */
+/* Home hero, on .container (edges) + .grid (columns) from tokens.css. It stops short of a full
+   screen by the cards' top padding plus 48px, so the top of case study 01 peeks in below the art:
+   the first screen shows that the work is next. */
 .hero {
+  --peek: calc(var(--space-9) + var(--space-1) + var(--space-7)); /* phones: cards start 100px down */
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  min-height: 100svh;
+  min-height: calc(100vh - var(--peek));
+  min-height: calc(100svh - var(--peek));
   padding-top: var(--nav-offset);
   overflow: hidden;
-  container-type: inline-size; /* cqw: the numeral's baseline follows the art's width */
 }
 
-/* Phones and tablet: stacked, full width. Desktop: headline cols 1–8, intro 9–12. */
+/* One left column at every size: name and role, the headline, the summary. */
 .top {
   position: relative;
   z-index: 1;
-  row-gap: var(--space-5);
 }
 
-.headline,
-.intro {
+.text {
   grid-column: 1 / -1;
 }
 
-/* Role: display. */
+/* Role: display. The promise, read right after the name. */
 .headline {
+  margin-top: var(--space-5);
   font-size: var(--fs-display);
   line-height: var(--lh-display);
   font-weight: var(--fw-display);
@@ -36,11 +37,12 @@
   display: inline;
 }
 
-/* Role: h3. */
+/* The greeting: a step above the handwritten role in size and weight, so the two read as a clear
+   pair (bold name, light hand), and still a step below the promise. */
 .name {
-  font-size: var(--fs-h3);
-  line-height: var(--lh-h3);
-  font-weight: var(--fw-h2);
+  font-size: var(--fs-name);
+  line-height: var(--lh-name);
+  font-weight: var(--fw-label);
   letter-spacing: var(--tracking-h2);
   text-wrap: pretty; /* full width: lines fill, no balancing */
 }
@@ -54,32 +56,15 @@
 .hand {
   display: block;
   width: auto;
-  height: var(--fs-hand-md);
+  height: var(--fs-hand-md); /* 20: every handwritten label on the home page */
 }
 
 /* Role: body. */
 .summary {
-  margin-top: var(--space-3);
+  margin-top: var(--space-4);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
   font-weight: var(--fw-body);
-}
-
-/* Tinted numeral, behind everything. One bottom with the art: the numeral's lowest point (the slash's
-   descender) sits on the art's lowest visible pixel (the file ends 45 of 2000 px below it, 2.25% of its width). */
-.big {
-  position: absolute;
-  right: 0; /* the container's right edge */
-  bottom: calc(-0.034em + min(640px, 100cqw) * 0.0225); /* -0.144em puts the baseline on the art; +0.11em lifts the slash's descender (0.11em) clear of the bottom edge */
-  z-index: 0;
-  font-size: var(--fs-numeral);
-  font-weight: var(--fw-display);
-  letter-spacing: var(--tracking-display);
-  line-height: 1;
-  white-space: nowrap;
-  opacity: 0.14;
-  pointer-events: none;
-  user-select: none;
 }
 
 /* Cut-out sits in the flow, flush with the bottom edge, so text never overlaps it. */
@@ -250,44 +235,54 @@
   opacity: 0;
 }
 
-/* Role: caption, on the container's left edge. */
-.cue {
-  position: absolute;
-  left: 0;
-  bottom: var(--space-5);
-  font-size: var(--fs-caption);
-  line-height: var(--lh-caption);
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  z-index: 2; /* full cream: 6.3:1 on red (it was 4.23:1 at 0.8 opacity, under AA for 12px) */
-}
-
 @media (min-width: 768px) {
   .step {
     display: block;
     white-space: nowrap;
   }
 
-  .intro {
-    grid-column: 1 / span 5;
+  .hero {
+    --peek: calc(var(--space-9) + var(--space-2) + var(--space-7)); /* tablet and up: cards start 104px down */
+  }
+
+  .summary {
+    max-width: 30em;
   }
 }
 
-/* Side by side from 1200: "Translating business goals" at display 48 is about 590px; 8 columns
-   are 685px at 1200. */
+/* Desktop: two halves on one top line. Left (columns 1–5): the greeting, role and summary. Right
+   (columns 6–12): the promise at headline size, in its three hand-set lines ("…goals and" / "…interfaces
+   that" / "perform."); the longest, about 590px at 40px semibold, fits 7 columns down to 1200 (600px). The art stays
+   centred below.
+   Screen readers still read greeting, role, promise, summary. */
 @media (min-width: 1200px) {
-  .top {
+  .text {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    column-gap: var(--gutter);
     align-items: start;
   }
 
+  .name,
+  .role,
+  .summary {
+    grid-column: 1 / span 5;
+  }
+
+  .summary {
+    max-width: none;
+  }
+
   .headline {
-    grid-column: 1 / span 8;
+    grid-column: 6 / -1;
+    grid-row: 1 / span 3;
+    justify-self: end; /* set flush with the container's right edge: equal margins left and right, and
+                          the open space falls between the two halves, not after the headline */
+    margin-top: 0;
+    font-size: var(--fs-h2);
+    line-height: var(--lh-h2);
+    font-weight: var(--fw-label); /* semibold, untracked: an even, open line beside the bold greeting */
+    letter-spacing: normal;
   }
 
-  .intro {
-    grid-column: 9 / -1;
-    padding-top: var(--space-2);
-  }
 }
-

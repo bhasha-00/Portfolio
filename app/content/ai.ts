@@ -22,10 +22,10 @@ export type Tinker = {
 
 /** The section's header. */
 export const aiHead = {
-  eyebrow: "On my own time",
+  eyebrow: "From my personal vault", // drawn in her hand: public/ai/from-my-personal-vault.svg
   title: "Tools I wished existed, so I built them.",
   lead: "Small experiments that each start with a question and end as something you can use.",
-  count: "3 experiments / many random incomplete ones.",
+  count: "3 experiments, more brewing",
 };
 
 /** Height of every name pill, in px at the card's full size. */

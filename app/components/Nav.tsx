@@ -5,7 +5,8 @@ import { sections } from "../sections";
 import styles from "./Nav.module.css";
 
 export default function Nav() {
-  const [active, setActive] = useState<string>(sections[0].id);
+  // No tab is marked while the hero is on screen: the nav lists the places to go, not the landing.
+  const [active, setActive] = useState<string>("");
   // While a clicked tab scrolls into view, ignore the sections it passes.
   const locked = useRef(false);
 
@@ -30,7 +31,11 @@ export default function Nav() {
     const io = new IntersectionObserver(
       (entries) => {
         if (locked.current) return;
-        for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
+        for (const e of entries) {
+          const id = e.target.id;
+          if (e.isIntersecting) setActive(id);
+          else setActive((a) => (a === id ? "" : a)); // left the middle with no section after it (back up to the hero)
+        }
       },
       { rootMargin: "-50% 0px -50% 0px" },
     );

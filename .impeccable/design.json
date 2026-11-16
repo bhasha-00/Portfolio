@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T19:34:45+00:00",
+  "title": "Design System: Bhasha Maheshwari, Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "desk-red": {
+        "role": "primary",
+        "displayName": "Desk Red",
+        "canonical": "#A82A1E",
+        "tonalRamp": [
+          "#3A1612",
+          "#711C14",
+          "#A0281D",
+          "#D03425",
+          "#E05E52",
+          "#E98E86",
+          "#F3BFBA",
+          "#F9EDEC"
+        ]
+      },
+      "crane-gold": {
+        "role": "secondary",
+        "displayName": "Crane Gold",
+        "canonical": "#E8B04A",
+        "tonalRamp": [
+          "#3C2D10",
+          "#76510F",
+          "#A77415",
+          "#D9961C",
+          "#E8B04A",
+          "#EFC880",
+          "#F6DFB7",
+          "#FAF4EB"
+        ]
+      },
+      "paper-green": {
+        "role": "tertiary",
+        "displayName": "Paper Green",
+        "canonical": "#2E7D6B",
+        "tonalRamp": [
+          "#19342D",
+          "#246153",
+          "#338A76",
+          "#42B399",
+          "#6AC8B3",
+          "#97D9CA",
+          "#C3E9E0",
+          "#EEF7F5"
+        ]
+      },
+      "vermilion": {
+        "role": "tertiary",
+        "displayName": "Vermilion",
+        "canonical": "#D9432F",
+        "tonalRamp": [
+          "#3A1712",
+          "#701F14",
+          "#A02C1D",
+          "#CF3A26",
+          "#DF6353",
+          "#E99286",
+          "#F2C1BA",
+          "#F9EDEC"
+        ]
+      },
+      "parrot-lime": {
+        "role": "tertiary",
+        "displayName": "Parrot Lime",
+        "canonical": "#C8D52E",
+        "tonalRamp": [
+          "#363913",
+          "#686E16",
+          "#939D20",
+          "#BFCC29",
+          "#D2DD55",
+          "#E0E788",
+          "#EDF1BB",
+          "#F8F9EC"
+        ]
+      },
+      "sheet-cream": {
+        "role": "neutral",
+        "displayName": "Sheet Cream",
+        "canonical": "#F8F4E9",
+        "tonalRamp": [
+          "#352D17",
+          "#655220",
+          "#8F752E",
+          "#BA983B",
+          "#CEB264",
+          "#DDC993",
+          "#EBE0C1",
+          "#F7F5ED"
+        ]
+      },
+      "ink-brown": {
+        "role": "neutral",
+        "displayName": "Ink Brown",
+        "canonical": "#2A1410",
+        "tonalRamp": [
+          "#331D19",
+          "#602E25",
+          "#894134",
+          "#B15444",
+          "#C7796B",
+          "#D8A198",
+          "#E8CAC4",
+          "#F7EFEE"
+        ]
+      },
+      "paper-back": {
+        "role": "neutral",
+        "displayName": "Paper Back",
+        "canonical": "#FFF7E8",
+        "tonalRamp": [
+          "#432F0A",
+          "#855600",
+          "#BD7B00",
+          "#F5A000",
+          "#FFB833",
+          "#FFCD70",
+          "#FFE3AD",
+          "#FCF5E9"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The hero headline only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Card titles, section titles, case study headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "The name in the hero, sub-heads."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Callout titles and column heads."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All running text and summary lines."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Nav tabs, card labels, tags, counts."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Counters and small cues."
+      },
+      "hand": {
+        "displayName": "Hand",
+        "purpose": "Eyebrows, chips and the role line, in Caveat or Bhasha's handwriting."
+      }
+    },
+    "shadows": [
+      {
+        "name": "paper",
+        "value": "0 8px 24px color-mix(in srgb, #2A1410 20%, transparent)",
+        "purpose": "Every sheet resting on the red: nav, cards."
+      },
+      {
+        "name": "lifted",
+        "value": "0 12px 28px color-mix(in srgb, #2A1410 16%, transparent)",
+        "purpose": "An AI card on hover, faded in with an 8px rise."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "UI responses: hover, press, fades."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(0.77, 0, 0.175, 1)",
+        "purpose": "On-screen movement: folds lifting, the crane's flight, a card turning."
+      },
+      {
+        "name": "dur-fast",
+        "value": "150ms",
+        "purpose": "Hover and press feedback."
+      },
+      {
+        "name": "dur-base",
+        "value": "250ms",
+        "purpose": "Fades and lifts."
+      },
+      {
+        "name": "dur-card",
+        "value": "500ms",
+        "purpose": "A card coming to the front of the spread."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "tablet",
+        "value": "768px"
+      },
+      {
+        "name": "desktop",
+        "value": "1200px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Navigation pill",
+      "kind": "nav",
+      "refersTo": "nav-pill",
+      "description": "The fixed cream pill at the top centre; the active tab is a red pill.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-tab\" aria-current=\"true\" href=\"#\">Home</a><a class=\"ds-nav-tab\" href=\"#\">Projects</a><a class=\"ds-nav-tab\" href=\"#\">AI Tinkering</a><a class=\"ds-nav-tab\" href=\"#\">About</a></nav>",
+      "css": ".ds-nav { display: inline-flex; padding: 4px; border-radius: 999px; background: #F8F4E9; box-shadow: 0 8px 24px color-mix(in srgb, #2A1410 20%, transparent); } .ds-nav-tab { padding: 8px 12px; border-radius: 999px; font-family: Geist, ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 500; line-height: 20px; color: #2A1410; text-decoration: none; opacity: 0.68; transition: opacity 150ms ease, transform 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-nav-tab:hover, .ds-nav-tab:focus-visible { opacity: 1; } .ds-nav-tab:focus-visible { outline: 2px solid #2A1410; outline-offset: 2px; } .ds-nav-tab:active { transform: scale(0.97); } .ds-nav-tab[aria-current] { background: #A82A1E; color: #F8F4E9; opacity: 1; }"
+    },
+    {
+      "name": "Case study card",
+      "kind": "card",
+      "refersTo": "case-card",
+      "description": "A cream sheet with a handwritten label, a headline and three short blocks. The whole card is one link.",
+      "html": "<article class=\"ds-case\"><p class=\"ds-case-label\">Design system</p><h3 class=\"ds-case-title\">Turned static frames into a tokenized design system</h3><h4 class=\"ds-case-head\">Outcome</h4><p class=\"ds-case-text\"><strong>26 components</strong>, <strong>150+ variants</strong> across width, state, icon, and helper text.</p></article>",
+      "css": ".ds-case { max-width: 420px; padding: 32px; border-radius: 16px; background: #F8F4E9; color: #2A1410; box-shadow: 0 8px 24px color-mix(in srgb, #2A1410 20%, transparent); font-family: Geist, ui-sans-serif, system-ui, sans-serif; } .ds-case-label { margin: 0 0 8px; font-family: Caveat, 'Segoe Print', cursive; font-size: 20px; line-height: 24px; color: color-mix(in srgb, #2A1410 72%, #F8F4E9); } .ds-case-title { margin: 0; font-size: 28px; line-height: 32px; font-weight: 700; letter-spacing: -0.02em; } .ds-case-head { margin: 24px 0 4px; font-size: 14px; line-height: 20px; font-weight: 600; } .ds-case-text { margin: 0; font-size: 16px; line-height: 24px; color: color-mix(in srgb, #2A1410 72%, #F8F4E9); } .ds-case-text strong { font-weight: 700; }"
+    },
+    {
+      "name": "Craft card",
+      "kind": "card",
+      "refersTo": "craft-card",
+      "description": "A photo card with a handwritten caption chip; rises 8px on hover.",
+      "html": "<button class=\"ds-craft\" type=\"button\"><span class=\"ds-craft-photo\"></span><span class=\"ds-craft-chip\">Gourd lamp</span></button>",
+      "css": ".ds-craft { display: flex; flex-direction: column; gap: 12px; width: 220px; padding: 16px; border: 0; border-radius: 16px; background: #F8F4E9; box-shadow: 0 8px 24px color-mix(in srgb, #2A1410 20%, transparent); cursor: pointer; transition: transform 250ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-craft:hover, .ds-craft:focus-visible { transform: translateY(-8px); } .ds-craft:focus-visible { outline: 2px solid #F8F4E9; outline-offset: 6px; } .ds-craft-photo { display: block; height: 240px; border-radius: 16px; background: #2A1410; } .ds-craft-chip { align-self: flex-start; padding: 4px 12px; border-radius: 999px; background: #FFF7E8; color: #2A1410; font-family: Caveat, 'Segoe Print', cursive; font-size: 16px; line-height: 20px; }"
+    },
+    {
+      "name": "Tag",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "A translucent cream pill on the red, for one fact such as a degree.",
+      "html": "<span class=\"ds-tag\">B.Des, Product Design</span>",
+      "css": ".ds-tag { display: inline-block; padding: 8px 16px; border-radius: 999px; background: color-mix(in srgb, #F8F4E9 12%, #A82A1E); color: #F8F4E9; font-family: Geist, ui-sans-serif, system-ui, sans-serif; font-size: 14px; line-height: 20px; font-weight: 600; }"
+    },
+    {
+      "name": "Play button",
+      "kind": "button",
+      "refersTo": "play-button",
+      "description": "A cream disc with a red triangle over the first frame of a prototype.",
+      "html": "<button class=\"ds-play\" type=\"button\" aria-label=\"Play the prototype\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M9 6.5v11l9-5.5z\"/></svg></button>",
+      "css": ".ds-play { display: grid; place-items: center; width: 240px; height: 150px; border: 0; border-radius: 8px; background: color-mix(in srgb, #2A1410 16%, #FBF9F3); cursor: pointer; } .ds-play svg { box-sizing: border-box; width: 72px; height: 72px; padding: 12px; border-radius: 50%; background: #F8F4E9; fill: #A82A1E; stroke: #A82A1E; stroke-width: 2; stroke-linejoin: round; transition: transform 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-play:hover svg { transform: scale(1.06); } .ds-play:active svg { transform: scale(0.96); } .ds-play:focus-visible { outline: 2px solid #A82A1E; outline-offset: -2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Folded Sheet",
+    "overview": "Origami is the idea behind everything on the site: one flat sheet, a few precise folds, and a shape with character at the end. The page is a red desk. On it lie cream sheets (the nav, the cards, the case study pages) and one folded companion, a gold crane, that travels with the reader. Nothing is decorated for its own sake; every surface is paper you could pick up.\n\nThe system is tactile and calm. Sheets rest on the desk with one soft shadow and rise a little when touched. Type stays quiet and confident so that personality can come from the hand: Bhasha's handwriting on labels, her own illustrations, the crane's flight. Precision and warmth sit side by side, the way a designer trained in making things by hand works on a screen.",
+    "keyCharacteristics": [
+      "Flat red ground, cream sheets, brown ink. Three colours do almost all the work.",
+      "One typeface for reading (Geist) and one for the hand (Caveat).",
+      "A single paper shadow; depth is a sheet resting on a desk, never a glow.",
+      "Motion is folding, flying and lifting: transform and opacity only.",
+      "Everything shown as artwork is Bhasha's own, at the quality she exported it."
+    ],
+    "rules": [
+      {
+        "name": "The Three Colours Rule",
+        "body": "Red, cream and ink carry every layout. Gold, green, vermilion and lime exist only as folded paper.",
+        "section": "colors"
+      },
+      {
+        "name": "The Borrowed Palette Rule",
+        "body": "Case study artifacts keep the colours of the products they show (the `--art-*` tokens). Those colours never appear in the site's own interface.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Geist says the facts; the hand says who is speaking. A third family never appears.",
+        "section": "typography"
+      },
+      {
+        "name": "The Fill the Line Rule",
+        "body": "Headings wrap only when they reach the edge of their column. They are never balanced into short, even lines.",
+        "section": "typography"
+      },
+      {
+        "name": "The Resting Sheet Rule",
+        "body": "A shadow means \"this is paper on the desk\". It is never used to rank importance, and a card covered by the next card loses its shadow so two never stack.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do take every colour, size, space and radius from `app/tokens.css`.",
+      "Do keep text at AA contrast: cream on red, ink on cream.",
+      "Do animate transform and opacity only, and honour `prefers-reduced-motion`.",
+      "Do show supplied artwork exactly as exported: lossless, never resized.",
+      "Do give every sheet the one paper shadow and 16px corners (12px on phones)."
+    ],
+    "donts": [
+      "Don't use gradients, glows, glass effects or texture beyond the paper grain.",
+      "Don't add a third font family, or indigo anywhere in the interface.",
+      "Don't use gold, green, vermilion or lime for text or interface surfaces.",
+      "Don't let animation delay content; the intro is skippable by any tap, scroll or key.",
+      "Don't use third-party characters or artwork."
+    ]
+  }
+}

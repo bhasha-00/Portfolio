@@ -108,7 +108,7 @@
   list-style: none;
 }
 
-/* Each contact: the link, then its icon (email: a copy button; LinkedIn: an arrow inside the link). */
+/* Each contact is one pill with its icon inside it (email: a copy button; LinkedIn: an arrow). */
 .item {
   position: relative;
   display: flex;
@@ -116,20 +116,50 @@
   gap: var(--space-1);
 }
 
-/* Plain cream text links, semibold, no underline, on the subline's baseline (Bhasha's update to
-   end II.svg). The padding is the tap area. */
+/* Contact pills, 48px tall: the email is the one filled action (cream sheet, ink text), LinkedIn
+   a cream outline beside it. */
 .pill {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-2) 0;
-  color: var(--text-on-red);
-  font-size: var(--fs-body); /* = .line, so the two share size and baseline */
+  padding: var(--space-3) var(--space-5);
+  border: 2px solid var(--cream);
+  border-radius: var(--r-pill);
+  background: var(--cream);
+  color: var(--text-on-cream);
+  font-size: var(--fs-body);
   font-weight: var(--fw-label);
   line-height: var(--lh-body);
   text-decoration: none;
   transition: transform var(--dur-fast) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Phones: the address must fit beside its copy button inside 350px, so the pills drop to the small
+   size (still 48px tall). */
+@media (max-width: 767px) {
+  .pill {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--fs-small);
+    line-height: var(--lh-small);
+  }
+
+  .pill.split {
+    padding: 0;
+  }
+
+  .split .mail {
+    padding-left: var(--space-4);
+  }
+
+  .split .copy {
+    padding-right: var(--space-4);
+  }
+}
+
+.ghost {
+  background: none;
+  color: var(--text-on-red);
 }
 
 /* Lucide icons at the body size, stroked in the text colour. */
@@ -140,16 +170,33 @@
   transition: transform var(--dur-fast) var(--ease-out);
 }
 
-/* Copy: an icon button right of the address, its tap area the same as the links'. */
+/* The email pill holds two actions: the address (mail) and, at its end, the copy icon, in the place
+   LinkedIn's arrow takes in its pill. The pill's padding moves onto the two, so each one's tap area
+   runs the full 48px height. */
+.split {
+  padding: 0;
+  gap: 0;
+  align-items: stretch;
+}
+
+.mail {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-3) var(--space-1) var(--space-3) var(--space-5);
+  border-radius: var(--r-pill) 0 0 var(--r-pill);
+  color: inherit;
+  text-decoration: none;
+}
+
 .copy {
   display: inline-grid;
   place-items: center;
-  padding: var(--space-2);
+  padding: 0 var(--space-5) 0 var(--space-2);
   border: 0;
-  border-radius: var(--r-sm);
+  border-radius: 0 var(--r-pill) var(--r-pill) 0;
   background: none;
-  color: var(--text-on-red);
-  font-size: var(--fs-body);
+  color: inherit;
+  font: inherit;
   cursor: pointer;
   transition: transform var(--dur-fast) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
@@ -179,9 +226,18 @@
   transform: scale(0.97);
 }
 
+/* The split pill presses as one piece; only its icon reacts on its own. */
+.split:active,
+.split .copy:active {
+  transform: none;
+}
+
+.split .copy:active .icon {
+  transform: scale(0.85);
+}
+
 @media (hover: hover) and (pointer: fine) {
-  .pill:hover,
-  .copy:hover {
+  .pill:hover {
     transform: translateY(-2px);
   }
 
@@ -191,9 +247,17 @@
 }
 
 .pill:focus-visible,
-.copy:focus-visible {
+.copy:focus-visible,
+.mail:focus-visible {
   outline: 2px solid var(--cream);
   outline-offset: 3px;
+}
+
+/* Inside the cream email pill, focus shows as an ink ring just inside each half. */
+.split .mail:focus-visible,
+.split .copy:focus-visible {
+  outline-color: var(--ink);
+  outline-offset: -4px;
 }
 
 /* Settle in: only once the script has run, so without it the paper is simply there. */
@@ -243,8 +307,7 @@
   /* LinkedIn ends on the container's right edge. */
   .links {
     flex-wrap: nowrap;
-    gap: var(--space-7);
-    margin-bottom: calc(-1 * var(--space-2)); /* cancel the tap padding so the text sits on the subline's baseline */
+    gap: var(--space-4);
   }
 }
 

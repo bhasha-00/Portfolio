@@ -70,7 +70,7 @@ export const projects: Project[] = [
       "A 30-year-old platform was struggling at scale. One failing batch stalls 300,000 reports, making teams spend days firefighting.",
     whatIDid:
       "Designed the module’s dashboards and workflows. Added a pipeline view that shows load against capacity, and widgets for frequent tasks.",
-    outcome: "**6 → 3 clicks** on frequent tasks, and batch load is visible before it overloads.",
+    outcome: "**6 → 3 clicks** on frequent tasks, and batch load is visible before it overloads.*",
     note: "*In client testing, not yet in production.",
     image: { src: "/projects/nova-reporting.webp", svg: "/projects/nova-reporting.svg", alt: "NOVA financial reporting platform: pipeline throughput chart, queue metrics and the active jobs table." },
   },
