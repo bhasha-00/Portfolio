@@ -39,6 +39,8 @@
   --art-red: #DC2626;         /* TL;DR problem */
   --art-green: #16A34A;       /* TL;DR impact */
   --art-orange: #E59310;      /* hand-lettered captions */
+  --art-orange-text: #96610B; /* her orange, darkened (same hue) to 4.5:1 on her sticky note and frame: text set in it */
+  --art-faint-text: #6B728B;  /* --art-faint darkened (same hue) to 4.5:1 on her blue panel: readable "out of scope" text */
   --art-blue: #106EAD;        /* "Schools", "Revised", the designed answers */
   --art-blue-bg: #F4FAFE;     /* schools panel, answer boxes */
   --art-blue-lit: #DEF0FC;    /* highlighted row */

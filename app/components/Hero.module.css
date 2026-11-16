@@ -43,7 +43,7 @@
   font-size: var(--fs-name);
   line-height: var(--lh-name);
   font-weight: var(--fw-label);
-  letter-spacing: var(--tracking-h2);
+  letter-spacing: normal; /* as the headline beside it: one Geist, one spacing */
   text-wrap: pretty; /* full width: lines fill, no balancing */
 }
 

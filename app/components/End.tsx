@@ -35,19 +35,21 @@ export default function End() {
   const section = useRef<HTMLElement>(null);
   const [folding, setFolding] = useState(false);
   const [round, setRound] = useState(0); // a fresh sheet each time
-  const [copied, setCopied] = useState(false);
+  // "Copied", or, where the browser refuses the clipboard, a pointer to the address itself.
+  const [copied, setCopied] = useState<"" | "ok" | "fail">("");
   const copiedTimer = useRef(0);
 
   // Copy the address (for people without a mail app set up); "Copied" shows for a moment.
   const copy = async () => {
+    let ok = true;
     try {
       await navigator.clipboard.writeText(email);
     } catch {
-      return; // no clipboard access: the address is still on screen and a mailto link
+      ok = false; // no clipboard access (an insecure page, a refused permission): say so
     }
-    setCopied(true);
+    setCopied(ok ? "ok" : "fail");
     clearTimeout(copiedTimer.current);
-    copiedTimer.current = window.setTimeout(() => setCopied(false), 1600);
+    copiedTimer.current = window.setTimeout(() => setCopied(""), ok ? 1600 : 3200);
   };
   useEffect(() => () => clearTimeout(copiedTimer.current), []);
 
@@ -117,7 +119,7 @@ export default function End() {
               </button>
             </span>
             <span className={styles.copied} data-on={copied || undefined} role="status" aria-live="polite">
-              {copied ? "Copied" : ""}
+              {copied === "ok" ? "Copied" : copied === "fail" ? "Couldn't copy: select the address" : ""}
             </span>
           </li>
           <li className={styles.item}>

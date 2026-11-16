@@ -65,7 +65,7 @@
   background: var(--paper-grain);
   background-size: var(--paper-size);
   mix-blend-mode: multiply;
-  opacity: 0.25;
+  opacity: var(--paper-opacity); /* the same grain as the nav (globals.css) */
   pointer-events: none;
 }
 

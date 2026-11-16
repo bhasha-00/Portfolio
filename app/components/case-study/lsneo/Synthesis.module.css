@@ -67,7 +67,7 @@
 /* ---------- A: the synthesis table ---------- */
 .caption {
   margin: 0;
-  color: var(--art-orange);
+  color: var(--art-orange-text);
   font-family: var(--font-hand);
   font-size: var(--fs-hand-md);
   line-height: var(--lh-hand-md);

@@ -15,6 +15,7 @@
      background-size: var(--paper-size); background-blend-mode: multiply. */
   --paper-grain: none;
   --paper-size: 407px 407px; /* the 814px tile at 2x: grain at about the green paper's scale */
+  --paper-opacity: 1; /* one strength for every cream sheet: nav, case study bar and page, and the case study, AI and About cards */
 }
 
 html[data-paper] {

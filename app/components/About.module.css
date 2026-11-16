@@ -97,7 +97,7 @@
   background: var(--paper-grain);
   background-size: var(--paper-size);
   mix-blend-mode: multiply;
-  opacity: 0.25;
+  opacity: var(--paper-opacity); /* the same grain as the nav (globals.css) */
   pointer-events: none;
 }
 
@@ -110,7 +110,7 @@
   position: relative;
   flex: 1;
   min-height: 0;
-  border-radius: var(--r-art);
+  border-radius: var(--r-sm); /* 8: every image inside a card, as on the case study cards */
   background: var(--ink);
   overflow: hidden;
 }
