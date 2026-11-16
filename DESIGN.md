@@ -153,7 +153,7 @@ A warm, saturated red ground with cream paper and brown ink; gold and a few pape
 **Character:** Geist is set plainly and tightly, heavy at the top of the scale and regular for reading. Caveat and the handwritten outlines are the voice in the margin: labels, eyebrows and chips.
 
 ### Hierarchy
-- **Display** (800, 32px on phones to 48px on desktop, line height 36 to 52px, -0.03em): the hero headline only.
+- **Display** (800, -0.03em): the hero headline only. 32px on phones, 40px on tablets, 32/36 on desktop, where it sits in the right half of the hero in three hand-set lines beside the greeting at the same size (600): the two differ by weight only.
 - **Headline** (700, 28px to 40px, -0.02em): card titles, section titles and case study headings.
 - **Title** (700, 24px to 28px): the name in the hero, sub-heads.
 - **Lead** (600, 20px / 28px): callout titles and column heads.
@@ -214,7 +214,9 @@ Tactile and calm: paper you can lift, with a soft shadow and a small rise on hov
 
 ### Buttons
 - **Play:** a cream disc (64 to 96px) with a red triangle, on a 16% ink veil over the first frame of a prototype. Grows to 106% on hover, 96% while pressed.
-- There are no other buttons; links are cards, tabs or plain underlined text.
+- **Résumé (the contact row's primary action):** a filled cream pill, 48px tall, "Résumé" in Geist 600 with a Lucide download icon. Lifts 2px on hover; the arrow drops 2px.
+- **Contact icons:** round 48px buttons in a 2px cream outline on the red, one Lucide icon each (mail, LinkedIn), named for screen readers and in a tooltip.
+- Icons are Lucide (2px stroke, round caps and joins), inline and drawn in the text colour. Other links are cards, tabs or plain underlined text.
 
 ### The Crane
 The companion. A gold origami crane folds itself in the intro, lands in the hero, then perches on the case study cards and the AI cards as the reader scrolls. Tapping it refolds it into a rabbit or a parrot. It never blocks content and stays still under reduced motion.
@@ -226,7 +228,8 @@ The companion. A gold origami crane folds itself in the intro, lands in the hero
 - **Do** keep text at AA contrast: cream on red, ink on cream.
 - **Do** animate transform and opacity only, and honour `prefers-reduced-motion`.
 - **Do** show supplied artwork exactly as exported: lossless, never resized.
-- **Do** give every sheet the one paper shadow and 16px corners (12px on phones).
+- **Do** give every sheet the one paper shadow and 16px corners (12px on phones), and the paper grain at `--paper-opacity` (one strength for the nav, the cards and the case study page).
+- **Do** give every image inside a card 8px corners, and 16px of padding round it (32px in case study cards).
 
 ### Don't:
 - **Don't** use gradients, glows, glass effects or texture beyond the paper grain.

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-13T19:34:45+00:00",
+  "generatedAt": "2026-11-16T13:13:15+00:00",
   "title": "Design System: Bhasha Maheshwari, Portfolio",
   "extensions": {
     "colorMeta": {
@@ -293,7 +293,8 @@
       "Do keep text at AA contrast: cream on red, ink on cream.",
       "Do animate transform and opacity only, and honour `prefers-reduced-motion`.",
       "Do show supplied artwork exactly as exported: lossless, never resized.",
-      "Do give every sheet the one paper shadow and 16px corners (12px on phones)."
+      "Do give every sheet the one paper shadow and 16px corners (12px on phones), and the paper grain at `--paper-opacity` (one strength for the nav, the cards and the case study page).",
+      "Do give every image inside a card 8px corners, and 16px of padding round it (32px in case study cards)."
     ],
     "donts": [
       "Don't use gradients, glows, glass effects or texture beyond the paper grain.",

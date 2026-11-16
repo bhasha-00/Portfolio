@@ -35,6 +35,13 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Touch: a bigger invisible tap area round the companion, at least 44px tall. */
+@media (pointer: coarse) {
+  .hit {
+    inset: calc(-1 * var(--space-3));
+  }
+}
+
 .hit:focus-visible {
   outline: 2px solid var(--cream);
   outline-offset: 2px;

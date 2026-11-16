@@ -210,6 +210,8 @@
   margin-top: var(--space-5);
   font-size: var(--fs-body); /* as the hero's summary line */
   line-height: var(--lh-body);
+  max-width: 65ch; /* a readable line where the column is wide (tablets) */
+  text-wrap: pretty;
 }
 
 .tag {

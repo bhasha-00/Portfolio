@@ -199,6 +199,7 @@
   line-height: var(--lh-body);
   font-weight: var(--fw-body);
   color: var(--text-muted);
+  text-wrap: pretty; /* no lone last word ("Mapped.", "title") */
 }
 
 .text strong {
