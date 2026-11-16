@@ -101,3 +101,11 @@
   outline-offset: -2px;
   opacity: 1;
 }
+
+/* Touch screens: 44px tall tabs, as the home nav. */
+@media (pointer: coarse) {
+  .back,
+  .tab {
+    padding-block: var(--space-3);
+  }
+}

@@ -507,3 +507,10 @@ button.media:active {
     overflow: hidden;
   }
 }
+
+/* Touch phones: the nav is 8px taller (44px tabs), so a card stops 8px lower to keep the crane clear. */
+@media (max-width: 767px) and (pointer: coarse) {
+  .work {
+    --pad-top: calc(var(--space-9) + var(--space-3));
+  }
+}

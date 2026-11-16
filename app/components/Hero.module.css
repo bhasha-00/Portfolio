@@ -250,6 +250,15 @@
   }
 }
 
+/* Tablets (768–1199), portrait or landscape: the text stacks above the art, so the art is sized to
+   the height left on the screen (about 440px of nav and text above it) and never runs below the first
+   screen; it keeps its 640px cap, and never drops under 320px on a very short screen. */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .stage {
+    width: min(640px, 100%, max(320px, (100svh - 440px) * 2000 / 1615));
+  }
+}
+
 /* Desktop: two halves on one top line. Left (columns 1–5): the greeting, role and summary. Right
    (columns 6–12): the promise at headline size, in its three hand-set lines ("…goals and" / "…interfaces
    that" / "perform."); the longest, about 590px at 40px semibold, fits 7 columns down to 1200 (600px). The art stays

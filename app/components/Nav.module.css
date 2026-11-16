@@ -68,3 +68,11 @@
   outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
+
+/* Touch screens: every tab 44px tall (12px above and below the 20px line), the comfortable size for
+   a thumb. Mouse and trackpad keep the compact 36px. */
+@media (pointer: coarse) {
+  .link {
+    padding-block: var(--space-3);
+  }
+}
