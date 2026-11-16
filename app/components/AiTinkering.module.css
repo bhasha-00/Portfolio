@@ -89,20 +89,36 @@
 }
 
 /* Footer: 12 padding all round, like every card; the one-liner 16 under the pill. */
+/* One footer height for every card (padding, the 48px pill, the gap and --foot-lines lines of text),
+   so the images, pills and one-liners line up across the row whatever each line's length. Three lines
+   on phones and tablets (the narrow card wraps the longest one-liner to three), two on desktop. */
 .foot {
+  --foot-lines: 3;
   flex: none;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: calc(var(--space-3) / var(--k));
+  height: calc((2 * var(--space-4) + var(--space-3) + var(--foot-lines) * var(--lh-body)) / var(--k) + 48px);
   padding: calc(var(--space-4) / var(--k));
 }
 
+@media (min-width: 1200px) {
+  .foot {
+    --foot-lines: 2;
+  }
+}
+
+/* The name art is 48 units tall with its handwriting 14.5 units tall. Sized so the handwriting comes
+   out at --fs-hand-sm (16px) on screen at any card scale (--k), the size of About's captions. The art
+   keeps 16 of its 48 units clear on the left: pulled back by that share, the icon lines up with the text. */
 .pill {
+  --pill-h: calc(var(--fs-hand-sm) * 48 / 14.5 / var(--k));
   display: block;
   width: auto;
-  height: 48px; /* PILL_H */
-  max-width: 100%;
+  height: var(--pill-h);
+  max-width: none;
+  margin-left: calc(var(--pill-h) * -16 / 48);
 }
 
 /* Body text, divided by --k like the padding, so it comes out at 16 / 24 on screen: the same body

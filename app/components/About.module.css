@@ -134,14 +134,12 @@
   display: flex;
   align-self: flex-start;
   max-width: 100%;
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--r-pill);
-  background: var(--back);
+  padding: var(--space-1) 0; /* no chip: the word in her hand sits on the card, level with the photo's edge */
   color: var(--text-on-cream);
 }
 
 .chipHand {
-  height: var(--lh-hand-sm);
+  height: var(--fs-hand-sm); /* 16: the same handwriting size as the AI cards' names */
   max-width: 100%;
 }
 
@@ -229,8 +227,14 @@
    three cards scattered on the right, each a little turned and overlapping, as a handful of prints
    laid on a desk. The spread's inline transforms are replaced. ---------- */
 @media (min-width: 1200px) {
+  /* A full screen with the content centred in it, so when a scroll settles on About (scroll snap),
+     the text and cards sit in the middle of the screen. Equal room above (under the nav) and below. */
   .about {
+    display: flex;
+    align-items: center;
     height: auto;
+    min-height: 100vh;
+    min-height: 100svh;
     padding: var(--space-9) 0;
   }
 
