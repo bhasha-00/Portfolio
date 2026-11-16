@@ -5,7 +5,7 @@
 
 .ai {
   position: relative;
-  padding: var(--space-8) 0 var(--space-9);
+  padding: calc(var(--space-9) + var(--space-4)) 0 var(--space-9); /* 112: the eyebrow starts clear of the fixed nav (66 on touch) */
 }
 
 /* Phones: the front card 77% of the screen, sides at 80% scale with ~10px clear of it. */

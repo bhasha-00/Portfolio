@@ -506,6 +506,13 @@ button.media:active {
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  /* Except the Outcome: the proof is always shown whole. */
+  .outcome .text {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
 }
 
 /* Touch phones: the nav is 8px taller (44px tabs), so a card stops 8px lower to keep the crane clear. */

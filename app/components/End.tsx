@@ -2,32 +2,43 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { email, endLine, endTitle, linkedin } from "../content/end";
+import { email, endLine, endTitle, linkedin, resume } from "../content/end";
 import CrabFold from "./end/CrabFold";
 import styles from "./End.module.css";
 
-// Lucide "copy" and "arrow-right" (ISC), inline, drawn in the text colour.
-function CopyIcon() {
+// Lucide "mail", "linkedin" and "download" (ISC), inline, drawn in the text colour.
+function MailIcon() {
   return (
     <svg className={styles.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+      <rect width="20" height="16" x="2" y="4" rx="2" />
+      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
     </svg>
   );
 }
 
-function ArrowIcon() {
+function LinkedInIcon() {
   return (
     <svg className={styles.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M5 12h14" />
-      <path d="m12 5 7 7-7 7" />
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect width="4" height="12" x="2" y="9" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  );
+}
+
+function DownloadIcon() {
+  return (
+    <svg className={styles.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 15V3" />
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <path d="m7 10 5 5 5-5" />
     </svg>
   );
 }
 
 // The end, from end II.svg: a square of real green paper in the middle ("Try a fold ?" in the
-// designer's hand), the sign-off bottom-left over it, contact pills bottom-right: the email as the
-// one filled cream pill, LinkedIn in outline. The paper settles
+// designer's hand), the sign-off bottom-left over it, the contacts bottom-right: mail and LinkedIn as
+// round icon buttons, the résumé as the one filled cream pill. The paper settles
 // in (lift and fade, transform and opacity only) when the section comes into view; the text never
 // waits. A click or tap on the paper (or Enter / Space) starts the fold: the handwriting goes, and
 // the paper guides a crab one outlined part at a time (end/CrabFold.tsx).
@@ -35,24 +46,6 @@ export default function End() {
   const section = useRef<HTMLElement>(null);
   const [folding, setFolding] = useState(false);
   const [round, setRound] = useState(0); // a fresh sheet each time
-  // "Copied", or, where the browser refuses the clipboard, a pointer to the address itself.
-  const [copied, setCopied] = useState<"" | "ok" | "fail">("");
-  const copiedTimer = useRef(0);
-
-  // Copy the address (for people without a mail app set up); "Copied" shows for a moment.
-  const copy = async () => {
-    let ok = true;
-    try {
-      await navigator.clipboard.writeText(email);
-    } catch {
-      ok = false; // no clipboard access (an insecure page, a refused permission): say so
-    }
-    setCopied(ok ? "ok" : "fail");
-    clearTimeout(copiedTimer.current);
-    copiedTimer.current = window.setTimeout(() => setCopied(""), ok ? 1600 : 3200);
-  };
-  useEffect(() => () => clearTimeout(copiedTimer.current), []);
-
   useEffect(() => {
     const sec = section.current;
     if (!sec) return;
@@ -108,24 +101,26 @@ export default function End() {
         </div>
         <ul className={styles.links}>
           <li className={styles.item}>
-            {/* One pill, two actions: the address opens mail, the icon at its end copies it (a button
-                cannot sit inside a link, so the pill is a wrapper around both). */}
-            <span className={`${styles.pill} ${styles.split}`}>
-              <a className={styles.mail} href={`mailto:${email}`}>
-                {email}
-              </a>
-              <button type="button" className={styles.copy} onClick={copy} aria-label="Copy email address">
-                <CopyIcon />
-              </button>
-            </span>
-            <span className={styles.copied} data-on={copied || undefined} role="status" aria-live="polite">
-              {copied === "ok" ? "Copied" : copied === "fail" ? "Couldn't copy: select the address" : ""}
-            </span>
+            <a className={styles.iconLink} href={`mailto:${email}`} aria-label={`Email Bhasha: ${email}`} title={email}>
+              <MailIcon />
+            </a>
           </li>
           <li className={styles.item}>
-            <a className={`${styles.pill} ${styles.ghost}`} href={linkedin} target="_blank" rel="noopener noreferrer">
-              LinkedIn
-              <ArrowIcon />
+            <a
+              className={styles.iconLink}
+              href={linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn (opens in a new tab)"
+              title="LinkedIn"
+            >
+              <LinkedInIcon />
+            </a>
+          </li>
+          <li className={styles.item}>
+            <a className={styles.pill} href={resume.href} download={resume.file}>
+              Résumé
+              <DownloadIcon />
             </a>
           </li>
         </ul>

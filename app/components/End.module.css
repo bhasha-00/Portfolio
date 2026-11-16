@@ -102,22 +102,18 @@
 .links {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4) var(--space-5);
+  align-items: center;
+  gap: var(--space-3);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* Each contact is one pill with its icon inside it (email: a copy button; LinkedIn: an arrow). */
 .item {
-  position: relative;
   display: flex;
-  align-items: center;
-  gap: var(--space-1);
 }
 
-/* Contact pills, 48px tall: the email is the one filled action (cream sheet, ink text), LinkedIn
-   a cream outline beside it. */
+/* Résumé: the one filled action, a whole cream pill with its download icon, 48px tall. */
 .pill {
   display: inline-flex;
   align-items: center;
@@ -135,129 +131,48 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Phones: the address must fit beside its copy button inside 350px, so the pills drop to the small
-   size (still 48px tall). */
-@media (max-width: 767px) {
-  .pill {
-    padding: var(--space-3) var(--space-4);
-    font-size: var(--fs-small);
-    line-height: var(--lh-small);
-  }
-
-  .pill.split {
-    padding: 0;
-  }
-
-  .split .mail {
-    padding-left: var(--space-4);
-  }
-
-  .split .copy {
-    padding-right: var(--space-4);
-  }
-}
-
-.ghost {
-  background: none;
-  color: var(--text-on-red);
-}
-
-/* Lucide icons at the body size, stroked in the text colour. */
-.icon {
-  flex: none;
-  width: 1em;
-  height: 1em;
-  transition: transform var(--dur-fast) var(--ease-out);
-}
-
-/* The email pill holds two actions: the address (mail) and, at its end, the copy icon, in the place
-   LinkedIn's arrow takes in its pill. The pill's padding moves onto the two, so each one's tap area
-   runs the full 48px height. */
-.split {
-  padding: 0;
-  gap: 0;
-  align-items: stretch;
-}
-
-.mail {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--space-3) var(--space-1) var(--space-3) var(--space-5);
-  border-radius: var(--r-pill) 0 0 var(--r-pill);
-  color: inherit;
-  text-decoration: none;
-}
-
-.copy {
+/* Mail and LinkedIn: round 48px buttons in cream outline, a Lucide icon each, named for screen
+   readers (and in a tooltip on hover). */
+.iconLink {
   display: inline-grid;
   place-items: center;
-  padding: 0 var(--space-5) 0 var(--space-2);
-  border: 0;
-  border-radius: 0 var(--r-pill) var(--r-pill) 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
+  width: var(--space-7);
+  height: var(--space-7);
+  border: 2px solid var(--cream);
+  border-radius: var(--r-pill);
+  color: var(--text-on-red);
   transition: transform var(--dur-fast) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
 }
 
-/* "Copied", above the copy button for a moment (role caption). Opacity only. */
-.copied {
-  position: absolute;
-  right: 0;
-  bottom: 100%;
-  color: var(--text-on-red);
-  font-size: var(--fs-caption);
-  line-height: var(--lh-caption);
-  font-weight: 500;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--dur-base) var(--ease-out);
-}
-
-.copied[data-on] {
-  opacity: 1;
+/* Lucide icons, stroked in the text colour. */
+.icon {
+  flex: none;
+  width: var(--fs-lead);
+  height: var(--fs-lead);
+  transition: transform var(--dur-fast) var(--ease-out);
 }
 
 .pill:active,
-.copy:active {
+.iconLink:active {
   transform: scale(0.97);
 }
 
-/* The split pill presses as one piece; only its icon reacts on its own. */
-.split:active,
-.split .copy:active {
-  transform: none;
-}
-
-.split .copy:active .icon {
-  transform: scale(0.85);
-}
-
 @media (hover: hover) and (pointer: fine) {
-  .pill:hover {
+  .pill:hover,
+  .iconLink:hover {
     transform: translateY(-2px);
   }
 
   .pill:hover .icon {
-    transform: translateX(2px); /* the arrow leans the way it goes */
+    transform: translateY(2px); /* the download arrow drops */
   }
 }
 
 .pill:focus-visible,
-.copy:focus-visible,
-.mail:focus-visible {
+.iconLink:focus-visible {
   outline: 2px solid var(--cream);
   outline-offset: 3px;
-}
-
-/* Inside the cream email pill, focus shows as an ink ring just inside each half. */
-.split .mail:focus-visible,
-.split .copy:focus-visible {
-  outline-color: var(--ink);
-  outline-offset: -4px;
 }
 
 /* Settle in: only once the script has run, so without it the paper is simply there. */

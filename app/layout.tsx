@@ -27,7 +27,7 @@ const hand = Caveat({
 
 export const metadata: Metadata = {
   title: "Bhasha Maheshwari, Product Designer",
-  description: "Product and UX/UI designer for enterprise fintech.",
+  description: "Product designer with 2+ years across B2B SaaS: complex systems, scale and end-to-end ownership.",
 };
 
 export const viewport: Viewport = {
