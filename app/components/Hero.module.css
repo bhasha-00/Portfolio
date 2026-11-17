@@ -1,13 +1,11 @@
-/* Home hero, on .container (edges) + .grid (columns) from tokens.css. Phones and tablets: it stops
-   short of a full screen by the cards' top padding plus 48px, so the top of case study 01 peeks in
-   below the art. Desktop: a full screen, the art on its bottom edge (see the end of this file). */
+/* Home hero, on .container (edges) + .grid (columns) from tokens.css. A full screen at every size,
+   the art on its bottom edge, so the drawing meets the screen's bottom edge on first view. */
 .hero {
-  --peek: calc(var(--space-9) + var(--space-1) + var(--space-7)); /* phones: cards start 100px down */
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - var(--peek));
-  min-height: calc(100svh - var(--peek));
+  min-height: 100vh;
+  min-height: 100svh;
   padding-top: var(--nav-offset);
   overflow: hidden;
 }
@@ -245,10 +243,6 @@
     white-space: nowrap;
   }
 
-  .hero {
-    --peek: calc(var(--space-9) + var(--space-2) + var(--space-7)); /* tablet and up: cards start 104px down */
-  }
-
   .summary {
     max-width: 30em;
   }
@@ -297,11 +291,8 @@
     /* weight and tracking as on phones and tablets (the display role): one headline everywhere */
   }
 
-  /* The hero fills the screen: the art sits on its bottom edge, and the text has more room under the
-     nav (32px more than the nav offset). The cards begin below the fold. */
+  /* The text has more room under the nav (32px more than the nav offset). */
   .hero {
-    min-height: 100vh;
-    min-height: 100svh;
     padding-top: calc(var(--nav-offset) + var(--space-6));
   }
 }
