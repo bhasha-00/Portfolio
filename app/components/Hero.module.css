@@ -6,7 +6,7 @@
   flex-direction: column;
   min-height: 100vh;
   min-height: 100svh;
-  padding-top: var(--nav-offset);
+  padding-top: calc(var(--nav-offset) + var(--space-6)); /* clear room under the nav at every size */
   overflow: hidden;
 }
 
@@ -280,6 +280,12 @@
     max-width: none;
   }
 
+  /* The art is sized to the height left under the text (about 300px of nav and text above it), so
+     on a short laptop screen it still ends on the screen's bottom edge instead of below the fold. */
+  .stage {
+    width: min(640px, 100%, max(400px, (100svh - 300px) * 2000 / 1615));
+  }
+
   .headline {
     grid-column: 6 / -1;
     grid-row: 1 / span 3;
@@ -289,10 +295,5 @@
     font-size: var(--fs-name); /* 32: the greeting's size; the two differ by weight only (calmer) */
     line-height: var(--lh-name);
     /* weight and tracking as on phones and tablets (the display role): one headline everywhere */
-  }
-
-  /* The text has more room under the nav (32px more than the nav offset). */
-  .hero {
-    padding-top: calc(var(--nav-offset) + var(--space-6));
   }
 }
