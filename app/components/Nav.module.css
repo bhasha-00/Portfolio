@@ -72,7 +72,7 @@
 }
 
 /* The red pill behind the active tab (Nav.tsx sets --l, --t, --h, --r, --m). Two caps (circles, the
-   tab's height) at its two ends and a 1px strip stretched between them: moved with transforms only,
+   tab's height) at its two ends and a strip stretched between them: moved with transforms only,
    so the round ends never squash while it slides. Hidden over the hero (no active tab). */
 .pill {
   position: absolute;
@@ -94,6 +94,9 @@
   height: var(--h, 0px);
   background: var(--red);
   transition: transform var(--dur-base) var(--ease-out);
+  /* Kept on their own layers for good: when the browser dropped them back into the nav's layer after
+     a slide, it sometimes left the first cap and the strip unpainted (a lone cap beside the tab). */
+  will-change: transform;
 }
 
 .cap {
@@ -106,11 +109,13 @@
   transform: translate(var(--r, 0px), var(--t, 0px));
 }
 
-/* Starts at the middle of the first cap, ends at the middle of the second. */
+/* Starts at the middle of the first cap, ends at the middle of the second. Drawn 100px wide and
+   scaled to the length it needs (--m / 100): a 1px strip stretched 40 times came out blurred on
+   scaled displays (125%), a soft band with a bump at its end. Its ends sit under the caps. */
 .mid {
-  width: 1px;
+  width: 100px;
   transform-origin: 0 0;
-  transform: translate(calc(var(--l, 0px) + var(--h, 0px) / 2), var(--t, 0px)) scaleX(var(--m, 0));
+  transform: translate(calc(var(--l, 0px) + var(--h, 0px) / 2), var(--t, 0px)) scaleX(calc(var(--m, 0) / 100));
 }
 
 .pill[data-still] .cap,
