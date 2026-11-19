@@ -41,6 +41,7 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
   const [playing, setPlaying] = useState(false); // a fold is moving: no outline, no lift
   const [cheer, setCheer] = useState(0); // confetti bursts: one when the last fold lands
   const busy = useRef(false);
+  const queued = useRef(false); // a tap or key press that came while a fold was playing
   const reduce = useRef(false);
 
   const still = useCallback((g: SVGGElement | null, polys: Poly[]) => {
@@ -69,7 +70,11 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
     });
 
   const fold = useCallback(async () => {
-    if (busy.current || i >= N) return;
+    if (i >= N) return;
+    if (busy.current) {
+      queued.current = true; // one press is remembered and folds as soon as this one lands
+      return;
+    }
     busy.current = true;
     setPlaying(true);
     const s = crabSteps[i], w = world.current!, end = rest(i);
@@ -109,8 +114,19 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
     busy.current = false;
   }, [i, still]);
 
+  // A press remembered during a fold plays the next one once the paper has settled.
+  useEffect(() => {
+    if (!queued.current || busy.current || i >= N) return;
+    queued.current = false;
+    fold();
+  }, [i, fold]);
+
   const onClick = (e: MouseEvent<SVGSVGElement>) => {
-    if (busy.current || i >= N) return;
+    if (i >= N) return;
+    if (busy.current) {
+      queued.current = true; // the outline is hidden while a fold plays: any tap on the paper counts
+      return;
+    }
     if ((e.target as Element).getAttribute("data-target") !== null) {
       buzz(12);
       fold();
@@ -153,6 +169,12 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
           {target && <polygon className={styles.target} data-target="" points={pts(target)} />}
         </g>
       </svg>
+      {/* Where you are, in her handwriting's font, once folding has begun (screen readers hear it below). */}
+      {i > 0 && i < N && (
+        <span className={styles.count} aria-hidden="true">
+          {i + 1} / {N}
+        </span>
+      )}
       {cheer > 0 && <Confetti key={cheer} />}
       <p className="sr-only" aria-live="polite">
         {i === 0 ? "" : i < N ? `Step ${i + 1} of ${N}.` : "Done: a paper crab."}

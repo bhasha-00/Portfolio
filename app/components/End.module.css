@@ -97,6 +97,7 @@
   color: var(--text-on-red);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
+  text-wrap: pretty; /* no lone last word ("breaks.") on a phone */
 }
 
 .links {

@@ -106,6 +106,7 @@
   font-size: var(--fs-lead);
   line-height: var(--lh-lead);
   font-weight: var(--fw-label);
+  text-wrap: pretty; /* no near-empty last line */
 }
 
 /* Small label above an artifact ("Walkthrough", "Prototype"). */
@@ -118,10 +119,12 @@
 }
 
 .p {
+  max-width: 36em; /* about 75 characters of Geist: a readable line (the column runs ~110 on desktop); artifacts keep the full width */
   margin-bottom: 0;
   color: var(--text-muted);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
+  text-wrap: pretty; /* no lone last word */
 }
 
 .p strong,
@@ -145,6 +148,7 @@
   font-size: var(--fs-lead);
   line-height: var(--lh-lead);
   font-weight: var(--fw-label);
+  text-wrap: pretty;
 }
 
 /* 300-400 / 5-10 mins / ~1 hour: one row of three, ruled like a table (as on Framer). */
