@@ -1,6 +1,8 @@
 import Image, { getImageProps } from "next/image";
+import Reveal from "./Reveal";
+import { ViewTransition } from "react";
 import Link from "next/link";
-import { caseStudyHref, type ArtifactName, type Block, type CaseStudy as CS, type Media } from "../../content/caseStudies";
+import { caseStudyHref, caseStudyVT, type ArtifactName, type Block, type CaseStudy as CS, type Media } from "../../content/caseStudies";
 import { projects, type Project } from "../../content/projects";
 import { rich } from "../rich";
 import CaseBar from "./CaseBar";
@@ -191,6 +193,7 @@ export default function CaseStudy({ cs }: { cs: CS }) {
 
   return (
     <div className={styles.page}>
+      <Reveal />
       <CaseBar tabs={tabs} spy={spy} />
       <main className={`container grid ${styles.main}`}>
         <article className={styles.col}>
@@ -198,7 +201,11 @@ export default function CaseStudy({ cs }: { cs: CS }) {
             <p className={styles.kicker}>
               {cs.product} <span aria-hidden="true">•</span> {cs.year}
             </p>
-            <h1 className={styles.h1}>{title}</h1>
+            <h1 className={styles.h1}>
+              <ViewTransition name={caseStudyVT(cs.project, "title")} share="case-title" default="none">
+                <span className={styles.vtTitle}>{title}</span>
+              </ViewTransition>
+            </h1>
             {cs.dek && <p className={styles.dek}>{cs.dek}</p>}
             <dl className={styles.meta}>
               {cs.meta.map((m) => (
@@ -208,7 +215,13 @@ export default function CaseStudy({ cs }: { cs: CS }) {
                 </div>
               ))}
             </dl>
-            {cover ? <Cover image={cover} /> : <Artifact media={cs.hero} priority />}
+            {cover ? (
+              <ViewTransition name={caseStudyVT(cs.project, "cover")} share="case-cover" default="none">
+                <Cover image={cover} />
+              </ViewTransition>
+            ) : (
+              <Artifact media={cs.hero} priority />
+            )}
           </header>
 
           {cs.sections.map((s) => (

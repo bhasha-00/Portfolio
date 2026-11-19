@@ -43,9 +43,79 @@
     transform var(--dur-fast) var(--ease-out);
 }
 
-.link[aria-current] {
-  background: var(--red);
+.link {
+  z-index: 1; /* above the sliding pill */
+}
+
+/* Each tab's word twice: ink, and cream for when the pill is under it. They cross-fade (opacity),
+   so the word turns cream as the pill arrives. */
+.label,
+.labelOn {
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.labelOn {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
   color: var(--cream);
+  opacity: 0;
+}
+
+.link[aria-current] .label {
+  opacity: 0;
+}
+
+.link[aria-current] .labelOn {
+  opacity: 1;
+}
+
+/* The red pill behind the active tab (Nav.tsx sets --l, --t, --h, --r, --m). Two caps (circles, the
+   tab's height) at its two ends and a 1px strip stretched between them: moved with transforms only,
+   so the round ends never squash while it slides. Hidden over the hero (no active tab). */
+.pill {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.pill[data-on] {
+  opacity: 1;
+}
+
+.cap,
+.mid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: var(--h, 0px);
+  background: var(--red);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.cap {
+  width: var(--h, 0px);
+  border-radius: var(--r-pill);
+  transform: translate(var(--l, 0px), var(--t, 0px));
+}
+
+.capEnd {
+  transform: translate(var(--r, 0px), var(--t, 0px));
+}
+
+/* Starts at the middle of the first cap, ends at the middle of the second. */
+.mid {
+  width: 1px;
+  transform-origin: 0 0;
+  transform: translate(calc(var(--l, 0px) + var(--h, 0px) / 2), var(--t, 0px)) scaleX(var(--m, 0));
+}
+
+.pill[data-still] .cap,
+.pill[data-still] .mid {
+  transition: none;
 }
 
 @media (hover: hover) and (pointer: fine) {

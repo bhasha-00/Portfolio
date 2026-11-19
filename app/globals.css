@@ -98,3 +98,51 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------- Opening a case study (React ViewTransition, Projects.tsx and CaseStudy.tsx) ----------
+   The card's cover and title move and grow into the page's cover and title; Back reverses it. The
+   rest of the page cross-fades (the browser's default). Browsers without view transitions, and
+   reduced motion (durations are 0 there), get an instant cut. */
+::view-transition-group(.case-cover),
+::view-transition-group(.case-title) {
+  animation-duration: var(--dur-card);
+  animation-timing-function: var(--ease-in-out);
+}
+
+/* The cover keeps filling its box as the box changes shape (card shot to page cover), cropped as
+   each one crops it, so the picture is never stretched. */
+::view-transition-image-pair(.case-cover) {
+  overflow: hidden;
+  border-radius: var(--r-art);
+}
+
+::view-transition-old(.case-cover),
+::view-transition-new(.case-cover) {
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The title: each snapshot keeps its own proportions (the lines wrap differently on the card and the
+   page), anchored top left, so the words are never squeezed. */
+::view-transition-old(.case-title),
+::view-transition-new(.case-title) {
+  height: auto;
+}
+
+/* Without a partner (going back to home, or Explore more), the cover and title just fade with the
+   rest of the page, at the page's pace, instead of lingering on top of it. */
+::view-transition-old(.case-cover):only-child,
+::view-transition-new(.case-cover):only-child,
+::view-transition-old(.case-title):only-child,
+::view-transition-new(.case-title):only-child {
+  animation-duration: var(--dur-base);
+}
+
+/* Reduced motion: no view transition at all, the browser's default cross-fade included. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

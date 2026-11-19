@@ -522,3 +522,8 @@ button.media:active {
     --pad-top: calc(var(--space-9) + var(--space-3));
   }
 }
+
+/* The title's text as one box, so it can morph into the case study page's title (Projects.tsx). */
+.vtTitle {
+  display: block;
+}

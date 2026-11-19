@@ -8,9 +8,10 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  ViewTransition,
 } from "react";
 import { projects, type Project } from "../content/projects";
-import { caseStudyHref } from "../content/caseStudies";
+import { caseStudyHref, caseStudyVT } from "../content/caseStudies";
 import { controls, flightFrames, type Pt } from "./craneFlight";
 import PerchPuff from "./companion/PerchPuff";
 import Origami, { REFOLD, type RefoldDetail } from "./companion/Origami";
@@ -405,7 +406,9 @@ export default function Projects() {
               <h3 id={`project-${j}`} className={styles.title}>
                 {href ? (
                   <Link href={href} className={styles.stretch}>
-                    {p.title ?? p.name}
+                    <ViewTransition name={caseStudyVT(p.name, "title")} share="case-title" default="none">
+                      <span className={styles.vtTitle}>{p.title ?? p.name}</span>
+                    </ViewTransition>
                   </Link>
                 ) : (
                   (p.title ?? p.name)
@@ -440,9 +443,11 @@ export default function Projects() {
                 </div>
 
                 {href && p.image ? (
-                  <div className={`${styles.media} ${styles.shot}`}>
-                    <Shot image={p.image} />
-                  </div>
+                  <ViewTransition name={caseStudyVT(p.name, "cover")} share="case-cover" default="none">
+                    <div className={`${styles.media} ${styles.shot}`}>
+                      <Shot image={p.image} />
+                    </div>
+                  </ViewTransition>
                 ) : p.image ? (
                   <div className={`${styles.media} ${styles.shot}`}>
                     <Shot image={p.image} />

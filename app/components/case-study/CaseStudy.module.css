@@ -376,3 +376,22 @@ a.moreLink:focus-visible {
     grid-column: 3 / 11;
   }
 }
+
+/* Artifacts below the screen ease in once as they arrive (Reveal.tsx): up 16px, from transparent. */
+.main :global([data-reveal]) {
+  opacity: 0;
+  transform: translateY(var(--space-4));
+}
+
+.main :global([data-reveal="in"]) {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--dur-card) var(--ease-out),
+    transform var(--dur-card) var(--ease-out);
+}
+
+/* The title's text as one box, the other end of the card title's morph (CaseStudy.tsx). */
+.vtTitle {
+  display: block;
+}

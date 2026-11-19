@@ -712,3 +712,10 @@ export const caseStudyHref = (project: string) => {
   const c = caseStudies.find((x) => x.project === project);
   return c ? `/case-studies/${c.slug}` : undefined;
 };
+
+/** View transition names for a case study's cover and title, shared by its card on home and its
+ *  page, so opening one morphs the card's cover and title into the page's (Projects.tsx, CaseStudy.tsx). */
+export const caseStudyVT = (project: string, part: "cover" | "title") => {
+  const c = caseStudies.find((x) => x.project === project);
+  return c ? `cs-${part}-${c.slug}` : undefined;
+};
