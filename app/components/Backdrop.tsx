@@ -56,6 +56,9 @@ export default function Backdrop() {
       <svg ref={burst} className={styles.burst} viewBox={`0 0 ${FRAME.w} ${FRAME.h}`} preserveAspectRatio="xMidYMid slice">
         <path d={BURST} />
       </svg>
+      {/* Printed-ink texture on the red (make-ink-texture.py): slow cloudy mottle, then fine speck. */}
+      <div className={styles.inkMottle} />
+      <div className={styles.inkSpeck} />
     </div>
   );
 }

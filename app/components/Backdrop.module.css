@@ -35,3 +35,35 @@
   fill-opacity: 0.12;
   will-change: transform;
 }
+
+/* Printed-ink texture over the red and the burst, below all content: two seamless transparent tiles
+   from make-ink-texture.py (dark ink and light paper specks a few percent strong), in plain normal
+   blending, repeated. The layer is fixed with the backdrop, so it never slides or shows a seam while
+   the page scrolls. The files load after the page (html[data-paper], set by PaperOn.tsx), like the
+   paper grain, so they never compete with the hero; until then the red is plain. */
+.inkMottle,
+.inkSpeck {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  background-position: 0 0;
+  pointer-events: none;
+}
+
+.inkMottle {
+  z-index: 2;
+  background-size: 768px 768px;
+}
+
+.inkSpeck {
+  z-index: 3;
+  background-size: 160px 160px;
+}
+
+:global(html[data-paper]) .inkMottle {
+  background-image: url("/assets/ink-mottle.webp");
+}
+
+:global(html[data-paper]) .inkSpeck {
+  background-image: url("/assets/ink-speck.webp");
+}
