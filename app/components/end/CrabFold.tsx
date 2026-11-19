@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type Mous
 import { buildStep, ease, flatten, type Classes, type Poly } from "../intro/fold";
 import { centreY, crabStart, crabSteps, restAfter } from "./crab";
 import styles from "./CrabFold.module.css";
+import Confetti from "./Confetti";
 
 const N = crabSteps.length;
 const K: Classes = {
@@ -28,7 +29,8 @@ const pts = (p: [number, number][]) => p.map(([x, y]) => `${x.toFixed(2)},${y.to
 // outlined in ink and gently pulses; clicking it plays that fold. A click anywhere else on the
 // paper nudges it. Keyboard: the paper is one button; Enter or Space folds the outlined part.
 // Motion is transform and opacity only (the intro's fold engine). Reduced motion: each fold lands
-// at once. When the crab is done, a small round button folds a fresh sheet.
+// at once. When the crab is done, paper confetti bursts from it (not under reduced motion) and a
+// small round button folds a fresh sheet.
 export default function CrabFold({ onReset }: { onReset: () => void }) {
   const world = useRef<SVGGElement>(null); // the paper being folded
   const flip = useRef<SVGGElement>(null); // squashed through edge-on to turn the paper over
@@ -37,6 +39,7 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
   const [lift, setLift] = useState(centreY(crabStart));
   const [nudge, setNudge] = useState(0);
   const [playing, setPlaying] = useState(false); // a fold is moving: no outline, no lift
+  const [cheer, setCheer] = useState(0); // confetti bursts: one when the last fold lands
   const busy = useRef(false);
   const reduce = useRef(false);
 
@@ -101,6 +104,7 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
     w.style.opacity = "1";
     setLift(centreY(end));
     setI(i + 1);
+    if (i + 1 === N && !reduce.current) setCheer((c) => c + 1); // the crab is done: paper confetti
     setPlaying(false);
     busy.current = false;
   }, [i, still]);
@@ -149,6 +153,7 @@ export default function CrabFold({ onReset }: { onReset: () => void }) {
           {target && <polygon className={styles.target} data-target="" points={pts(target)} />}
         </g>
       </svg>
+      {cheer > 0 && <Confetti key={cheer} />}
       <p className="sr-only" aria-live="polite">
         {i === 0 ? "" : i < N ? `Step ${i + 1} of ${N}.` : "Done: a paper crab."}
       </p>

@@ -1,0 +1,44 @@
+/* Paper confetti over the finished crab (Confetti.tsx). The layer covers the paper square and lets
+   the pieces fly past its edges onto the red; it never takes a tap. */
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* One strip of paper, launched from the centre of the square. */
+.strip,
+.spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  will-change: transform, opacity;
+}
+
+.strip {
+  border-radius: 1px;
+}
+
+.vermilion {
+  background: var(--vermilion);
+}
+
+.gold {
+  background: var(--gold);
+}
+
+.cream {
+  background: var(--cream);
+}
+
+.sand {
+  background: color-mix(in srgb, var(--gold) 40%, var(--cream));
+}
+
+/* A four-point sparkle in gold: a square cut to a star with concave sides. */
+.spark {
+  background: var(--gold);
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+}
