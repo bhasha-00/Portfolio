@@ -7,7 +7,9 @@
   min-height: 100vh;
   min-height: 100svh;
   padding-top: calc(var(--nav-offset) + var(--space-6)); /* clear room under the nav at every size */
-  overflow: hidden;
+  overflow-x: clip; /* not vertically: on scroll the art sinks past the hero's bottom (HeroScroll.tsx) */
+  z-index: 5; /* the sinking art draws over the Projects strip under the nav (4) and stays under the
+                 crane's perch (5, later in the page), so no edge ever cuts across it */
 }
 
 /* One left column at every size: name and role, the headline, the summary. */

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import HeroScroll from "./HeroScroll";
 import HeroTouchdown from "./HeroTouchdown";
 import Origami from "./companion/Origami";
 import styles from "./Hero.module.css";
@@ -10,7 +11,7 @@ export default function Hero() {
       {/* One reading unit, in order: who (name, role), what she delivers (headline), the proof of
           experience (summary). */}
       <div className={`grid ${styles.top}`}>
-        <div className={styles.text}>
+        <div className={styles.text} data-hero-text="">
           <h1 id="home-title" className={styles.name}>
             Hi, I am Bhasha
           </h1>
@@ -33,7 +34,7 @@ export default function Hero() {
 
       {/* Hero art: designer workspace, top-down. Decorative, so empty alt.
           The gold paper crane from the intro rests in the clear space above the tablet. */}
-      <div className={styles.stage}>
+      <div className={styles.stage} data-hero-art="">
         <div className={styles.artBox}>
           <Image
             src="/hero/workspace-v7.webp"
@@ -73,6 +74,7 @@ export default function Hero() {
           </div>
         </div>
       </div>
+      <HeroScroll />
     </section>
   );
 }
