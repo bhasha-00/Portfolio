@@ -19,6 +19,9 @@ const PAST = 24; // px past the screen edge the text and art travel, so they are
 const clamp = (v: number) => Math.min(1, Math.max(0, v));
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2);
 const easeOut = (t: number) => 1 - (1 - t) ** 3;
+// The glide: a gentle sine in and out, so its top speed stays low (half again the average) and it
+// never lurches.
+const easeGlide = (t: number) => (1 - Math.cos(Math.PI * t)) / 2;
 
 export default function HeroScroll() {
   useEffect(() => {
@@ -100,12 +103,10 @@ export default function HeroScroll() {
     const glide = (to: number) => {
       cancelAnimationFrame(gliding);
       const from = scrollY;
-      const snap = html.style.scrollSnapType, behave = html.style.scrollBehavior;
-      html.style.scrollSnapType = "none"; // the page's snap and smooth scroll would fight the glide
-      html.style.scrollBehavior = "auto";
+      const behave = html.style.scrollBehavior;
+      html.style.scrollBehavior = "auto"; // the page's smooth scroll would fight the glide
       const end = () => {
         gliding = 0;
-        html.style.scrollSnapType = snap;
         html.style.scrollBehavior = behave;
         quietUntil = performance.now() + 450;
       };
@@ -116,7 +117,7 @@ export default function HeroScroll() {
       const t0 = performance.now();
       const step = (now: number) => {
         const t = clamp((now - t0) / GLIDE);
-        scrollTo(0, from + (to - from) * easeInOut(t));
+        scrollTo(0, Math.round(from + (to - from) * easeGlide(t)));
         if (t < 1) gliding = requestAnimationFrame(step);
         else end();
       };
@@ -138,8 +139,13 @@ export default function HeroScroll() {
     };
 
     let touchY: number | null = null;
+    let touching = false;
     const onTouchStart = (e: TouchEvent) => {
+      touching = true;
       touchY = e.touches.length === 1 ? e.touches[0].clientY : null;
+    };
+    const onTouchEnd = (e: TouchEvent) => {
+      touching = e.touches.length > 0;
     };
     const onTouchMove = (e: TouchEvent) => {
       if (touchY === null || html.dataset.intro !== "done") return;
@@ -167,6 +173,16 @@ export default function HeroScroll() {
       go(dir);
     };
 
+    // A fling up from the case studies coasts on by itself (no touch or wheel to catch): as it
+    // crosses into the stretch, take it over and glide the rest of the way, so it never stops part
+    // way and then starts again.
+    let lastY = scrollY;
+    const onCross = () => {
+      const y = scrollY, g = goal();
+      if (!gliding && !touching && html.dataset.intro === "done" && lastY >= g - 1 && y < g - 1 && y > 1) glide(0);
+      lastY = y;
+    };
+
     // Anything else that leaves the page resting part way (a dragged scrollbar, a restored scroll):
     // finish the glide the nearer way.
     const onScrollEnd = () => {
@@ -187,6 +203,9 @@ export default function HeroScroll() {
     addEventListener("wheel", onWheel, { passive: false });
     addEventListener("touchstart", onTouchStart, { passive: true });
     addEventListener("touchmove", onTouchMove, { passive: false });
+    addEventListener("touchend", onTouchEnd, { passive: true });
+    addEventListener("touchcancel", onTouchEnd, { passive: true });
+    addEventListener("scroll", onCross, { passive: true });
     addEventListener("keydown", onKey);
     addEventListener("scrollend", onScrollEnd);
     reduce.addEventListener("change", on);
@@ -196,6 +215,9 @@ export default function HeroScroll() {
       removeEventListener("wheel", onWheel);
       removeEventListener("touchstart", onTouchStart);
       removeEventListener("touchmove", onTouchMove);
+      removeEventListener("touchend", onTouchEnd);
+      removeEventListener("touchcancel", onTouchEnd);
+      removeEventListener("scroll", onCross);
       removeEventListener("keydown", onKey);
       removeEventListener("scrollend", onScrollEnd);
       reduce.removeEventListener("change", on);

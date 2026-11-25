@@ -34,16 +34,9 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-/* Home: a scroll that ends near the start of a section settles on it, so the reader lands on Projects,
-   AI Tinkering, About or the contact, not between two of them. "Proximity", not "mandatory": inside a
-   long section (the stacked case studies, the pinned spreads) the page scrolls freely. */
-html:has(main > section#home) {
-  scroll-snap-type: y proximity;
-}
-
-main > section {
-  scroll-snap-align: start;
-}
+/* No scroll snap on the home page: it pulled the page onto a section's start after the reader had
+   stopped, which read as a jerk. The page rests wherever the reader leaves it; only the hero → first
+   case study stretch is a single glide (HeroScroll.tsx). */
 
 body {
   min-height: 100vh;
