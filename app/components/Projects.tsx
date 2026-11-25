@@ -13,6 +13,7 @@ import {
 import { projects, type Project } from "../content/projects";
 import { caseStudyHref, caseStudyVT } from "../content/caseStudies";
 import { controls, flightFrames, type Pt } from "./craneFlight";
+import Backdrop from "./Backdrop";
 import PerchPuff from "./companion/PerchPuff";
 import Origami, { REFOLD, type RefoldDetail } from "./companion/Origami";
 import { rich } from "./rich";
@@ -345,8 +346,12 @@ export default function Projects() {
         Projects
       </h2>
       <ol className={styles.stack}>
-        {/* Phones: a strip under the nav, so card text scrolls away below it, never behind it. */}
-        <li className={styles.band} aria-hidden="true" />
+        {/* Phones: a strip under the nav, so card text scrolls away below it, never behind it. It shows
+            the page background itself (a second copy, fixed and clipped to the strip), so it is not a
+            surface of its own: the page reads as one background with the cards passing under the nav. */}
+        <li className={styles.band} aria-hidden="true">
+          <Backdrop />
+        </li>
         {/* The crane's perch: holds still on the top card's top-right edge while cards slide under. */}
         {/* Not aria-hidden: the crane on it is a real, labelled button (tap to refold). The landing puff
             hides itself; while the crane is elsewhere it is visibility: hidden, so out of the tab order. */}

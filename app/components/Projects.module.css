@@ -319,30 +319,26 @@ button.media:active {
 }
 
 /* ---------- Under the nav (phones) ----------
-   A sticky layer that takes no space: a red strip from the top of the screen to a little below the
-   nav pill, over the cards (below the nav and the crane). Card text stops at its lower edge. */
+   A sticky strip that takes no space (its height is given back by the negative bottom margin), from
+   the top of the screen to a little below the nav pill, over the cards (below the nav and the crane).
+   Card text stops at its lower edge. It holds a copy of the fixed page background (Backdrop), and the
+   clip-path clips that fixed copy to the strip, so the strip shows exactly the background behind it:
+   no edge, no second surface. */
 .band {
   display: none;
 }
 
 @media (max-width: 767px) {
   .band {
+    --band-h: calc(var(--nav-top) + var(--space-7)); /* the nav pill (58) and a little */
     position: sticky;
     top: 0;
     z-index: 4;
     display: block;
-    height: 0;
+    height: var(--band-h);
+    margin: 0 calc(var(--margin) * -1) calc(var(--band-h) * -1);
+    clip-path: inset(0);
     pointer-events: none;
-  }
-
-  .band::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: calc(var(--margin) * -1);
-    right: calc(var(--margin) * -1);
-    height: calc(var(--nav-top) + var(--space-7)); /* the nav pill (58) and a little */
-    background: var(--red);
   }
 }
 
