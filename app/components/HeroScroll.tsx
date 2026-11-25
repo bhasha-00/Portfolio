@@ -74,16 +74,131 @@ export default function HeroScroll() {
       measure();
       on();
     };
+
+    // ---- One swipe ----
+    // Between the hero (scroll 0) and the first case study in place (`goal()`) the page never rests:
+    // one swipe, wheel turn or key down plays the whole exit above in one eased glide and lands on
+    // the card; one up from there plays it back. Input during the glide (and a trackpad's trailing
+    // momentum after it) is swallowed, so it never overshoots. Past the first card the page scrolls
+    // as normal. Reduced motion: the jump is instant (the fades above simply switch).
+    const html = document.documentElement;
+    const projects = document.getElementById("projects");
+    const GLIDE = 1100; // ms
+    const goal = () => (projects ? Math.round(projects.getBoundingClientRect().top + scrollY) : 0);
+    let gliding = 0; // rAF id of the glide
+    let quietUntil = 0; // swallow wheel momentum until then
+    let doneAt = html.dataset.intro === "done" ? -1e9 : Infinity; // when the intro ended
+    const ready = () => performance.now() - doneAt > 600; // the input that skipped the intro is not a swipe
+    const inZone = (dir: number) => {
+      const y = scrollY, g = goal();
+      return dir > 0 ? y < g - 1 : y > 1 && y <= g + 1;
+    };
+
+    const glide = (to: number) => {
+      cancelAnimationFrame(gliding);
+      const from = scrollY;
+      const snap = html.style.scrollSnapType, behave = html.style.scrollBehavior;
+      html.style.scrollSnapType = "none"; // the page's snap and smooth scroll would fight the glide
+      html.style.scrollBehavior = "auto";
+      const end = () => {
+        gliding = 0;
+        html.style.scrollSnapType = snap;
+        html.style.scrollBehavior = behave;
+        quietUntil = performance.now() + 450;
+      };
+      if (reduce.matches || Math.abs(to - from) < 2) {
+        scrollTo(0, to);
+        return end();
+      }
+      const t0 = performance.now();
+      const step = (now: number) => {
+        const t = clamp((now - t0) / GLIDE);
+        scrollTo(0, from + (to - from) * easeInOut(t));
+        if (t < 1) gliding = requestAnimationFrame(step);
+        else end();
+      };
+      gliding = requestAnimationFrame(step);
+    };
+    const go = (dir: number) => glide(dir > 0 ? goal() : 0);
+
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || html.dataset.intro !== "done") return; // pinch zoom; the intro's own skip
+      const dir = Math.sign(e.deltaY);
+      if (gliding || performance.now() < quietUntil) {
+        e.preventDefault();
+        if (!gliding) quietUntil = performance.now() + 120; // momentum still coming: keep quiet
+        return;
+      }
+      if (!dir || !inZone(dir)) return;
+      e.preventDefault();
+      if (ready()) go(dir);
+    };
+
+    let touchY: number | null = null;
+    const onTouchStart = (e: TouchEvent) => {
+      touchY = e.touches.length === 1 ? e.touches[0].clientY : null;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (touchY === null || html.dataset.intro !== "done") return;
+      if (gliding) return e.preventDefault();
+      const dy = touchY - e.touches[0].clientY; // > 0: finger up, page down
+      const dir = Math.sign(dy);
+      if (!dir || !inZone(dir)) return;
+      e.preventDefault();
+      if (Math.abs(dy) > 12 && ready()) {
+        touchY = null;
+        go(dir);
+      }
+    };
+
+    const onKey = (e: KeyboardEvent) => {
+      if (gliding || e.altKey || e.ctrlKey || e.metaKey || html.dataset.intro !== "done") return;
+      const t = e.target as HTMLElement | null;
+      if (t?.closest("input, textarea, select, [contenteditable]")) return;
+      if (e.key === " " && t?.closest("button, a")) return; // Space presses a focused control
+      const down = ["ArrowDown", "PageDown", " "].includes(e.key) && !(e.key === " " && e.shiftKey);
+      const up = ["ArrowUp", "PageUp"].includes(e.key) || (e.key === " " && e.shiftKey);
+      const dir = down ? 1 : up ? -1 : 0;
+      if (!dir || !inZone(dir)) return;
+      e.preventDefault();
+      go(dir);
+    };
+
+    // Anything else that leaves the page resting part way (a dragged scrollbar, a restored scroll):
+    // finish the glide the nearer way.
+    const onScrollEnd = () => {
+      if (gliding || html.dataset.intro !== "done") return;
+      const y = scrollY, g = goal();
+      if (y > 1 && y < g - 1) glide(y > g / 2 ? g : 0);
+    };
+
+    const intro = new MutationObserver(() => {
+      if (html.dataset.intro === "done" && doneAt === Infinity) doneAt = performance.now();
+    });
+    intro.observe(html, { attributes: true, attributeFilter: ["data-intro"] });
+
     measure();
     update();
     addEventListener("scroll", on, { passive: true });
     addEventListener("resize", onResize);
+    addEventListener("wheel", onWheel, { passive: false });
+    addEventListener("touchstart", onTouchStart, { passive: true });
+    addEventListener("touchmove", onTouchMove, { passive: false });
+    addEventListener("keydown", onKey);
+    addEventListener("scrollend", onScrollEnd);
     reduce.addEventListener("change", on);
     return () => {
       removeEventListener("scroll", on);
       removeEventListener("resize", onResize);
+      removeEventListener("wheel", onWheel);
+      removeEventListener("touchstart", onTouchStart);
+      removeEventListener("touchmove", onTouchMove);
+      removeEventListener("keydown", onKey);
+      removeEventListener("scrollend", onScrollEnd);
       reduce.removeEventListener("change", on);
+      intro.disconnect();
       cancelAnimationFrame(raf);
+      cancelAnimationFrame(gliding);
     };
   }, []);
 
