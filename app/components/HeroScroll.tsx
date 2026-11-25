@@ -42,7 +42,10 @@ export default function HeroScroll() {
 
     const update = () => {
       raf = 0;
-      const y = Math.max(0, scrollY), vh = innerHeight;
+      // Held only as far as the first case study: past it the text and art (hidden by then) stop
+      // following the scroll, or they would push the page longer and longer below the footer.
+      const top = card ? card.parentElement!.parentElement!.getBoundingClientRect().top + scrollY : Infinity;
+      const y = Math.min(Math.max(0, scrollY), top), vh = innerHeight;
       const still = reduce.matches;
       const p = clamp(y / (vh * RUN));
       const e = still ? 0 : easeInOut(p);
